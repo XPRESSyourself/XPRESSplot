@@ -1,6 +1,6 @@
 """
 XPRESStools
-An alignment and analysis pipeline for RNAseq data
+A toolkit for navigating and analyzing gene expression datasets
 alias: xpresstools
 
 Copyright (C) 2019  Jordan A. Berg
