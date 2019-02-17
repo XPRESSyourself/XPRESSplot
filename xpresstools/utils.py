@@ -19,10 +19,20 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from .fetch import *
-from .format import *
-from .normalize import *
-from .collapser import *
+"""
+IMPORT DEPENDENCIES
+"""
 
+"""
+DESCRIPTION: Check directory formatting
+"""
+#Check directory formatting
+def check_directories(directory):
 
-__version__ = '0.0.1-beta'
+    #Check input directory name is formatted correctly and fix if necessary
+    if directory.endswith('/'):
+        pass
+    else:
+        directory += '/'
+
+    return directory

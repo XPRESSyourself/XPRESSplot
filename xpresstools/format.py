@@ -22,8 +22,12 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 IMPORT DEPENDENCIES
 """
-import os, sys
+import re
+import csv
 import pandas as pd
+pd.options.mode.chained_assignment = None
+from .utils import check_directories
+from .utils_truncator import execute_truncator, parallelize_truncator
 
 """
 DESCRIPTION: Collate HTseq counts files
@@ -65,3 +69,97 @@ def count_table(file_list, gene_column=0, sample_column=1, sep=','):
     df_counts.columns = file_list
 
     return df_counts
+
+"""
+DESCRIPTION: Create a GTF reference file with only protein coding genes and the first n nucleotides of each first exon
+
+RETURNS: Return the truncated, coding only table when running the function
+
+METHODS: Considers strandedness
+Multiprocesses chunks of a dataframe on cores of computer
+
+VARIABLES:
+input_gtf= GTF reference file path and name
+truncate_amount= Number of nucleotides to truncate from the 5' end of each exon 1 (considers strandedness)
+save_coding_path= Location to save coding-only GTF, set to None to avoid outputting file
+save_truncated_path= Location to save coding-only truncated GTF
+sep= Separator type of the GTF file (generally always tab-delimited)
+
+ASSUMPTIONS:
+Input file is a properly formatted GTF file
+Protein coding transcripts are denoted by 'protein_coding in the final column of the GTF'
+"""
+def truncate(input_gtf, truncate_amount=45, save_coding_path='./' save_truncated_path='./', sep='\t', return_files=False):
+
+    save_coding_path = check_directories(save_coding_path)
+    save_truncated_path = check_directories(save_truncated_path)
+
+    #Import gtf reference file to
+    if str(input_gtf).endswith('.gtf'):
+        gtf = pd.read_csv(str(input_gtf), sep=sep, header=None, comment='#', low_memory=False)
+    else:
+        raise Exception('Error: A GTF-formatted file was not provided')
+
+    #Get only protein_coding coordinates
+    gtf_coding = gtf[gtf.iloc[:, 8].str.contains('protein_coding') == True]
+
+    #Save to .gtf file (tsv)
+    if save_coding_path != None:
+        gtf_coding.to_csv(str(save_coding_path) + 'transcripts_coding.gtf', sep='\t', header=None, index=False, quoting=csv.QUOTE_NONE)
+
+    gtf_coding_c = gtf_coding.copy()
+
+    print("Multiprocessing reference chunks -- this may take a while...")
+    gtf_truncated = parallelize_truncator(execute_truncator, gtf_coding_c, truncate_amount)
+
+    if save_truncated_path != None:
+        gtf_truncated.to_csv(str(save_truncated_path) + 'transcripts_coding_truncated.gtf', sep='\t', header=None, index=False, quoting=csv.QUOTE_NONE)
+
+    if return_files != False:
+        return gtf_coding, gtf_truncated
+
+"""
+DESCRIPTION: Convert row names (genes) of dataframe using GTF as reference for new name
+
+RETURNS: Return the renamed dataframe
+
+VARIABLES:
+data= Dataframe to convert rows names
+gtf= Path and name of gtf reference file
+orig_name_position= Label of original name (usually a 'gene_id')
+new_name_position= Column position (number) of new names
+refill= In some cases, where common gene names are unavailable, the dataframe will fill the gene name with the improper field of the GTF. In this case, specify this improper string and these values will be replaced with the original name
+sep= GTF delimiter (usually tab-delimited)
+"""
+def convert_names_gtf(data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=1, refill=None, sep='\t'):
+
+    #Import reference GTF
+    gtf = pd.read_csv(str(gtf),sep=sep,comment='#', low_memory=False, header=None)
+
+    #Parse out old and new names from GTF
+    gtf_genes = gtf.loc[gtf[2] == 'gene']
+    gtf_genes[orig_name_label] = gtf[8].str.split(';').str[orig_name_location]
+    gtf_genes[new_name_label] = gtf[8].str.split(';').str[new_name_location]
+    gtf_genes[orig_name_label] = gtf_genes[orig_name_label].map(lambda x: x.lstrip(str(orig_name_label)).rstrip('\"').rstrip(' '))
+    gtf_genes[new_name_label] = gtf_genes[new_name_label].map(lambda x: x.lstrip(str(new_name_label)).rstrip('\"').rstrip(' '))
+    gtf_genes = gtf_genes[[orig_name_label,new_name_label]].copy()
+
+    #Create dictionary
+    gene_dict = {}
+
+    if refill != None:
+        for index, row in gtf_genes.iterrows():
+            if row[1] == str(refill):
+                gene_dict[row[0]] = row[0]
+            else:
+                gene_dict[row[0]] = row[1]
+    else:
+        gene_dict[gtf_genes[orig_name_label]] = gtf_genes[new_name_label]
+
+    #Replace old gene names/ids with new
+    data_names = data.copy()
+    data_names[new_name_label] = data_names.index.to_series().map(gene_dict).fillna(data_names.index.to_series())
+    data_names = data_names.set_index(new_name_label)
+    del data_names.index.name
+
+    return data_names
