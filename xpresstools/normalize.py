@@ -72,6 +72,27 @@ def r_fpkm(data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='
     return data_rpkm
 
 """
+DESCRIPTION: Log-scale a sample-normalized dataframe
+
+VARIABLES:
+data= Sample normalized, MICARtools-formated dataframe
+log_base= Log-scale to normalize data with (Options: 2 or 10)
+
+ASSUMPTIONS:
+Requires a properly formatted dataframe for MICARtools usage where samples are normalized
+"""
+def log_scale(data, log_base=10):
+
+    if log_base == 10:
+        data_log = np.log10(data)
+    elif log_base == 2:
+        data_log = np.log2(data)
+    else:
+        print('Invalid log_base option provided')
+
+    return data_log
+
+"""
 DESCRIPTION: Normalize out batch effects from RNAseq data
 
 VARIABLES:
@@ -83,7 +104,7 @@ batch_sep= Batch file delimiter
 ASSUMPTIONS:
 Data has already been sample normalized
 """
-def batch_normalize(input_file, batch_file, input_sep=',', batch_sep='\t'):
+def batch_normalize(input_file, batch_file, input_sep=',', batch_sep=','):
 
     #Get output file name
     if intput_sep == ',':

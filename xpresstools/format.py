@@ -126,8 +126,10 @@ RETURNS: Return the renamed dataframe
 VARIABLES:
 data= Dataframe to convert rows names
 gtf= Path and name of gtf reference file
-orig_name_position= Label of original name (usually a 'gene_id')
-new_name_position= Column position (number) of new names
+orig_name_label= Label of original name (usually a \"gene_id \"')
+orig_name_location= Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)
+new_name_label= Label of original name (usually \"gene_name \")
+new_name_location= Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)
 refill= In some cases, where common gene names are unavailable, the dataframe will fill the gene name with the improper field of the GTF. In this case, specify this improper string and these values will be replaced with the original name
 sep= GTF delimiter (usually tab-delimited)
 """
