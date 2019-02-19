@@ -80,14 +80,48 @@ def get_geo(geo_id):
     return data
 
 """
-DESCRIPTION:
-VARIABLES:
-USAGE:
-ASSUMPTIONS:
+DESCRIPTION: Returns metadata from GEOparse about dataset, useful preceding get_info
+VARIABLES: geo_id= GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)
+USAGE: sample_info_df, sample_info_dict = get_geo_info(geo_id)
 """
 def get_geo_info(geo_id):
+    gse = GEOparse.get_GEO(geo_id) #Import GSE dataset
 
-    print('Coming soon...')
+    with open(geo_id + '.txt', 'w+') as f: #Save all information as text file for reference
+        for gsm_name, gsm in gse.gsms.items():
+            f.write(gsm_name + '\n')
+            for key, value in gsm.metadata.items():
+                f.write(" - %s : %s" % (key, ", ".join(value)) + '\n')
+
+    for gsm_name, gsm in gse.gsms.items(): #Print relevant information for quick reference
+        print("Name: ", gsm_name)
+        for key, value in gsm.metadata.items():
+            if key == 'title' or key == 'source_name_ch1' or key == 'characteristics_ch1' \
+            or key == 'treatment_protocol_ch1' or key == 'data_processing':
+                print(" - %s : %s" % (key, ", ".join(value)))
+
+    df = pd.DataFrame(columns=['gsm', 'title', 'data_processing']) #Create dataframe 
+    gsm_list, title_list, data_processing_list = [], [], []
+    for gsm_name, gsm in gse.gsms.items():
+        for key, value in gsm.metadata.items():
+            if key == 'title':
+                title_list.append(''.join(value))
+            if key == 'geo_accession':
+                gsm_list.append(''.join(value))
+            if key == 'data_processing':
+                data_processing_list.append(''.join(value))
+
+    df['gsm'], df['title'], df['data_processing'] = gsm_list, title_list, data_processing_list
+
+    print() #Prettify and organize
+    print(df)
+    print()
+    print(df['data_processing'].describe()) #To determine if all samples have undergone the sample data processing
+
+    dict = df.drop(columns=['data_processing']).set_index('gsm').T.to_dict('records') #Make a dict, easy to pass to sample_info
+    
+    return df, dict
+
 
 
 """
