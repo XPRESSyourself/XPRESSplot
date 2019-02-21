@@ -41,7 +41,7 @@ sep= Separator of counts files
 ASSUMPTIONS:
 No headers are included in the count files
 """
-def count_table(file_list, gene_column=0, sample_column=1, sep=','):
+def count_table(file_list, gene_column=0, sample_column=1, sep='\t'):
 
     #Read in first count file to get gene names
     df = pd.read_csv(str(file_list[gene_column]), sep=sep, comment='#', header=None)
