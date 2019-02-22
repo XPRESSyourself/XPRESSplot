@@ -22,6 +22,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 IMPORT DEPENDENCIES
 """
+from multiprocessing import cpu_count, Pool
 
 """
 DESCRIPTION: Check directory formatting
@@ -36,3 +37,32 @@ def check_directories(directory):
         directory += '/'
 
     return directory
+
+"""
+DESCRIPTION: Parallelize function on a chunk of a dataframe
+"""
+def parallelize(func, *args):
+
+    cores = cpu_count() #Number of CPU cores on your system
+    partitions = cpu_count() #Define as many partitions as you want
+
+    data_split = np.array_split(args[0], partitions)
+    pool = Pool(cores)
+
+    if func == calculate_fc:
+        func = partial(calculate_fc, label_comp=args[1], label_base=args[2])
+    elif func == calculate_p:
+        func = partial(calculate_p, label_comp=args[1], label_base=args[2], drop_index=args[3])
+    elif func == threshold_util:
+        func = partial(threshold_util, minimum=args[1], maximum=args[2])
+    elif func == truncate:
+        func = partial(truncate, truncate_amount=args[1])
+    else:
+        return
+
+    data = pd.concat(pool.map(func, data_split))
+
+    pool.close()
+    pool.join()
+
+    return data

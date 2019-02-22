@@ -26,6 +26,7 @@ import os, sys
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
+from .utils import parallelize
 
 """
 INITIALIZATION PARAMETERS
@@ -116,3 +117,137 @@ def batch_normalize(input_file, batch_file, input_sep=',', batch_sep=','):
 
     #Run sva combat in R
     os.system('rscript ' + str(__path__) + '/batch_normalize.r ' + str(input_file) + ' ' + str(batch_file) + str(input_sep) + ' ' + str(batch_sep) + ' ' + str(output_file))
+
+"""
+DESCRIPTION: Check sample means and medians
+METHODS: Output density plot for dataframe, barplot for each sample
+VARIABLES:
+USAGE:
+ASSUMPTIONS:
+Dataframe has been properly formatted so that probes or genes are rows and samples are columns
+"""
+def check_samples(data):
+
+    wid = len(list(data))
+    ax = data.boxplot(column=list(data), figsize=(wid,wid/3))
+    ax.set_xlabel('Samples')
+    ax.set_ylabel('Expression')
+
+"""
+DESCRIPTION: Cleans axis of NULL values
+VARIABLES:
+USAGE:
+ASSUMPTIONS:
+If dataframe has been properly formatted previously and genes are in rows, the default parameters will remove along the gene axis
+"""
+def clean_df(data, axis=0):
+
+    data = data.dropna(axis=axis)
+    data = data[~data.index.duplicated()]
+
+    return data
+
+"""
+DESCRIPTION: Remove genes from analysis where sequence coverage does not meet minimum
+
+VARIABLES:
+data= MICARtools formatted data
+minimum= Float or int of minimum count/read value to accept per gene (all samples need to meet this requirement to keep)
+"""
+def threshold_util(data, minimum, maximum):
+
+    data = data.T
+
+    if minimum != None:
+        data = data[data.columns[data.min() > minimum]]
+
+    if maximum != None:
+        data = data[data.columns[data.max() < maximum]]
+
+    data = data.T
+
+    return data
+
+def threshold(data, minimum=None, maximum=None):
+
+    data_c = data.copy()
+    data_c = parallelize(threshold_util, data_c, minimum, maximum)
+
+    return data_c
+
+"""
+DESCRIPTION: Normalize samples, prints sample axis means for verification
+
+METHODS: For each sample axis, divide each cell by the sum the axis divided by the factor provided (default: 1e6)
+
+VARIABLES:
+data= Dataframe of microarray probe data
+axis= Axis where samples are found in the dataframe
+factor= Numeric value to scale samples by
+print_means= Print appropriate means that were scaled for verification
+
+USAGE:
+import micartools as mat
+df_norm = mat.sample_norm(df)
+"""
+def sample_norm(data, axis=1, factor=1e6, print_means=False):
+
+    #Initialize axis variables based on user input
+    if axis == 0:
+        axis_2 = 1
+    elif axis == 1:
+        axis_2 = 0
+    else:
+        pass
+
+    #Perform normalization
+    data_norm = data.divide((data.sum(axis=axis_2) / float(factor)),axis=axis)
+
+    if print_means == True:
+        print(data_norm.mean(axis=axis_2))
+
+    return data_norm
+
+"""
+DESCRIPTION: Prepare dataframes for analysis plotting functions found within analyze.py
+
+METHODS:
+Original dataframe is unformatted besides adding labels from info to the first row of the dataframe
+Formatted dataframe is scaled if option provided and dataframe is converted to float
+
+VARIABLES:
+data= MICARtools formatted dataframe of expression values
+info= MICARtools formatted sample info dataframe
+gene_scale= Scale genes (rows) of data
+print_means= Print appropriate means that were scaled for verification
+
+USAGE:
+import micartools as mat
+df_scaled, df_collapsed = mat.prep_df(df_collapsed, info)
+
+ASSUMPTIONS:
+Requires properly formatted df and info dataframes for MICARtools usage
+"""
+def prep_data(data, info, gene_scale=True, print_means=False):
+
+    #Convert data to float and drop bad values
+    data_scaled = data.astype(dtype='float')
+    data_scaled = data_scaled.dropna(axis=0)
+    data = data.dropna(axis=0)
+
+    #gene normalization
+    if gene_scale == True:
+        data_scaled[data_scaled.columns] = preprocessing.scale(data_scaled[data_scaled.columns], axis=1)
+
+    if print_means == True:
+        print(data_scaled.mean(axis=1))
+
+    #Map labels to samples
+    labels = pd.Series(info[1].values,index=info[0]).to_dict()
+    data.loc['label'] = data.columns.map(labels.get)
+
+    #Output collapsed dataframe
+    newIndex = ['label'] + [ind for ind in data.index if ind != 'label']
+    data = data.reindex(index=newIndex)
+
+    return data_scaled, data

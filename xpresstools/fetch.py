@@ -293,11 +293,12 @@ DESCRIPTION: Rename column names using dictionary
 
 VARIABLES:
 data= Dataframe to rename column names
-dictionary= Keys are old name and values are new names
+converters= Dataframe where column 0 contains old names and column 1 contains new names
 """
-def rename_cols(data, dictionary):
+def rename_cols(data, converters):
 
     data_c = data.copy()
+    dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
     data_set = data_c.rename(columns=dictionary, inplace=True)
     return data_set
 

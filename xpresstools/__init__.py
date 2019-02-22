@@ -23,6 +23,7 @@ from .fetch import *
 from .format import *
 from .normalize import *
 from .collapser import *
+from .analyze import *
 
 
 __version__ = '0.0.1-beta'
