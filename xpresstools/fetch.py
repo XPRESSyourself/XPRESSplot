@@ -61,46 +61,32 @@ def get_df(file_name, delimiter=",", low_memory=False, gene_axis='row'):
     return data
 
 """
-DESCRIPTION: Get GEO dataframe
+DESCRIPTION: Get GEO dataframe and metadata
 VARIABLES:
 geo_id= GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)
+output_info= Output long-form metadata to txt file
 USAGE:
-import micartools as mat
-data = mat.get_geo("GSE20716")
+sample_data, sample_metadata = mat.get_geo("GSE20716")
 """
-def get_geo(geo_id):
+def get_geo(geo_id, output_info=False):
 
-    #Import GSE dataset
-    gse = GEOparse.get_GEO(geo=str(geo_id).upper())
+    #Get data
+    gse = GEOparse.get_GEO(geo=str(geo_id).upper) #Import GSE dataset
     data = gse.pivot_samples('VALUE')
     del data.index.name
-
     data = clean_df(data)
 
-    return data
+    #Get metadata
+    #Write data to output file
+    if output_info != False:
+        with open(str(geo_id).upper() + '.txt', 'w+') as f: #Save all information as text file for reference
+            for gsm_name, gsm in gse.gsms.items():
+                f.write(gsm_name + '\n')
+                for key, value in gsm.metadata.items():
+                    f.write(" - %s : %s" % (key, ", ".join(value)) + '\n')
 
-"""
-DESCRIPTION: Returns metadata from GEOparse about dataset, useful preceding get_info
-VARIABLES: geo_id= GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)
-USAGE: sample_info_df, sample_info_dict = get_geo_info(geo_id)
-"""
-def get_geo_info(geo_id):
-    gse = GEOparse.get_GEO(geo_id) #Import GSE dataset
-
-    with open(geo_id + '.txt', 'w+') as f: #Save all information as text file for reference
-        for gsm_name, gsm in gse.gsms.items():
-            f.write(gsm_name + '\n')
-            for key, value in gsm.metadata.items():
-                f.write(" - %s : %s" % (key, ", ".join(value)) + '\n')
-
-    for gsm_name, gsm in gse.gsms.items(): #Print relevant information for quick reference
-        print("Name: ", gsm_name)
-        for key, value in gsm.metadata.items():
-            if key == 'title' or key == 'source_name_ch1' or key == 'characteristics_ch1' \
-            or key == 'treatment_protocol_ch1' or key == 'data_processing':
-                print(" - %s : %s" % (key, ", ".join(value)))
-
-    df = pd.DataFrame(columns=['gsm', 'title', 'data_processing']) #Create dataframe 
+    #Populate metadata with sample ids and names
+    metadata = pd.DataFrame(columns=['gsm', 'title']) #Create dataframe
     gsm_list, title_list, data_processing_list = [], [], []
     for gsm_name, gsm in gse.gsms.items():
         for key, value in gsm.metadata.items():
@@ -111,18 +97,13 @@ def get_geo_info(geo_id):
             if key == 'data_processing':
                 data_processing_list.append(''.join(value))
 
-    df['gsm'], df['title'], df['data_processing'] = gsm_list, title_list, data_processing_list
+    metadata['gsm'], metadata['title'] = gsm_list, title_list
+    metadata.columns = range(metadata.shape[1])
 
-    print() #Prettify and organize
-    print(df)
-    print()
-    print(df['data_processing'].describe()) #To determine if all samples have undergone the sample data processing
+    #Output processing style
+    print('Data processing summary:\n' + str(set(data_processing_list))) #To determine if all samples have undergone the sample data processing
 
-    dict = df.drop(columns=['data_processing']).set_index('gsm').T.to_dict('records') #Make a dict, easy to pass to sample_info
-    
-    return df, dict
-
-
+    return data, metadata
 
 """
 DESCRIPTION: Get user file with pertinent sample information
