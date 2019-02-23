@@ -6,3 +6,6 @@ library(sva)
 library(bladderbatch)
 library(pamr)
 library(limma)
+
+
+Create conda install for xpresspipe
