@@ -25,6 +25,10 @@ IMPORT DEPENDENCIES
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from mpl_toolkits.mplot3d import Axes3D
 
 """
 DESCRIPTION: Default data prep for all analysis functions
@@ -192,3 +196,159 @@ def make_linreg(data, gene1, gene2):
     title = 'r = ' + "%.2f" % round(r_value,4)
 
     return x, y, r_value, title
+
+"""
+Initial variable checks
+"""
+def init_pca(principle_components, _3d_pca, plotly_login, principle_components):
+
+    if len(principle_components) != 2 and _3d_pca == False:
+        print('Incompatible options provided for principle_components and _3d_pca')
+        return
+
+    if plotly_login != None and _3d_pca == False:
+        print('Only provide plotly login for _3d_pca')
+        return
+
+    if _3d_pca == True:
+        if principle_components == [1,2]:
+            principle_components = [1,2,3]
+
+        elif len(principle_components) != 3:
+            print('Incompatible options provided for principle_components and _3d_pca')
+            return
+
+        else:
+            print('Not sure if this will ever be triggered, but if it is need to check case')
+            return
+
+        if plotly_login != None and type(plotly_login) is not list:
+            print('Provide proper plotly login information in form of list')
+            print("['userid','api key']")
+            return
+
+    return principle_components
+
+"""
+DESCRIPTION: Generate scree plot for principle components
+"""
+def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, grid, whitegrid):
+
+    vari = 'Explained variation per principal component: {}'.format(np.round(pca.explained_variance_ratio_, decimals=4)*100)
+    scree = np.round(pca.explained_variance_ratio_, decimals=4)*100
+
+    #Plot scree
+    sing_vals = np.arange(n_components) + 1
+
+    ax = sns.lineplot(x=sing_vals, y=scree, color="red")
+    ax.set(xlabel='Principal Component', ylabel='Proportion of Variance Explained', title='Scree Plot')
+    plt.savefig(str(save_fig[:-4]) + '_scree.pdf', dpi=dpi, bbox_inches=bbox_inches)
+
+    if scree_only == True:
+        plt.show()
+
+    if grid == False:
+        ax.grid(False)
+
+    #Remove scree from memory to prevent plot bleeding
+    reset_plot(whitegrid, ax=True)
+
+    return scree
+
+"""
+DESCRIPTION: Add confidence intervals to scatterplot
+"""
+def set_confidence(df_pca, pca_plot, unique_labels, palette):
+
+    for x in unique_labels:
+        #slice df into label specific datasets
+        df_slice = df_pca[df_pca['label'] == x]
+
+        #make numpy array from label-specific dfs
+        x_slice = df_slice.PCa.values
+        y_slice = df_slice.PCb.values
+
+        #pca maths
+        cov = np.cov(x_slice, y_slice)
+        lambda_, v = np.linalg.eig(cov)
+        theta = np.degrees(np.arctan2(*v[:,0][::-1]))
+        lambda_ = np.sqrt(lambda_)
+
+        #plot
+        pca_plot.add_patch(patches.Ellipse(xy=(np.mean(x_slice), np.mean(y_slice)),
+                          width=lambda_[0]*ci*2, height=lambda_[1]*ci*2,
+                          angle=theta,
+                          alpha=0.3, facecolor=palette[x], edgecolor='black', linewidth=1, linestyle='solid')
+                          )
+
+"""
+DESCRIPTION: 2D Non-interactive PCA scatterplot
+"""
+def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches):
+    pca_plot = sns.scatterplot(df_pca.PCa, df_pca.PCb, hue=df_pca['label'], palette=palette)
+    set_confidence(df_pca, pca_plot, unique_labels, palette)
+
+    # Put the legend out of the figure
+    handles,labels = pca_plot.get_legend_handles_labels()
+
+    if order_legend != None:
+        if type(order_legend) is list:
+            plt.legend([handles[idx] for idx in order_legend],[labels[idx] for idx in order_legend], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        else:
+            plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            print('order_legend datatype is invalid -- plotting samples in default order...')
+    else:
+        plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+    plt.xlabel('PC' + str(principle_components[0]) + ' (' + str(round(scree[(principle_components[0] - 1)],2)) + '%)')
+    plt.ylabel('PC' + str(principle_components[1]) + ' (' + str(round(scree[(principle_components[1] - 1)],2)) + '%)')
+
+    if grid == False:
+        plt.grid(False)
+
+    if save_fig != None:
+        #Save plot
+        plt.title(str(title))
+        plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
+
+    plt.show()
+
+"""
+DESCRIPTION: 3D Non-interactive PCA scatterplot
+"""
+def pca3(df_pca, palette, save_fig, dpi, bbox_inches):
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    df_pca.columns = ['PCa', 'PCb', 'PCc', 'label']
+    unique_labels = df_pca['label'].unique() #Gather unique labels
+
+    pca0 = df_pca.loc[df_pca['label'] == unique_labels[0]]
+    pca1 = df_pca.loc[df_pca['label'] == unique_labels[1]]
+    pca2 = df_pca.loc[df_pca['label'] == unique_labels[2]]
+
+    x0 = pca0.PCa.values
+    y0 = pca0.PCb.values
+    z0 = pca0.PCc.values
+    ax.scatter(x0, y0, z0, c=palette[unique_labels[0]], label=str(unique_labels[0]))
+
+    x1 = pca1.PCa.values
+    y1 = pca1.PCb.values
+    z1 = pca1.PCc.values
+    ax.scatter(x1, y1, z1, c=palette[unique_labels[1]], label=str(unique_labels[1]))
+
+    x2 = pca2.PCa.values
+    y2 = pca2.PCb.values
+    z2 = pca2.PCc.values
+    ax.scatter(x2, y2, z2, c=palette[unique_labels[2]], label=str(unique_labels[2]))
+
+    ax.set_xlabel(str(pc_list[0]))
+    ax.set_ylabel(str(pc_list[1]))
+    ax.set_zlabel(str(pc_list[2]))
+    ax.legend()
+
+    plt.show()
+
+    if save_fig != None:
+        plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)

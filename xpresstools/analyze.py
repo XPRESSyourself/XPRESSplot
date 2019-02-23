@@ -28,7 +28,6 @@ from scipy.stats import linregress
 from sklearn.decomposition import PCA
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import seaborn as sns
 sns.set(font='arial')
 jakes_cmap = sns.diverging_palette(212, 61, s=99, l=77, sep=1, n=16, center='dark') #Custom aesthetics
@@ -449,17 +448,144 @@ def volcano(data, info, label_comp, label_base, order_legend=None, highlight_gen
         interactive_scatter(data_c, info, x='log2 Fold Change', y='-log10 P-Value', plotly_login=plotly_login, file_name=save_fig, highlight='sample', palette=None)
 
     #Save hits if user-specified
-    """if save_threshold_hits != None:
-        if y_threshold != None and x_threshold != None:
-            df_c = data_c[['log2 Fold Change', '-log10 P-Value']].copy()
-            df_up = df_c.loc[(df_c['log2 Fold Change'] > x_threshold) & (df_c['-log10 P-Value'] > y_threshold)] #get upregulated hits
-            df_down = df_c.loc[(df_c['log2 Fold Change'] < -x_threshold) & (df_c['-log10 P-Value'] > y_threshold)] #get downregulated hits
-            thresh_hits = df_up.append(df_down) #append hits tables
+    if return_data == True:
+        df_c = data_c[['log2 Fold Change', '-log10 P-Value']].copy()
+        return df_c
 
-            #export table for user
-            if save_threshold_hits != None:
-                thresh_hits.to_csv(str(save_threshold_hits), sep=save_threshold_hits_delimiter)
+"""
+DESCRIPTION: Plot a 2-D PCA with confidence intervals or a 3-D PCA with no confidence intervals
 
-        #If return option provided, return dataframe, else print plot to stout
-        if return_data == True:
-            return thresh_hits"""
+RETURNS: Dataframe with PCs calculated
+
+METHODS: 3-D PCA -- option to output as interactive plot by providing plotly credentials, or as a static plot without these credentials (default)
+
+VARIABLES:
+data_scaled= Scaled dataframe as created with the MICARtools prep_data and scaling function -- can be a dataframe prepared using the prep_data() function or log_scale() function
+info= MICARtools formatted sample info dataframe
+palette= Dictionary of matplotlib compatible colors for samples; for plotly 3-D PCA,
+grouping= Perform PCA sample-wise (default) or gene-wise (grouping='genes')
+gene_list= List of genes (either as list or as .csv file path and name with list of genes) to plot (IMPORTANT: Gene names are case-sensitive) (only functional when grouping='samples')
+gene_labels= Option for grouping='genes', not currently implemented
+ci= For 2-D PCA, confidence interval to display for each sample type (i.e. 1 == CI1 == 68%, 2 == CI2 == 95%, 3 == CI3 == 99%)
+principle_components= Principle components to plot (default: [1,2] for 2-D PCA, or [1,2,3] for 3-D PCA)
+n_components= Number of components to calculate in dataframe (more applicable if you want to perform a deeper survey of the principle components)
+_3d_pca= Plot 3 principle components (default: False)
+plotly_login= ['userid','api key'], usage of this option creates a plotly interactive plot that can be viewed online using your login credentials
+title= Provide title for figure and saved file if save_fig option used
+save_fig= If not None, provide full file path, name, and extension to save the file as
+dpi= Set dpi of saved figure
+bbox_inches= Format saved figure (often useful for making sure no text is cut off)
+order_legend= List of integers to reorder samples in legend (i.e. if samples are displayed 1:Sample_A, 2:Sample_C, 3:Sample_B, provide the list [1,3,2]) (Not currently compatible with 3-D PCA options)
+grid= For non-plotly options, remove gridlines from plot
+fig_size= Option not used in function currently
+size= Marker size
+
+palette examples:
+colors = {'adenocarcinoma': (0.5725490196078431, 0.5843137254901961, 0.5686274509803921),
+        'adenoma': (0.8705882352941177, 0.5607843137254902, 0.0196078431372549),
+        'normal': (0.00784313725490196, 0.6196078431372549, 0.45098039215686275)}
+colors = {'adenocarcinoma': 'gray',
+        'adenoma': 'orange',
+        'normal': 'green'}
+colors = {'adenocarcinoma': '#59656d',
+        'adenoma': '#f0833a',
+        'normal': '#0a5f38'}
+
+USAGE:
+
+ASSUMPTIONS:
+Plotly and api key generation, addition
+Data has been scaled and labeled with the MICARtools prep_data function
+
+FEATURES TO ADD:
+Allow for compatibility with adding labels for gene classes for plotting
+Option to order legend
+Move legend outside plot
+Add options to vary marker size and opacity
+"""
+def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=False, ci=2, principle_components=[1,2], n_components=10, _3d_pca=False, plotly_login=None, scree_only=False, save_scree=None, size=10, whitegrid=False, title=None, save_fig=None, dpi=600, bbox_inches='tight', order_legend=None, grid=False, fig_size=(10,10)):
+
+    reset_plot(whitegrid)
+    principle_components = init_pca(principle_components, _3d_pca, plotly_login, principle_components)
+    data_c = analysis_prep(data)
+
+    #Custom panel heatmap
+    if gene_list != None:
+        data_sub = data_subset(data_c, gene_list)
+        plot_data = data_sub.dropna(axis=0)
+    else:
+        plot_data = data_c.dropna(axis=0)
+
+    #Format data for sample-wise or gene-wise PCA analysis
+    if str(grouping) == 'samples':
+        plot_data = plot_data.T
+    elif str(grouping) == 'genes':
+        plot_data = plot_data
+    else:
+        print('Incorrect grouping variable provided')
+        return
+
+    #Prep PCA
+    pca = PCA(n_components=n_components)
+    pca_result = pca.fit_transform(plot_data.values)
+
+    #Record PCs
+    x = 1
+    while x <= n_components:
+        pc = 'PC' + str(x)
+        component = x - 1
+        scaled[pc] = pca_result[:,component]
+        x += 1
+
+    #Scree
+    if save_scree != None:
+        scree = make_scree(pca, n_components, save_fig, dpi, bbox_inches, grid, whitegrid)
+        if scree_only:
+            return
+    else:
+        scree = np.round(pca.explained_variance_ratio_, decimals=4)*100
+
+    if gene_labels == False:
+
+        #Prep data_scaled by adding labels from info to column (samples are rows)
+        labels = pd.Series(info[1].values,index=info[0]).to_dict()
+        plot_data['label'] = plot_data.index.to_series().map(labels)
+
+        #Plot PCa & PCb
+        pc_list = []
+        for p in principle_components:
+            pc_list.append('PC' + str(p))
+
+        pc_list.append('label')
+
+        df_pca = plot_data[pc_list] #Prepare pca data
+
+        #2D PCA
+        if _3d_pca == False:
+            df_pca.columns = ['PCa', 'PCb', 'label']
+            unique_labels = df_pca['label'].unique() #Gather unique labels
+
+            #Non-interactive
+            if plotly_login == None:
+                pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches)
+
+            #Plotly
+            else:
+                interactive_scatter(df_pca, info, 'PCa', 'PCb', plotly_login, palette, highlight='sample', save_fig=save_fig)
+
+        #3D PCA
+        elif _3d_pca == True:
+
+            #Plotly
+            if plotly_login != None:
+                interactive_3D(df_pca, size, palette, plotly_login, save_fig)
+
+            #Non-interactive
+            else:
+                pca3(df_pca, palette, save_fig, dpi, bbox_inches)
+
+        else:
+            return
+
+    else:
+        print('This feature has not been implemented yet')
