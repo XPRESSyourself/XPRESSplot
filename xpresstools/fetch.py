@@ -61,34 +61,49 @@ def get_df(file_name, delimiter=",", low_memory=False, gene_axis='row'):
     return data
 
 """
-DESCRIPTION: Get GEO dataframe
+DESCRIPTION: Get GEO dataframe and metadata
 VARIABLES:
 geo_id= GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)
+output_info= Output long-form metadata to txt file
 USAGE:
-import micartools as mat
-data = mat.get_geo("GSE20716")
+sample_data, sample_metadata = mat.get_geo("GSE20716")
 """
-def get_geo(geo_id):
+def get_geo(geo_id, output_info=False):
 
-    #Import GSE dataset
-    gse = GEOparse.get_GEO(geo=str(geo_id).upper())
+    #Get data
+    gse = GEOparse.get_GEO(geo=str(geo_id).upper) #Import GSE dataset
     data = gse.pivot_samples('VALUE')
     del data.index.name
-
     data = clean_df(data)
 
-    return data
+    #Get metadata
+    #Write data to output file
+    if output_info != False:
+        with open(str(geo_id).upper() + '.txt', 'w+') as f: #Save all information as text file for reference
+            for gsm_name, gsm in gse.gsms.items():
+                f.write(gsm_name + '\n')
+                for key, value in gsm.metadata.items():
+                    f.write(" - %s : %s" % (key, ", ".join(value)) + '\n')
 
-"""
-DESCRIPTION:
-VARIABLES:
-USAGE:
-ASSUMPTIONS:
-"""
-def get_geo_info(geo_id):
+    #Populate metadata with sample ids and names
+    metadata = pd.DataFrame(columns=['gsm', 'title']) #Create dataframe
+    gsm_list, title_list, data_processing_list = [], [], []
+    for gsm_name, gsm in gse.gsms.items():
+        for key, value in gsm.metadata.items():
+            if key == 'title':
+                title_list.append(''.join(value))
+            if key == 'geo_accession':
+                gsm_list.append(''.join(value))
+            if key == 'data_processing':
+                data_processing_list.append(''.join(value))
 
-    print('Coming soon...')
+    metadata['gsm'], metadata['title'] = gsm_list, title_list
+    metadata.columns = range(metadata.shape[1])
 
+    #Output processing style
+    print('Data processing summary:\n' + str(set(data_processing_list))) #To determine if all samples have undergone the sample data processing
+
+    return data, metadata
 
 """
 DESCRIPTION: Get user file with pertinent sample information
