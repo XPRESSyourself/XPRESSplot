@@ -2,6 +2,9 @@
 
 <p><img src="https://github.com/XPRESSyourself/XPRESStools/blob/master/docs/content/xpressyourself.png" class="center" width="17%" height="17%" align="right">
 
+<br />
+<br />
+
 <b>XPRESStools</b>  
 A toolkit for navigating and analyzing gene expression datasets
 
