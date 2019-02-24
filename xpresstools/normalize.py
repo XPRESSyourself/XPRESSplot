@@ -25,6 +25,7 @@ IMPORT DEPENDENCIES
 import os, sys
 import pandas as pd
 import numpy as np
+import matplotlib
 from sklearn import preprocessing
 from .utils import parallelize
 

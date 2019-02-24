@@ -238,7 +238,6 @@ def add_threshold(threshold, threshold_color, ax):
         else:
             print('Invalid threshold provided')
 
-
 def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, save_fig=None, dpi=600, bbox_inches='tight', grid=False, whitegrid=False, alpha=1, highlight_genes=None, highlight_color='DarkRed', alpha_highlights=1, y_threshold=[None], x_threshold=[None], threshold_color='b', label_genes=None):
 
     reset_plot(whitegrid)

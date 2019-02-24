@@ -1,12 +1,10 @@
-=====================================================================
-**RiboPipe**: *An assembly and analysis pipeline for sequencing data*
-=====================================================================
-**RiboPipe** is toolkit designed for automating the assembly,
-quality control, and analysis of ribosome profiling and other single-end RNAseq
-datasets. It is intended to be easy to use for bench and computational biologists
-and is quick to use out of the box.
+==================================================================================
+**XPRESStools**: *A toolkit for navigating and analyzing gene expression datasets*
+==================================================================================
+**XPRESStools** is a part of the **XPRESSyourself** suite of sequencing tools. **XPRESStools** is a python
+toolkit importing, cleaning, normalizing, and analyzing sequence data from Microarray or RNAseq platforms.
 
-**RiboPipe** is developed by Jordan Berg in the `Rutter Lab <https://biochem.utah.edu/rutter/index.html>`_
+**XPRESStools** is developed by Jordan Berg in the `Rutter Lab <https://biochem.utah.edu/rutter/index.html>`_
 @ the `University of Utah <https://www.utah.edu/>`_, along with other collaborators.
 
 
@@ -16,39 +14,31 @@ Table of contents
 .. toctree::
    :maxdepth: 1
 
-   content/overview
    content/installation
-   contect/building-references
-   content/quickstart
-   content/general-usage
-   content/advanced-usage
-
-
-========
-Tutorial
-========
-Video walkthrough coming soon! See the `Quickstart <content/quickstart>`_ guide for more information.
-
-
-===============
-Important notes
-===============
-See the `Important File Naming Conventions <content/general-usage>`_ heading of the General Usage page for more information.
-
-
-===========
-Performance
-===========
-Coming soon
+   contect/general-usage
+   content/getting-data
+   content/formatting
+   content/quality-control
+   content/normalize
+   content/collapse-probes
+   content/reference-building
+   content/heatmaps
+   content/sample-overviews
+   content/gene-overviews
+   content/scatterplots
+   content/volcano-plots
+   content/pca
+   content/regressions
 
 
 =======
 License
 =======
-RiboPipe is freely available under a GNU General Public License (v3.0).
+XPRESStools is freely available under a GNU General Public License (v3.0).
 
 
 ==========
 Questions?
 ==========
-If you have questions, requests, or bugs to report, please use the `Github issues forum <https://github.com/RiboPipe/ribopipe/issues>`_.
+If you have questions, requests, or bugs to report, please use the `Github issues forum
+<https://github.com/XPRESSyourself/XPRESStools/issues>`_.
