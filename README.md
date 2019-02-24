@@ -1,14 +1,12 @@
+<p><img src="https://github.com/XPRESSyourself/XPRESStools/blob/master/docs/content/xpresstools.png" class="center" width="100%" height="100%" align="left">
+
+<br />
+<b>A toolkit for navigating and analyzing gene expression datasets</b>   
+<b>Part of the XPRESSyourself suite of gene expression processing and analysis tools</b>   
 [![Build Status](https://travis-ci.org/dwyl/learn-travis.svg?branch=master)](https://travis-ci.org/dwyl/learn-travis)
+[![Conda Version](https://anaconda.org/bioconda/xpresstools/badges/version.svg)](https://anaconda.org/bioconda/xpresstools)
 
-<p><img src="https://github.com/XPRESSyourself/XPRESStools/blob/master/docs/content/xpressyourself.png" class="center" width="17%" height="17%" align="right">
-
-<br />
-<br />
-
-<b>XPRESStools</b>  
-A toolkit for navigating and analyzing gene expression datasets
-
-<br />
+-----
 
 Citation:    
 ```
