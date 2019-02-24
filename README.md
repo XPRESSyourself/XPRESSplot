@@ -9,17 +9,17 @@
 
 -----
 
-##### Citation:    
+### Citation:    
 ```
 Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis made easy. https://github.com/XPRESSyourself.
 ```
 
-##### Installation:   
+### Installation:   
 ```
 conda install -c bioconda xpresstools
 ```
 
-##### QuickStart:   
+### QuickStart:   
 ```
 >>> import pandas as pd
 >>> import xpresstools as xp   
@@ -28,7 +28,7 @@ conda install -c bioconda xpresstools
 >>> geo = xp.rpm(geo)
 ```
 
-##### Important Notes:    
+### Important Notes:    
 Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see documentation for help)    
 
 ```
