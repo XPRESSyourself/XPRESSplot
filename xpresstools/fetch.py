@@ -71,7 +71,7 @@ sample_data, sample_metadata = mat.get_geo("GSE20716")
 def get_geo(geo_id, output_info=False):
 
     #Get data
-    gse = GEOparse.get_GEO(geo=str(geo_id).upper) #Import GSE dataset
+    gse = GEOparse.get_GEO(geo=str(geo_id).upper()) #Import GSE dataset
     data = gse.pivot_samples('VALUE')
     del data.index.name
     data = clean_df(data)
