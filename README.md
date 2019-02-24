@@ -1,28 +1,25 @@
-<p><img src="https://github.com/XPRESSyourself/XPRESStools/blob/master/docs/content/xpresstools.png" class="center" width="100%" height="100%" align="left">
+# ![XPRESStools](https://raw.githubusercontent.com/XPRESSyourself/XPRESStools/master/docs/content/xpresstools.png)
 
-<br />
-<b>A toolkit for navigating and analyzing gene expression datasets</b>    
-<b>Part of the XPRESSyourself suite of gene expression processing and analysis tools</b>   
-[![Build Status](https://travis-ci.org/dwyl/learn-travis.svg?branch=master)](https://travis-ci.org/dwyl/learn-travis)   
-[![Conda Version](https://anaconda.org/bioconda/xpresstools/badges/version.svg)](https://anaconda.org/bioconda/xpresstools)   
+
+### A toolkit for navigating and analyzing gene expression datasets
+
+[![Build Status](https://travis-ci.org/dwyl/learn-travis.svg?branch=master)](https://travis-ci.org/XPRESSyourself/XPRESStools)
+
+##### Find documentation [here](https://xpressyourself.github.io/XPRESStools/)
 
 -----
 
-Citation:    
+##### Citation:    
 ```
 Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis made easy. https://github.com/XPRESSyourself.
 ```
 
-<br />
-
-Installation:   
+##### Installation:   
 ```
 conda install -c bioconda xpresstools
 ```
 
-<br />
-
-QuickStart:   
+##### QuickStart:   
 ```
 >>> import pandas as pd
 >>> import xpresstools as xp   
@@ -31,12 +28,8 @@ QuickStart:
 >>> geo = xp.rpm(geo)
 ```
 
-<br />
-
-Important Notes:    
+##### Important Notes:    
 Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see documentation for help)    
-
-<br />
 
 ```
 >>> geo.head()
@@ -49,4 +42,3 @@ name       GSM523242  GSM523243  GSM523244  GSM523245  GSM523246  GSM523247    .
 
 [5 rows x 145 columns]   
 ```
-<br />
