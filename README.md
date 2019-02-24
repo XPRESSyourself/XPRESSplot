@@ -2,7 +2,7 @@
 
 <p><img src="https://github.com/RiboPipe/ribopipe/blob/master/docs/content/xpressyourself.png" class="center" width="17%" height="17%" align="right">
 
-<font color="green" size=14><strong>XPRESS</strong></font><font color="black" size=14><strong>tools</strong></font>   
+<span style="color:green">XPRESS</span><span style="color:black">tools</span>   
 A toolkit for navigating and analyzing gene expression datasets
 
 <br />
