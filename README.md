@@ -35,7 +35,7 @@ Important Notes:
 Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see documentation for help)    
 
 <br />
-
+```
   +--------------+--------------+--------------+--------------+------------+
   |              |    Sample1   |   Sample2    |    Sample3   |    ...     |
   |--------------|---------------------------------------------------------|
@@ -47,6 +47,6 @@ Assumes all dataframes are columns=samples and rows=genes (except in certain cas
   |--------------|---------------------------------------------------------|
   |     ...      |      ...     |     ...      |      ...     |    ...     |
   |--------------+--------------+--------------+--------------+------------+
-
+```
 
 <br />
