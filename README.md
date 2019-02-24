@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/dwyl/learn-travis.svg?branch=master)](https://travis-ci.org/dwyl/learn-travis)
 
-<p><img src="https://github.com/RiboPipe/ribopipe/blob/master/docs/content/xpressyourself.png" class="center" width="17%" height="17%" align="right">
+<p><img src="https://github.com/XPRESSyourself/XPRESStools/blob/master/docs/content/xpressyourself.png" class="center" width="17%" height="17%" align="right">
 
-<span style="color:green">XPRESS</span><span style="color:black">tools</span>   
+<b>XPRESStools</b>  
 A toolkit for navigating and analyzing gene expression datasets
 
 <br />
