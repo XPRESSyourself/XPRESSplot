@@ -89,7 +89,7 @@ ASSUMPTIONS:
 Input file is a properly formatted GTF file
 Protein coding transcripts are denoted by 'protein_coding in the final column of the GTF'
 """
-def truncate(input_gtf, truncate_amount=45, save_coding_path='./' save_truncated_path='./', sep='\t', return_files=False):
+def truncate(input_gtf, truncate_amount=45, save_coding_path='./', save_truncated_path='./', sep='\t', return_files=False):
 
     save_coding_path = check_directories(save_coding_path)
     save_truncated_path = check_directories(save_truncated_path)

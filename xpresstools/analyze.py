@@ -146,9 +146,7 @@ def sample_overview(data_scaled, info, palette=None, gene_list=None, order=None,
         raise Exception('Data is not properly formatted for downstream plotting')
 
     #Plot
-    if order != None and type(order) is list or palette != None and type(palette) is list:
-        continue
-    else:
+    if not order != None and type(order) is list or palette != None and type(palette) is list:
         return
 
     ax = sns.violinplot(x="type", y="expr", data=plot_data, order=order, palette=palette)
@@ -506,7 +504,7 @@ Add options to vary marker size and opacity
 def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=False, ci=2, principle_components=[1,2], n_components=10, _3d_pca=False, plotly_login=None, scree_only=False, save_scree=None, size=10, whitegrid=False, title=None, save_fig=None, dpi=600, bbox_inches='tight', order_legend=None, grid=False, fig_size=(10,10)):
 
     reset_plot(whitegrid)
-    principle_components = init_pca(principle_components, _3d_pca, plotly_login, principle_components)
+    principle_components = init_pca(principle_components, _3d_pca, plotly_login)
     data_c = analysis_prep(data)
 
     #Custom panel heatmap

@@ -25,7 +25,7 @@ IMPORT DEPENDENCIES
 import os, sys
 import pandas as pd
 import GEOparse
-from .quality import clean_df
+from .normalize import clean_df
 
 
 """

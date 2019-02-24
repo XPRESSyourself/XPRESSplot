@@ -1,5 +1,15 @@
 #Control batch effects for prep, chips, etc
 
+#Install dependencies
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("sva", version = "3.8")
+BiocManager::install("bladderbatch", version = "3.8")
+BiocManager::install("limma", version = "3.8")
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("pamr")
+
 #Initialize workspace
 library(sva)
 library(bladderbatch)

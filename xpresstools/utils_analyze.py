@@ -200,7 +200,7 @@ def make_linreg(data, gene1, gene2):
 """
 Initial variable checks
 """
-def init_pca(principle_components, _3d_pca, plotly_login, principle_components):
+def init_pca(principle_components, _3d_pca, plotly_login):
 
     if len(principle_components) != 2 and _3d_pca == False:
         print('Incompatible options provided for principle_components and _3d_pca')
@@ -285,6 +285,7 @@ def set_confidence(df_pca, pca_plot, unique_labels, palette):
 DESCRIPTION: 2D Non-interactive PCA scatterplot
 """
 def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches):
+
     pca_plot = sns.scatterplot(df_pca.PCa, df_pca.PCb, hue=df_pca['label'], palette=palette)
     set_confidence(df_pca, pca_plot, unique_labels, palette)
 

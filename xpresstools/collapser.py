@@ -23,7 +23,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 IMPORT DEPENDENCIES
 """
 import pandas as pd
-from .collapser_utils import prep_collapser, run_collapser
+from .utils_collapser import prep_collapser, run_collapser
 
 """
 DESCRIPTION: Ties prep_collapser and probe_collapse functions together

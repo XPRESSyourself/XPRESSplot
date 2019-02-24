@@ -1,0 +1,12 @@
+package:
+  name: XPRESStools
+  version: 0.0.1
+
+source:
+  fn: XPRESStools-0.0.1.tar.gz
+  url: https://github.com/XPRESSyourself/XPRESStools/archive/XPRESStools-0.0.1.tar.gz
+
+about:
+  home: https://xpresstools.readthedocs.io/en/latest/
+  summary: A toolkit for navigating and analyzing gene expression datasets
+  license: GPL-3.0
