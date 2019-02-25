@@ -10,6 +10,9 @@
 
 -----
 
+### Development Notes:
+As this toolkit is still in beta production, it only currently is compatible with Python v3.5*
+
 ### Citation:    
 ```
 Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis made easy. https://github.com/XPRESSyourself.

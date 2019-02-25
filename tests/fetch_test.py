@@ -75,6 +75,19 @@ Not running currently due to connection time out in testing
 #assert meta.equals(metadata), 'get_info() failed at accessing metadata'
 
 """
+drop_sample
+"""
+df_test, meta_test = create_test()
+df_test = xp.drop_samples(df_test, ['fGSM523246'])
+df_truth = pd.DataFrame(columns=['fGSM523242','fGSM523243','fGSM523244','fGSM523245'], index=['1007_s_at','1053_at','121_at','1294_at','1405_i_at'])
+df_truth.loc['1007_s_at'] = pd.Series({'fGSM523242':66,'fGSM523243':59,'fGSM523244':1,'fGSM523245':82})
+df_truth.loc['1053_at'] = pd.Series({'fGSM523242':35,'fGSM523243':0,'fGSM523244':7,'fGSM523245':72})
+df_truth.loc['121_at'] = pd.Series({'fGSM523242':20,'fGSM523243':70,'fGSM523244':85,'fGSM523245':78})
+df_truth.loc['1294_at'] = pd.Series({'fGSM523242':96,'fGSM523243':7,'fGSM523244':93,'fGSM523245':38})
+df_truth.loc['1405_i_at'] = pd.Series({'fGSM523242':73,'fGSM523243':41,'fGSM523244':92,'fGSM523245':77})
+assert df_test.equals(df_truth), 'drop_sample() failed'
+
+"""
 drop_label
 """
 df_test, meta_test = create_test()

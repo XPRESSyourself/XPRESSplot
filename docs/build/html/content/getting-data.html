@@ -92,6 +92,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#import-data-from-file">Import data from file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#import-metadata-from-file">Import metadata from file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#import-data-from-geo-dataset">Import data from GEO dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#catenate-raw-counts-files">Catenate raw counts files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drop-samples">Drop samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drop-label">Drop label</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#keep-labels">Keep labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rename-dataframe-column-names">Rename dataframe column names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rename-dataframe-row-names">Rename dataframe row names</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +188,9 @@
 <div class="line"><strong>low_memory</strong>: Specify memory limits for importing large files, default: False (allows for large imports)</div>
 <div class="line"><strong>gene_axis</strong>: Orientiation of the data, where categorical data is either column-wise, (default: ‘col’) or row-wise (‘row’). Case insensitive</div>
 <div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with data matrix</div>
+<div class="line"><br /></div>
 <div class="line">Examples:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -216,6 +225,9 @@
 <div class="line"><strong>sample_ids</strong>: Column or row number where sample IDs are found (default: 0)</div>
 <div class="line"><strong>labels</strong>: Column or row number where categorical label data are found (default: 1)</div>
 <div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>metadata</strong>: Pandas dataframe with metadata</div>
+<div class="line"><br /></div>
 <div class="line">Examples:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -243,6 +255,10 @@
 <div class="line"><strong>geo_id</strong>: GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)</div>
 <div class="line"><strong>output_info</strong>: Output long-form metadata to txt file if True (default: False)</div>
 <div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with data matrix</div>
+<div class="line"><strong>metadata</strong>: Pandas dataframe with metadata</div>
+<div class="line"><br /></div>
 <div class="line">Examples:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
@@ -262,6 +278,268 @@
 <span class="mi">2</span>   <span class="n">GSM523244</span> <span class="n">mucosa_adenoma</span>
 <span class="mi">3</span>   <span class="n">GSM523245</span> <span class="n">colonic_crypt_epithelial_cells_normal_colon</span>
 <span class="o">...</span> <span class="o">...</span>       <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="catenate-raw-counts-files">
+<h2>Catenate raw counts files<a class="headerlink" href="#catenate-raw-counts-files" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.catenate_files ( directory, file_suffix=’txt’, save_file=None, delimiter=’t’, drop_rows=0 )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Compiles expression counts from multiple files into one table. For example, HTSeq-count outputs each alignment file’s counts as a separate count file. This module will collect all single count files and compile them into a single count table.</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- File length of each is the same and ordered the same (same genes in the same order)</div>
+<div class="line">- Files to parse are expected to be header-less and column[0] should be gene identifiers and column[1] should be expression values</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>directory</strong>: Path to directory containing raw counts files (only tested currently with HTSeq-count output files)</div>
+<div class="line"><strong>file_suffix</strong>: Common suffix of all count files (default: ‘txt’). This feature is useful for modification if there other files in the directory that are not count files, as if they do not contain the same suffix, they will not be used in the function.</div>
+<div class="line"><strong>save_file</strong>: Include if you want the resulting counts table saved for later use (default: None)</div>
+<div class="line"><strong>delimiter</strong>: Delimiter style for expression files, will also output files if saved in this same format</div>
+<div class="line"><strong>drop_rows</strong>: Number of rows to drop from the end of each count file. HTSeq-count provides 5 lines of summary statistics at the end of each file, so for HTSeq-count files, use drop_rows=5</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>count_table</strong>: Pandas dataframe with the catenated counts. Samples are along columns, genes are along rows</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">catenate_files</span><span class="p">(</span><span class="n">count_dir</span><span class="p">,</span> <span class="n">file_suffix</span><span class="o">=</span><span class="s1">&#39;counts.txt&#39;</span><span class="p">,</span> <span class="n">drop_rows</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">counts</span>
+        <span class="n">S1_counts</span><span class="o">.</span><span class="n">txt</span> <span class="n">S2_counts</span><span class="o">.</span><span class="n">txt</span> <span class="n">S3_counts</span><span class="o">.</span><span class="n">txt</span> <span class="n">S4_counts</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">Gene1</span>   <span class="mi">66</span>            <span class="mi">59</span>            <span class="mi">1</span>             <span class="mi">82</span>
+<span class="n">Gene2</span>   <span class="mi">35</span>            <span class="mi">0</span>             <span class="mi">7</span>             <span class="mi">72</span>
+<span class="n">Gene3</span>   <span class="mi">20</span>            <span class="mi">70</span>            <span class="mi">87</span>            <span class="mi">78</span>
+<span class="n">Gene4</span>   <span class="mi">96</span>            <span class="mi">7</span>             <span class="mi">93</span>            <span class="mi">38</span>
+<span class="o">...</span>     <span class="o">...</span>           <span class="o">...</span>           <span class="o">...</span>           <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drop-samples">
+<h2>Drop samples<a class="headerlink" href="#drop-samples" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.drop_samples ( data, ids )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Drop samples by sample IDs – pass in a list of names</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe axes have been properly formatted (samples are columns, genes are rows)</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Dataframe containing expression data</div>
+<div class="line"><strong>ids</strong>: List of sample IDs to remove from the dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with modified data matrix</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">drop_samples</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;GSM523244&#39;</span><span class="p">])</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drop-label">
+<h2>Drop label<a class="headerlink" href="#drop-label" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.drop_label ( data, info, label )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Drop samples by label group name</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe axes have been properly formatted (samples are columns, genes are rows)</div>
+<div class="line">- Only one string is given to drop per call instance of function</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Dataframe containing expression data</div>
+<div class="line"><strong>info</strong>: Dataframe containing sample information data</div>
+<div class="line"><strong>label</strong>: Name of sample type to drop (string)</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with modified data matrix</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">drop_label</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;mucosa_adenoma&#39;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="keep-labels">
+<h2>Keep labels<a class="headerlink" href="#keep-labels" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.keep_labels ( data, info, label_list=None )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Keep samples by list of label names</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe axes have been properly formatted (samples are columns, genes are rows)</div>
+<div class="line">- Labels provided are in list format</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Dataframe containing expression data</div>
+<div class="line"><strong>info</strong>: Dataframe containing sample information data</div>
+<div class="line"><strong>labels</strong>: List of sample types to keep</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with modified data matrix</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">keep_labels</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;mucosa_normal_colon&#39;</span><span class="p">,</span> <span class="s1">&#39;mucosa_adenoma&#39;</span><span class="p">])</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rename-dataframe-column-names">
+<h2>Rename dataframe column names<a class="headerlink" href="#rename-dataframe-column-names" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.rename_cols ( data, converters )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Rename column names using dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Dataframe to rename column names</div>
+<div class="line"><strong>converters</strong>: Dataframe where column 0 contains old names and column 1 contains new names</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with modified data matrix</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">conversion_table</span>
+    <span class="mi">0</span>         <span class="mi">1</span>
+<span class="mi">0</span>   <span class="n">GSM523242</span> <span class="n">normal</span>
+<span class="mi">1</span>   <span class="n">GSM523244</span> <span class="n">adenoma</span>
+<span class="mi">2</span>   <span class="n">GSM523245</span> <span class="n">normal</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">rename_cols</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conversion_table</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">normal</span>    <span class="n">GSM523243</span> <span class="n">adenoma</span>   <span class="n">normal</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rename-dataframe-row-names">
+<h2>Rename dataframe row names<a class="headerlink" href="#rename-dataframe-row-names" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.rename_rows ( data, converters, label=’index’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Rename values in an index (row names) or a column</div>
+<div class="line"><br /></div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Dataframe to rename rows of a column</div>
+<div class="line"><strong>converters</strong>: Dataframe where column 0 contains old names and column 1 contains new names</div>
+<div class="line"><strong>label</strong>: Name of column to convert names; if ‘index’ is provided, will rename the index of the dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with modified data matrix</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">conversion_table</span>
+    <span class="mi">0</span>         <span class="mi">1</span>
+<span class="mi">0</span>   <span class="mi">1007</span><span class="n">_s_at</span> <span class="n">Gene1</span>
+<span class="mi">1</span>   <span class="mi">121</span><span class="n">_at</span> <span class="n">Gene2</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">rename_rows</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conversion_table</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+              <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="n">Gene1</span>         <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="n">Gene2</span>         <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+     <span class="n">gene_names</span>    <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">0</span>    <span class="mi">1007</span><span class="n">_s_at</span>     <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1</span>    <span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">2</span>    <span class="mi">121</span><span class="n">_at</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">3</span>    <span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>  <span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">conversion_table</span>
+    <span class="mi">0</span>         <span class="mi">1</span>
+<span class="mi">0</span>   <span class="mi">1007</span><span class="n">_s_at</span> <span class="n">Gene1</span>
+<span class="mi">1</span>   <span class="mi">121</span><span class="n">_at</span> <span class="n">Gene2</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">rename_rows</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conversion_table</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;gene_names&#39;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+     <span class="n">gene_names</span>    <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">0</span>    <span class="n">Gene1</span>         <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1</span>    <span class="mi">1053</span><span class="n">_at</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">2</span>    <span class="n">Gene2</span>         <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">3</span>    <span class="mi">1294</span><span class="n">_at</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>  <span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
 </pre></div>
 </div>
 </div>
