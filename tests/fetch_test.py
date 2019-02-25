@@ -123,11 +123,11 @@ counts_truth.loc['121_at'] = pd.Series({'fGSM523242_counts.txt':20,'fGSM523243_c
 counts_truth.loc['1294_at'] = pd.Series({'fGSM523242_counts.txt':96,'fGSM523243_counts.txt':7,'fGSM523244_counts.txt':93,'fGSM523245_counts.txt':38})
 counts_truth.loc['1405_i_at'] = pd.Series({'fGSM523242_counts.txt':73,'fGSM523243_counts.txt':41,'fGSM523244_counts.txt':92,'fGSM523245_counts.txt':77})
 #Default
-counts = xp.catenate_files(count_dir, file_suffix='counts.txt', gene_dictionary=None, sample_dictionary=None, save_file=None, delimiter='\t', drop_rows=0)
+counts = xp.catenate_files(count_dir, file_suffix='counts.txt', save_file=None, delimiter='\t', drop_rows=0)
 assert counts.equals(counts_truth), 'catenate_files() failed'
 #drop_rows
 counts_truth_drop = counts_truth[:-2]
-counts = xp.catenate_files(count_dir, file_suffix='counts.txt', gene_dictionary=None, sample_dictionary=None, save_file=None, delimiter='\t', drop_rows=2)
+counts = xp.catenate_files(count_dir, file_suffix='counts.txt', save_file=None, delimiter='\t', drop_rows=2)
 assert counts.equals(counts_truth_drop), 'catenate_files() failed when dropping tailing rows'
 
 """

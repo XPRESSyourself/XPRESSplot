@@ -21,8 +21,8 @@ Table of contents
    content/general-usage
    content/getting-data
    content/formatting
-   content/quality-control
    content/normalize
+   content/quality-control
    content/collapse-probes
    content/reference-building
    content/heatmaps
