@@ -1,6 +1,9 @@
 ==================================================================================
 **XPRESStools**: *A toolkit for navigating and analyzing gene expression datasets*
 ==================================================================================
+
+|build-status| |docs|
+
 **XPRESStools** is a part of the **XPRESSyourself** suite of sequencing tools. **XPRESStools** is a python
 toolkit importing, cleaning, normalizing, and analyzing sequence data from Microarray or RNAseq platforms.
 
@@ -42,3 +45,12 @@ Questions?
 ==========
 If you have questions, requests, or bugs to report, please use the `Github issues forum
 <https://github.com/XPRESSyourself/XPRESStools/issues>`_.
+
+
+.. |build-status| image:: https://travis-ci.org/XPRESSyourself/XPRESStools.svg?branch=master
+    :target: https://travis-ci.org/XPRESSyourself/XPRESStools
+    :alt: Build Status
+
+.. |docs| image:: https://readthedocs.org/projects/xpresstools/badge/?version=latest
+    :target: https://xpresstools.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
