@@ -41,12 +41,12 @@ install:
   - git clone https://github.com/XPRESSyourself/XPRESStools.git
   - cd XPRESStools
   - python setup.py install
-  - cd ../
+  - cd ../tests/
 
 script:
 
-  - python tests/fetch_test.py
-  #- python tests/analyze_test.py
-  #- python tests/format_test.py
-  #- python tests/interactive_test.py
-  #- python tests/normalize_test.py
+  - python fetch_test.py
+  #- python analyze_test.py
+  #- python format_test.py
+  #- python interactive_test.py
+  #- python normalize_test.py
