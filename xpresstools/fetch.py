@@ -295,22 +295,6 @@ def catenate_files(directory, file_suffix='txt', gene_dictionary=None, sample_di
             length = len(reader)
             data[x] = reader
 
-    #Change row names
-    if gene_dictionary != None:
-        if isinstance(gene_dictionary, pd.DataFrame):
-            data = rename_rows(data, gene_dictionary, 'gene_names')
-            print('yes')
-        else:
-            data = data.rename(gene_dictionary, axis='index')
-            print('gene_dictionary')
-
-    #Change column names
-    if sample_dictionary != None:
-        if isinstance(sample_dictionary, pd.DataFrame):
-            data = rename_cols(data, sample_dictionary)
-        else:
-            data = data.rename(index=str, columns=sample_dictionary)
-
     #Remove gene_names label
     data = data.set_index('gene_names')
     del data.index.name

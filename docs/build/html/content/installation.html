@@ -86,7 +86,12 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-dependencies">Install dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conda-install">Conda install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#manual-install">Manual install</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="general-usage.html">General Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
 </ul>
@@ -155,6 +160,8 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="install-dependencies">
+<h2>Install dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li>You may need to manually point your system to python3. You can check this by typing <code class="xref py py-data docutils literal notranslate"><span class="pre">python</span></code> in the command line and seeing if it is running python3. At this time, RiboPipe only works when Python3 is set as the default. If it is not, do the following:</li>
 </ol>
@@ -163,12 +170,20 @@
 </div>
 <ol class="arabic simple" start="2">
 <li>Download <a class="reference external" href="https://www.anaconda.com/download/">Conda</a>, a package manager, for your operating system. Double click the <cite>.pkg</cite> file if on MacOS, the <cite>.exe</cite> file on Windows, or follow these <a class="reference external" href="https://conda.io/docs/user-guide/install/linux.html#install-linux-silent">instructions</a> on Linux.</li>
+</ol>
+</div>
+<div class="section" id="conda-install">
+<h2>Conda install<a class="headerlink" href="#conda-install" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
 <li>Install XPRESStools and associated dependencies via conda:</li>
 </ol>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ conda install -y -c bioconda xpresstools
 </pre></div>
 </div>
-<ol class="arabic simple" start="4">
+</div>
+<div class="section" id="manual-install">
+<h2>Manual install<a class="headerlink" href="#manual-install" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
 <li>Or download XPRESStools manually:</li>
 </ol>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/XPRESSyourself/xpresstools.git
@@ -176,7 +191,7 @@ $ <span class="nb">cd</span> XPRESStools
 $ <span class="nb">cd</span> python setup.py install
 </pre></div>
 </div>
-<ol class="arabic simple" start="4">
+<ol class="arabic simple" start="2">
 <li>Or, to download specific version:</li>
 </ol>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nv">tag</span><span class="o">=</span><span class="s1">&#39;v0.0.1-beta&#39;</span>
@@ -187,7 +202,7 @@ $ <span class="nb">cd</span> xpresstools
 $ <span class="nb">cd</span> python setup.py install
 </pre></div>
 </div>
-<ol class="arabic simple" start="9">
+<ol class="arabic simple" start="3">
 <li>At the end of the installation instructions, an installation location will be given. Add this to your $PATH:</li>
 </ol>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>...
@@ -199,6 +214,7 @@ Finished processing dependencies <span class="k">for</span> <span class="nv">XPR
 
 $ <span class="nb">echo</span> <span class="s2">&quot;export PATH=&#39;/Users/</span><span class="nv">$USERNAME</span><span class="s2">/anaconda3/bin:</span><span class="nv">$PATH</span><span class="s2">&#39; &gt;&gt; ~/.bash_profile</span>
 </pre></div>
+</div>
 </div>
 </div>
 

@@ -112,25 +112,10 @@ counts_truth.loc['1405_i_at'] = pd.Series({'fGSM523242_counts.txt':73,'fGSM52324
 #Default
 counts = xp.catenate_files(count_dir, file_suffix='counts.txt', gene_dictionary=None, sample_dictionary=None, save_file=None, delimiter='\t', drop_rows=0)
 assert counts.equals(counts_truth), 'catenate_files() failed'
-#Gene dictionary
-gene_dic = {'121_at':'Gene3'}
-counts_truth_gene = counts_truth.rename(gene_dic, axis='index')
-counts = xp.catenate_files(count_dir, file_suffix='counts.txt', gene_dictionary=gene_dic, sample_dictionary=None, save_file=None, delimiter='\t', drop_rows=0)
-assert counts.equals(counts_truth_gene), 'catenate_files() failed'
-#Sample_dictionary type dict
-sample_dic = {'fGSM523242_counts.txt':'fGSM523242','fGSM523243_counts.txt':'fGSM523243','fGSM523244_counts.txt':'fGSM523244','fGSM523245_counts.txt':'fGSM523245'}
-counts_truth_sample = counts_truth.rename(index=str, columns=sample_dic)
-counts = xp.catenate_files(count_dir, file_suffix='counts.txt', gene_dictionary=None, sample_dictionary=sample_dic, save_file=None, delimiter='\t', drop_rows=0)
-assert counts.equals(counts_truth_sample), 'catenate_files() failed'
-#Sample_dictionary type pandas
-sample_data = np.array([['fGSM523242_counts.txt','fGSM523242_counts'], ['fGSM523243_counts.txt','fGSM523243_counts'], ['fGSM523244_counts.txt','fGSM523244_counts'], ['fGSM523245_counts.txt','fGSM523245_counts']])
-sample_df = pd.DataFrame({0:sample_data[:,0],1:sample_data[:,1]})
-counts_testdf = xp.catenate_files(count_dir, file_suffix='counts.txt', gene_dictionary=None, sample_dictionary=sample_df, save_file=None, delimiter='\t', drop_rows=0)
-assert counts_testdf.equals(sample_df), 'catenate_files() failed'
 #drop_rows
 counts_truth_drop = counts_truth[:-2]
 counts = xp.catenate_files(count_dir, file_suffix='counts.txt', gene_dictionary=None, sample_dictionary=None, save_file=None, delimiter='\t', drop_rows=2)
-assert counts.equals(counts_truth_drop), 'catenate_files() failed'
+assert counts.equals(counts_truth_drop), 'catenate_files() failed when dropping tailing rows'
 
 """
 rename_cols
