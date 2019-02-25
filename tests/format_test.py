@@ -27,8 +27,11 @@ import pandas as pd
 import numpy as np
 import xpresstools as xp
 
-gtf = './transcripts.gtf'
-gtf_output = './'
+gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
+gtf_output = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/'
+
+#gtf = './transcripts.gtf'
+#gtf_output = './'
 
 """
 Test dataset
@@ -67,6 +70,10 @@ gtf_truncated_df = pd.read_csv(str(gtf[:-4]) + '_coding_truncated.gtf', sep='\t'
 if gtf_truncated_df[8].str.contains('sense_intronic').any() or gtf_truncated_df[8].str.contains('sense_intronic').any() or gtf_truncated_df[8].str.contains('transcribed_processed_pseudogene').any():
     raise Exception('truncate() failed to remove non-protein-coding entries')
 
+gtf_truncated_truth = pd.read_csv(str(gtf[:-4]) + '_coding_truncated_truth.gtf', sep='\t', header=None, comment='#', low_memory=False)
+assert gtf_truncated_df.equals(gtf_truncated_truth), 'convert_names_gtf() failed'
 
-
+gtf_coding_truth = pd.read_csv(str(gtf[:-4]) + '_coding_truth.gtf', sep='\t', header=None, comment='#', low_memory=False)
 coding = xp.truncate(gtf, truncate_amount=None, save_coding_path=None, save_truncated_path=None, sep='\t', return_files=True)
+coding = coding.reset_index(drop=True)
+assert coding.equals(gtf_coding_truth), 'convert_names_gtf() failed'
