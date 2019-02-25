@@ -11,3 +11,7 @@
       overflow: visible !important;
    }
 }
+
+body {
+  font-family: Arial;
+}

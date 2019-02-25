@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Retrieving Data &mdash; xpresstools 0.0.1-beta documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/xpressyourself.png"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="formatting.html" />
+    <link rel="prev" title="General Usage" href="general-usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> xpresstools
+          
+
+          
+            
+            <img src="../_static/xpressyourself.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="general-usage.html">General Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Retrieving Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#import-data-from-file">Import data from file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#import-metadata-from-file">Import metadata from file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#import-data-from-geo-dataset">Import data from GEO dataset</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">xpresstools</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Retrieving Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/content/getting-data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="retrieving-data">
+<h1>Retrieving Data<a class="headerlink" href="#retrieving-data" title="Permalink to this headline">¶</a></h1>
+<p>#explain drop rows in catenate and all variables for all</p>
+<div class="section" id="import-data-from-file">
+<h2>Import data from file<a class="headerlink" href="#import-data-from-file" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.get_df(file_name, delimiter=’,’, low_memory=False, gene_axis=’row’)</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Get sequence dataframe from user-provided file.</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line">1) Dataset does not contain axis labels (i.e. a column header for ‘gene names’)</div>
+<div class="line">2) Dataset only has gene names and sample_ids as column headers and row indices. Orientation is flexible, but needs to be specified in options if genes are not rows</div>
+<div class="line">3) If orientation is not default, it is then specified or else function will not be able to properly format the dataframe for downstream application</div>
+<div class="line"><br /></div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>file_name</strong>: Full path of file to import into pandas dataframe</div>
+<div class="line"><strong>delimiter</strong>: Delimiter type for importing file, default: ‘,’</div>
+<div class="line"><strong>low_memory</strong>: Specify memory limits for importing large files, default: False (allows for large imports)</div>
+<div class="line"><strong>gene_axis</strong>: Orientiation of the data, where categorical data is either column-wise, (default: ‘col’) or row-wise (‘row’). Case insensitive</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpresstools</span> <span class="kn">as</span> <span class="nn">xp</span>
+<span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="s1">&#39;/path/to/data.csv&#39;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">df</span>
+              <span class="n">GSM523242</span>       <span class="n">GSM523243</span>       <span class="n">GSM523244</span>       <span class="n">GSM523245</span>       <span class="n">GSM523246</span>       <span class="n">GSM523247</span>       <span class="n">GSM523248</span>       <span class="n">GSM523249</span>       <span class="n">GSM523250</span>
+<span class="mi">1007</span><span class="n">_s_at</span>         <span class="mf">8.98104</span>       <span class="mf">8.59941</span>         <span class="mf">8.25395</span>         <span class="mf">8.72981</span>         <span class="mf">8.70794</span>         <span class="mf">8.10693</span>         <span class="mf">8.96594</span>         <span class="mf">9.35994</span>         <span class="mf">8.40191</span>
+<span class="mi">1053</span><span class="n">_at</span>             <span class="mf">5.84313</span>     <span class="mf">6.59168</span>         <span class="mf">8.27881</span>         <span class="mf">6.64005</span>         <span class="mf">4.65107</span>         <span class="mf">7.19090</span>         <span class="mf">6.24983</span>         <span class="mf">6.98251</span>         <span class="mf">7.41631</span>
+<span class="mi">121</span><span class="n">_at</span>              <span class="mf">6.17189</span>     <span class="mf">5.73603</span>         <span class="mf">5.55673</span>         <span class="mf">5.69374</span>         <span class="mf">6.77618</span>         <span class="mf">5.84524</span>         <span class="mf">6.02640</span>         <span class="mf">6.49465</span>         <span class="mf">6.18855</span>
+<span class="mi">1294</span><span class="n">_at</span>             <span class="mf">6.97009</span>     <span class="mf">6.80003</span>         <span class="mf">5.56620</span>         <span class="mf">7.43816</span>         <span class="mf">7.36375</span>         <span class="mf">5.85687</span>         <span class="mf">6.26649</span>         <span class="mf">6.44538</span>         <span class="mf">6.52518</span>
+<span class="mi">1405</span><span class="n">_i_at</span>         <span class="mf">10.24611</span>    <span class="mf">10.13807</span>        <span class="mf">8.84743</span>   <span class="mf">9.72365</span>         <span class="mf">10.42940</span>      <span class="mf">9.17510</span>   <span class="mf">7.89429</span>         <span class="mf">7.81446</span>         <span class="mf">7.57219</span>
+<span class="mi">1438</span><span class="n">_at</span>             <span class="mf">2.18618</span>     <span class="mf">2.88067</span>         <span class="mf">7.08605</span>         <span class="mf">2.19053</span>         <span class="mf">2.09528</span>         <span class="mf">6.60998</span>         <span class="mf">2.37048</span>         <span class="mf">2.47629</span>         <span class="mf">2.18834</span>
+<span class="mi">1487</span><span class="n">_at</span>             <span class="mf">9.19325</span>     <span class="mf">9.59890</span>         <span class="mf">9.27702</span>         <span class="mf">8.79801</span>         <span class="mf">8.94495</span>         <span class="mf">9.05543</span>         <span class="mf">8.89486</span>         <span class="mf">9.29561</span>         <span class="mf">9.25947</span>
+<span class="mi">1552256</span><span class="n">_a_at</span>  <span class="mf">10.27871</span>        <span class="mf">9.94561</span>   <span class="mf">10.58918</span>      <span class="mf">9.51612</span>   <span class="mf">10.27936</span>      <span class="mf">10.69953</span>        <span class="mf">11.47816</span>        <span class="mf">11.33376</span>        <span class="mf">11.47500</span>
+<span class="mi">1552257</span><span class="n">_a_at</span>  <span class="mf">9.82578</span>  <span class="mf">9.67882</span>          <span class="mf">9.60929</span>         <span class="mf">9.95520</span>         <span class="mf">9.15464</span>         <span class="mf">9.40873</span>         <span class="mf">9.45647</span>         <span class="mf">9.72854</span>         <span class="mf">9.46014</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-metadata-from-file">
+<h2>Import metadata from file<a class="headerlink" href="#import-metadata-from-file" title="Permalink to this headline">¶</a></h2>
+<p><strong>xpresstools.get_info(file_name, delimiter=”,”, axis=”col”, sample_ids=0, labels=1)</strong></p>
+<p>Purpose:
+Get sample metadata from user-provided file</p>
+<p>Assumptions:
+1) Data categories are not labeled
+2) If orientation is not default, it is then specified or else function will not be able to properly format the dataframe for downstream application</p>
+<p>Parameters:
+<strong>file_name</strong>: full path of file to import into pandas dataframe
+<strong>delimiter</strong>: delimiter type for importing file, default: ‘,’
+<strong>axis</strong>: Orientiation of the data, where categorical data is either column-wise, (default: ‘col’) or row-wise (‘row’). Case insensitive
+<strong>sample_ids</strong>: Column or row number where sample IDs are found (default: 0)
+<strong>labels</strong>: Column or row number where categorical label data are found (default: 1)</p>
+<p>Examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpresstools</span> <span class="kn">as</span> <span class="nn">xp</span>
+<span class="o">&gt;</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s1">&#39;/path/to/metadata.csv&#39;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">metadata</span>
+  <span class="mi">0</span>           <span class="mi">1</span>
+<span class="mi">0</span>     <span class="n">GSM523242</span>       <span class="n">mucosa_normal_colon</span>
+<span class="mi">1</span>     <span class="n">GSM523243</span>       <span class="n">mucosa_normal_colon</span>
+<span class="mi">2</span>     <span class="n">GSM523244</span>       <span class="n">mucosa_adenoma</span>
+<span class="mi">3</span>     <span class="n">GSM523245</span>       <span class="n">colonic_crypt_epithelial_cells_normal_colon</span>
+<span class="mi">4</span>     <span class="n">GSM523246</span>       <span class="n">mucosa_normal_colon</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-data-from-geo-dataset">
+<h2>Import data from GEO dataset<a class="headerlink" href="#import-data-from-geo-dataset" title="Permalink to this headline">¶</a></h2>
+<p><strong>xpresstools.get_geo(geo_id, output_info=False)</strong></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="formatting.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="general-usage.html" class="btn btn-neutral float-left" title="General Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jordan A. Berg
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
