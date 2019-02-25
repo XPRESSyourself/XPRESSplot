@@ -23,6 +23,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 IMPORT DEPENDENCIES
 """
 import os, sys
+import re
 import pandas as pd
 import GEOparse
 from .normalize import clean_df
@@ -73,7 +74,6 @@ def get_geo(geo_id, output_info=False):
     #Get data
     gse = GEOparse.get_GEO(geo=str(geo_id).upper()) #Import GSE dataset
     data = gse.pivot_samples('VALUE')
-    del data.index.name
     data = clean_df(data)
 
     #Get metadata
@@ -102,6 +102,13 @@ def get_geo(geo_id, output_info=False):
 
     #Output processing style
     print('Data processing summary:\n' + str(set(data_processing_list))) #To determine if all samples have undergone the sample data processing
+
+    #Clean data
+    del data.columns.name
+    del data.index.name
+
+    #Clean metadata
+    metadata[1] = metadata[1].apply(lambda x: x[0:(re.search("\d", x).start()) - 1])
 
     return data, metadata
 
@@ -273,7 +280,8 @@ def catenate_files(directory, file_suffix='txt', gene_dictionary=None, sample_di
     with open(str(directory) + str(file_list[0])) as f:
         gene_names = pd.read_csv(f, header=None, usecols=[0], dtype=str, sep=delimiter)
         row_num = len(gene_names) - drop_rows
-        gene_names = gene_names[:-drop_rows]
+        if drop_rows > 0:
+            gene_names = gene_names[:-drop_rows]
 
     #populate dataframe with expression values
     data = pd.DataFrame(index=range(row_num))
@@ -289,19 +297,28 @@ def catenate_files(directory, file_suffix='txt', gene_dictionary=None, sample_di
 
     #Change row names
     if gene_dictionary != None:
-        data_set = rename_rows(data, gene_dictionary, 'gene_names')
+        if isinstance(gene_dictionary, pd.DataFrame):
+            data = rename_rows(data, gene_dictionary, 'gene_names')
+            print('yes')
+        else:
+            data = data.rename(gene_dictionary, axis='index')
+            print('gene_dictionary')
 
     #Change column names
     if sample_dictionary != None:
-        data_set = rename_cols(data, sample_dictionary)
+        if isinstance(sample_dictionary, pd.DataFrame):
+            data = rename_cols(data, sample_dictionary)
+        else:
+            data = data.rename(index=str, columns=sample_dictionary)
 
     #Remove gene_names label
-    data_set = data_set.rename({'gene_names': ''}, axis='columns')
+    data = data.set_index('gene_names')
+    del data.index.name
 
     if save_file != None:
-        data_set.to_csv(str(save_file),sep=delimiter)
+        data.to_csv(str(save_file),sep=delimiter)
 
-    return data_set
+    return data
 
 """
 DESCRIPTION: Rename column names using dictionary
@@ -314,7 +331,7 @@ def rename_cols(data, converters):
 
     data_c = data.copy()
     dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
-    data_set = data_c.rename(columns=dictionary, inplace=True)
+    data_set = data_c.rename(columns=dictionary, inplace=False)
     return data_set
 
 """
@@ -322,19 +339,22 @@ DESCRIPTION: Rename values in a column (selected by providing column name) with 
 
 VARIABLES:
 data= Dataframe to rename row values
-dictionary= Keys are old name and values are new names
+converters=  Dataframe where column 0 contains old names and column 1 contains new names
 label= Name of column to convert names; if 'index' is provided, will rename the index of the dataframe
 """
-def rename_rows(data, dictionary, label):
+def rename_rows(data, converters, label='index'):
 
     data_c = data.copy()
 
     if label == 'index':
         data_c['index'] = data_c.index
+        dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
         data_c[label] = data_c['index'].replace(dictionary)
         data_c = data_c.set_index('index')
+        del data_c.index.name
 
     else:
+        dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
         data_c[label] = data_c[label].replace(dictionary)
 
     return data_c

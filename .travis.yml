@@ -19,6 +19,9 @@ before_install:
   - export PATH=/home/travis/miniconda2/bin:$PATH
   - conda update --yes conda
 
+  - echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
+  - git lfs pull
+
 install:
 
   # Set up a conda environment with the right Python version
@@ -38,8 +41,15 @@ install:
 
   # You can also install some dependencies with pip if not available in conda
 
-  # - pip install ...
+  - git clone https://github.com/XPRESSyourself/XPRESStools.git
+  - cd XPRESStools
+  - python setup.py install
+  - cd ../
 
 script:
 
-  - test.py  # will run all tests in the package
+  - python tests/fetch_test.py
+  #- python tests/analyze_test.py
+  #- python tests/format_test.py
+  #- python tests/interactive_test.py
+  #- python tests/normalize_test.py

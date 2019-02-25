@@ -15,7 +15,7 @@ Table of contents
    :maxdepth: 1
 
    content/installation
-   contect/general-usage
+   content/general-usage
    content/getting-data
    content/formatting
    content/quality-control
