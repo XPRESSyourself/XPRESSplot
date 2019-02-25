@@ -3,7 +3,7 @@
 
 ### A toolkit for navigating and analyzing gene expression datasets
 
-[![Build Status](https://travis-ci.org/dwyl/learn-travis.svg?branch=master)](https://travis-ci.org/XPRESSyourself/XPRESStools)
+[![Build Status](https://travis-ci.org/XPRESSyourself/XPRESStools.svg?branch=master)](https://travis-ci.org/XPRESSyourself/XPRESStools)
 [![Documentation Status](https://readthedocs.org/projects/xpresstools/badge/?version=latest)](https://xpresstools.readthedocs.io/en/latest/?badge=latest)
 
 ##### Find documentation [here](https://xpressyourself.github.io/XPRESStools/)
