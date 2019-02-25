@@ -49,7 +49,8 @@ install:
 script:
 
   - python fetch_test.py
+  - python format_test.py
   #- python analyze_test.py
-  #- python format_test.py
+
   #- python interactive_test.py
   #- python normalize_test.py

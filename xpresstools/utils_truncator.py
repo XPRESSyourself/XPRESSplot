@@ -26,6 +26,7 @@ import pandas as pd
 pd.options.mode.chained_assignment = None
 import numpy as np
 from multiprocessing import cpu_count, Pool
+from functools import partial
 
 """
 DESCRIPTION: GTF truncation function

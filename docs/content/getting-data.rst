@@ -1,8 +1,6 @@
 ###############
 Retrieving Data
 ###############
-#explain drop rows in catenate and all variables for all
-
 
 =====================
 Import data from file
@@ -155,6 +153,26 @@ Catenate raw counts files
   Gene4   96            7             93            38
   ...     ...           ...           ...           ...
 
+======================================
+Create count table from file list
+======================================
+| **xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep='\t' )**
+|
+| Purpose:
+| Collate HTseq counts files (similar to catenate_files(), but input is a file list)
+|
+| Assumptions:
+|   - No headers are included in the count files
+|
+| Parameters:
+| **file_list**: List of files with the path names appended to each file to be collated into a single count table
+| **gene_column**: Column location in all count files of gene names
+| **gene_column**: Column location in all count files of samples
+| **sep**: Separator of counts files
+|
+| Returns:
+| **count_table**: Pandas dataframe with the catenated counts. Samples are along columns, genes are along rows
+|
 ============================
 Drop samples
 ============================
@@ -316,6 +334,52 @@ Rename dataframe column names
   121_at        6.17189   5.73603   5.55673   5.69374   ...
   1294_at       6.97009   6.80003   5.56620   7.43816   ...
   ...           ...       ...       ...       ...       ...
+
+  =======================
+  Rename genes with GTF
+  =======================
+  | **xpresstools.convert_names_gtf ( data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=1, refill=None, sep='\t' )**
+  |
+  | Purpose:
+  | Convert row names (genes) of dataframe using GTF as reference for new name
+  |
+  | Important Notes:
+  |   - A cursory look at the GTF may be required to determine where in the final field the conversion data lies. Position is relative to delimiter in the final field (usally a ";"), so if the new name is in the third position, new_name_location=2, etc.
+  |   - This function is pulling original and new gene name information from any row where the third field is "gene". You can run :data:`--helpcat transcripts.gtf | awk '$3 == "gene"' | less -S` from the command line of your reference file to identify the positions of the required text fields
+  |
+  | Parameters:
+  | **data**: Dataframe to convert rows names
+  | **gtf**: Path and name of gtf reference file
+  | **orig_name_label**: Label of original name (usually a \"gene_id \"')
+  | **orig_name_location**: Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)
+  | **new_name_label**: Label of original name (usually \"gene_name \")
+  | **new_name_location**: Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)
+  | **refill**: In some cases, where common gene names are unavailable, the dataframe will fill the gene name with the improper field of the GTF. In this case, specify this improper string and these values will be replaced with the original name
+  | **sep**: GTF delimiter (usually tab-delimited)
+  |
+  | Returns:
+  | **data**: Pandas dataframe with modified data matrix
+  |
+  | Examples:
+
+  .. ident with TABs
+  .. code-block:: python
+
+    > data
+         gene_names     GSM523242 GSM523243 GSM523244 GSM523245 ...
+    0    YXZ1034C       8.98104   8.59941   8.25395   8.72981   ...
+    1    YXA7834D       5.84313   6.59168   8.27881   6.64005   ...
+    2    YXZ349C        6.17189   5.73603   5.55673   5.69374   ...
+    3    YXZ1994A       6.97009   6.80003   5.56620   7.43816   ...
+    ...  ...            ...       ...       ...       ...       ...
+    > data = xp.convert_names_gtf(data, '/path/to/transcripts.gtf', new_name_label='gene_name \"', new_name_location=2)
+    > data
+         gene_names    GSM523242 GSM523243 GSM523244 GSM523245 ...
+    0    Gene1         8.98104   8.59941   8.25395   8.72981   ...
+    1    Gene2         5.84313   6.59168   8.27881   6.64005   ...
+    2    Gene3         6.17189   5.73603   5.55673   5.69374   ...
+    3    Gene4         6.97009   6.80003   5.56620   7.43816   ...
+    ...  ...           ...       ...       ...       ...       ...
 
 ======================================
 Rename dataframe row names

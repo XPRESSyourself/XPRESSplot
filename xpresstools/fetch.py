@@ -27,7 +27,7 @@ import re
 import pandas as pd
 import GEOparse
 from .normalize import clean_df
-
+from .utils import check_directories
 
 """
 DESCRIPTION: Get dataframe from user file
@@ -250,6 +250,46 @@ def keep_labels(data, info, label_list=None):
     return data_dropped
 
 """
+DESCRIPTION: Rename column names using dictionary
+
+VARIABLES:
+data= Dataframe to rename column names
+converters= Dataframe where column 0 contains old names and column 1 contains new names
+"""
+def rename_cols(data, converters):
+
+    data_c = data.copy()
+    dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
+    data_set = data_c.rename(columns=dictionary, inplace=False)
+    return data_set
+
+"""
+DESCRIPTION: Rename values in a column (selected by providing column name) with a dictionary of keys and sort_values
+
+VARIABLES:
+data= Dataframe to rename row values
+converters=  Dataframe where column 0 contains old names and column 1 contains new names
+label= Name of column to convert names; if 'index' is provided, will rename the index of the dataframe
+"""
+def rename_rows(data, converters, label='index'):
+
+    data_c = data.copy()
+
+    if label == 'index':
+        data_c['index'] = data_c.index
+        dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
+        data_c[label] = data_c['index'].replace(dictionary)
+        data_c = data_c.set_index('index')
+        del data_c.index.name
+
+    else:
+        dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
+        data_c[label] = data_c[label].replace(dictionary)
+
+    return data_c
+
+
+"""
 DESCRIPTION: Compiles expression counts from multiple files into one table
 
 VARIABLES:
@@ -305,40 +345,42 @@ def catenate_files(directory, file_suffix='txt', save_file=None, delimiter='\t',
     return data
 
 """
-DESCRIPTION: Rename column names using dictionary
+DESCRIPTION: Collate HTseq counts files
 
 VARIABLES:
-data= Dataframe to rename column names
-converters= Dataframe where column 0 contains old names and column 1 contains new names
+file_list= List of files with the path names appended to each file to be collated into a single count table
+gene_column= Column location in all count files of gene names
+gene_column= Column location in all count files of samples
+sep= Separator of counts files
+
+ASSUMPTIONS:
+No headers are included in the count files
 """
-def rename_cols(data, converters):
+def count_table(file_list, gene_column=0, sample_column=1, sep='\t'):
 
-    data_c = data.copy()
-    dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
-    data_set = data_c.rename(columns=dictionary, inplace=False)
-    return data_set
+    #Read in first count file to get gene names
+    df = pd.read_csv(str(file_list[gene_column]), sep=sep, comment='#', header=None)
+    pos_starter = [gene_column,sample_column]
+    colname = df.columns[pos_starter]
+    df = df[colname]
 
-"""
-DESCRIPTION: Rename values in a column (selected by providing column name) with a dictionary of keys and sort_values
+    #For the rest of the files in the file list, add the counts for that sample only
+    for f in file_list[1:]:
+        df_pull = pd.read_csv(str(f), sep=sep, comment='#', header=None)
+        df = pd.concat([df, df_pull[df_pull.columns[sample_column]]], axis=1)
+        del df_pull
 
-VARIABLES:
-data= Dataframe to rename row values
-converters=  Dataframe where column 0 contains old names and column 1 contains new names
-label= Name of column to convert names; if 'index' is provided, will rename the index of the dataframe
-"""
-def rename_rows(data, converters, label='index'):
+    #Final formatting clean up of table
+    df_counts = df.copy()
+    del df
+    df_counts = df_counts.set_index(0)
+    del df_counts.index.name
 
-    data_c = data.copy()
+    #Remove path and file suffix from each file's name before adding as column names to table
+    c = 0
+    for x in file_list:
+        file_list[c] = x[(x.rfind('/')+1):(x.find('.'))]
+        c += 1
+    df_counts.columns = file_list
 
-    if label == 'index':
-        data_c['index'] = data_c.index
-        dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
-        data_c[label] = data_c['index'].replace(dictionary)
-        data_c = data_c.set_index('index')
-        del data_c.index.name
-
-    else:
-        dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
-        data_c[label] = data_c[label].replace(dictionary)
-
-    return data_c
+    return df_counts
