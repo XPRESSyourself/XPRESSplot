@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>&lt;no title&gt; &mdash; xpresstools 0.0.1-beta documentation</title>
+  <title>Data Normalization &mdash; xpresstools 0.0.1-beta documentation</title>
   
 
   
@@ -26,6 +26,7 @@
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -37,8 +38,8 @@
   <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="collapse-probes.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="quality-control.html" /> 
+    <link rel="next" title="&lt;no title&gt;" href="quality-control.html" />
+    <link rel="prev" title="Reference File Modification" href="formatting.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,10 +86,17 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-usage.html">General Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formatting.html">Reference File Modification</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Normalization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rpm-reads-per-million">RPM (Reads per Million)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#r-fpkm-reads-fragments-per-kilobase-million">R/FPKM (Reads/Fragments per Kilobase Million)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#te-translation-efficiency">TE (Translation Efficiency)</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -134,7 +142,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>&lt;no title&gt;</li>
+      <li>Data Normalization</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -153,7 +161,152 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  
+  <div class="section" id="data-normalization">
+<h1>Data Normalization<a class="headerlink" href="#data-normalization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="rpm-reads-per-million">
+<h2>RPM (Reads per Million)<a class="headerlink" href="#rpm-reads-per-million" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.rpm ( data )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Perform reads per million sample normalization on RNAseq data</div>
+<div class="line"><br /></div>
+<div class="line">Formula:</div>
+<div class="line"><span class="math notranslate nohighlight">\(RPM = \frac{\#\ number\ reads\ per\ gene\ x\ 1e6}{\#\ mapped\ reads\ per\ sample}\)</span></div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe contains raw count data, where samples are along columns and genes across rows</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Input dataframe with counts values</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data_rpm</strong>: Pandas dataframe with RPM-normalized</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+      <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="n">Gene1</span> <span class="mi">66</span>          <span class="mi">59</span>          <span class="mi">1</span>           <span class="mi">82</span>          <span class="mi">45</span>
+<span class="n">Gene2</span> <span class="mi">35</span>          <span class="mi">0</span>           <span class="mi">7</span>           <span class="mi">72</span>          <span class="mi">2</span>
+<span class="n">Gene3</span> <span class="mi">20</span>          <span class="mi">70</span>          <span class="mi">85</span>          <span class="mi">78</span>          <span class="mi">36</span>
+<span class="n">Gene4</span> <span class="mi">96</span>          <span class="mi">7</span>           <span class="mi">93</span>          <span class="mi">38</span>          <span class="mi">85</span>
+<span class="n">Gene5</span> <span class="mi">73</span>          <span class="mi">41</span>          <span class="mi">92</span>          <span class="mi">77</span>          <span class="mi">26</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">rpm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+      <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="n">Gene1</span> <span class="mf">227586.2069</span> <span class="mf">333333.3333</span> <span class="mf">3597.1223</span>   <span class="mf">236311.2392</span> <span class="mf">231958.7629</span>
+<span class="n">Gene2</span> <span class="mf">120689.6552</span> <span class="mf">0.0000</span>      <span class="mf">25179.8561</span>  <span class="mf">207492.7954</span> <span class="mf">10309.2784</span>
+<span class="n">Gene3</span> <span class="mf">68965.5172</span>  <span class="mf">395480.2260</span> <span class="mf">305755.3957</span> <span class="mf">224783.8617</span> <span class="mf">185567.0103</span>
+<span class="n">Gene4</span> <span class="mf">331034.4828</span> <span class="mf">39548.0226</span>  <span class="mf">334532.3741</span> <span class="mf">109510.0865</span> <span class="mf">438144.3299</span>
+<span class="n">Gene5</span> <span class="mf">251724.1379</span> <span class="mf">231638.4181</span> <span class="mf">330935.2518</span> <span class="mf">221902.0173</span> <span class="mf">134020.6186</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="r-fpkm-reads-fragments-per-kilobase-million">
+<h2>R/FPKM (Reads/Fragments per Kilobase Million)<a class="headerlink" href="#r-fpkm-reads-fragments-per-kilobase-million" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.r_fpkm ( data, gtf, gene_name_prefix=’gene_id “’, gene_name_location=0, sep=’t’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Perform reads/fragments per kilobase million sample normalization on RNAseq data</div>
+<div class="line"><br /></div>
+<div class="line">Formulae:</div>
+<div class="line"><span class="math notranslate nohighlight">\(RPKM = \frac{\#\ number\ reads\ per\ gene\ x\ 1e6\ x\ 1e3}{\#\ mapped\ reads\ per\ sample\ x\ gene\ length\ (bp)}\)</span></div>
+<div class="line"><br /></div>
+<div class="line"><span class="math notranslate nohighlight">\(FPKM = \frac{\#\ number\ fragments\ per\ gene\ x\ 1e6\ x\ 1e3}{\#\ mapped\ fragments\ per\ sample\ x\ gene\ length\ (bp)}\)</span></div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe contains raw count data, where samples are along columns and genes across rows</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Input dataframe with counts values</div>
+<div class="line"><strong>gtf</strong>: GTF reference file path and name</div>
+<div class="line"><strong>gene_name_prefix</strong>: Label of original name (usually “gene_name “), must match the gene naming type in the input dataframe</div>
+<div class="line"><strong>gene_name_location</strong>: Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)</div>
+<div class="line"><strong>sep</strong>: GTF delimiter (usually tab-delimited)</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data_rpkm</strong>: Pandas dataframe with R/FPKM-normalized</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+      <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="n">Gene1</span> <span class="mi">66</span>          <span class="mi">59</span>          <span class="mi">1</span>           <span class="mi">82</span>          <span class="mi">45</span>
+<span class="n">Gene2</span> <span class="mi">35</span>          <span class="mi">0</span>           <span class="mi">7</span>           <span class="mi">72</span>          <span class="mi">2</span>
+<span class="n">Gene3</span> <span class="mi">20</span>          <span class="mi">70</span>          <span class="mi">85</span>          <span class="mi">78</span>          <span class="mi">36</span>
+<span class="n">Gene4</span> <span class="mi">96</span>          <span class="mi">7</span>           <span class="mi">93</span>          <span class="mi">38</span>          <span class="mi">85</span>
+<span class="n">Gene5</span> <span class="mi">73</span>          <span class="mi">41</span>          <span class="mi">92</span>          <span class="mi">77</span>          <span class="mi">26</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">r_fpkm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;/path/to/transcripts.gtf&#39;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+      <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="n">Gene1</span> <span class="mf">15006.3436</span>  <span class="mf">21978.9881</span>  <span class="mf">237.1833</span>    <span class="mf">15581.6457</span>  <span class="mf">15294.6567</span>
+<span class="n">Gene2</span> <span class="mf">18516.3632</span>  <span class="mf">0.0000</span>      <span class="mf">3863.1261</span>   <span class="mf">31833.8133</span>  <span class="mf">1581.6628</span>
+<span class="n">Gene3</span> <span class="mf">1552.2985</span>   <span class="mf">8901.5987</span>   <span class="mf">6882.0428</span>   <span class="mf">5059.5089</span>   <span class="mf">4176.8031</span>
+<span class="n">Gene4</span> <span class="mf">10220.8992</span>  <span class="mf">1221.0702</span>   <span class="mf">10328.8988</span>  <span class="mf">3381.1932</span>   <span class="mf">13527.9835</span>
+<span class="n">Gene5</span> <span class="mf">12188.2602</span>  <span class="mf">11215.7274</span>  <span class="mf">16023.5923</span>  <span class="mf">10744.2995</span>  <span class="mf">6489.1599</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="te-translation-efficiency">
+<h2>TE (Translation Efficiency)<a class="headerlink" href="#te-translation-efficiency" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.te ( data, samples=None, log2=True )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Transform paired ribosome footprint and RNA samples to translation efficiency measures</div>
+<div class="line"><br /></div>
+<div class="line">Formulae:</div>
+<div class="line"><span class="math notranslate nohighlight">\(log_2TE = log_2(\frac{RPF\ reads\ per\ gene}{total\ RNA\ reads\ per\ gene})\)</span></div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe contains normalized count data, where samples are along columns and genes across rows</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Input dataframe with counts values</div>
+<div class="line"><strong>samples</strong>: GTF reference file path and name</div>
+<div class="line"><strong>log2</strong>: Label of original name (usually “gene_name “), must match the gene naming type in the input dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data_te</strong>: Pandas dataframe TE transformed</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_rpf</span>        <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+<span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="mf">82.49</span>
+<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
+<span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
+<span class="n">ENSG00000241860</span> <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
+<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="mf">41.28</span>   <span class="mf">92.27</span>   <span class="mf">77.93</span>
+<span class="o">&gt;</span> <span class="n">te_data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">te</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sample1&#39;</span><span class="p">,</span><span class="s1">&#39;sample2&#39;</span><span class="p">])</span>
+<span class="o">&gt;</span> <span class="n">te_data</span>
+                <span class="n">sample1</span> <span class="n">sample2</span>
+<span class="n">ENSG00000227232</span> <span class="mf">0.1657</span>  <span class="o">-</span><span class="mf">5.3679</span>
+<span class="n">ENSG00000240361</span> <span class="mf">8.4850</span>  <span class="o">-</span><span class="mf">3.2876</span>
+<span class="n">ENSG00000238009</span> <span class="o">-</span><span class="mf">1.8051</span> <span class="mf">0.1095</span>
+<span class="n">ENSG00000241860</span> <span class="mf">3.6658</span>  <span class="mf">1.2819</span>
+<span class="n">ENSG00000187634</span> <span class="mf">0.8388</span>  <span class="mf">0.2434</span>
+<span class="o">&gt;</span> <span class="n">te_data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">te</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">te_data</span>
+                <span class="n">s1_rpf_te</span> <span class="n">s2_rpf_te</span>
+<span class="n">ENSG00000227232</span> <span class="mf">0.1657</span>    <span class="o">-</span><span class="mf">5.3679</span>
+<span class="n">ENSG00000240361</span> <span class="mf">8.4850</span>    <span class="o">-</span><span class="mf">3.2876</span>
+<span class="n">ENSG00000238009</span> <span class="o">-</span><span class="mf">1.8051</span>   <span class="mf">0.1095</span>
+<span class="n">ENSG00000241860</span> <span class="mf">3.6658</span>    <span class="mf">1.2819</span>
+<span class="n">ENSG00000187634</span> <span class="mf">0.8388</span>    <span class="mf">0.2434</span>
+</pre></div>
+</div>
+</div>
+</div>
+
 
            </div>
            
@@ -162,10 +315,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="collapse-probes.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="quality-control.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="quality-control.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="formatting.html" class="btn btn-neutral float-left" title="Reference File Modification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

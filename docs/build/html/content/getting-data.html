@@ -26,6 +26,7 @@
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -37,7 +38,7 @@
   <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="formatting.html" />
+    <link rel="next" title="Reference File Modification" href="formatting.html" />
     <link rel="prev" title="General Usage" href="general-usage.html" /> 
 </head>
 
@@ -93,13 +94,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#import-metadata-from-file">Import metadata from file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#import-data-from-geo-dataset">Import data from GEO dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#catenate-raw-counts-files">Catenate raw counts files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-count-table-from-file-list">Create count table from file list</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#drop-samples">Drop samples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#drop-label">Drop label</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#keep-labels">Keep labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rename-dataframe-column-names">Rename dataframe column names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rename-genes-with-gtf">Rename genes with GTF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rename-dataframe-row-names">Rename dataframe row names</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="formatting.html">Reference File Modification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="normalize.html">Data Normalization</a></li>
 </ul>
 
             
@@ -166,7 +171,6 @@
             
   <div class="section" id="retrieving-data">
 <h1>Retrieving Data<a class="headerlink" href="#retrieving-data" title="Permalink to this headline">¶</a></h1>
-<p>#explain drop rows in catenate and all variables for all</p>
 <div class="section" id="import-data-from-file">
 <h2>Import data from file<a class="headerlink" href="#import-data-from-file" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
@@ -316,6 +320,30 @@
 <span class="n">Gene4</span>   <span class="mi">96</span>            <span class="mi">7</span>             <span class="mi">93</span>            <span class="mi">38</span>
 <span class="o">...</span>     <span class="o">...</span>           <span class="o">...</span>           <span class="o">...</span>           <span class="o">...</span>
 </pre></div>
+</div>
+</div>
+<div class="section" id="create-count-table-from-file-list">
+<h2>Create count table from file list<a class="headerlink" href="#create-count-table-from-file-list" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep=’t’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Collate HTseq counts files (similar to catenate_files(), but input is a file list)</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- No headers are included in the count files</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>file_list</strong>: List of files with the path names appended to each file to be collated into a single count table</div>
+<div class="line"><strong>gene_column</strong>: Column location in all count files of gene names</div>
+<div class="line"><strong>gene_column</strong>: Column location in all count files of samples</div>
+<div class="line"><strong>sep</strong>: Separator of counts files</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>count_table</strong>: Pandas dataframe with the catenated counts. Samples are along columns, genes are along rows</div>
+<div class="line"><br /></div>
 </div>
 </div>
 <div class="section" id="drop-samples">
@@ -482,6 +510,53 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="rename-genes-with-gtf">
+<h2>Rename genes with GTF<a class="headerlink" href="#rename-genes-with-gtf" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.convert_names_gtf ( data, gtf, orig_name_label=’gene_id “’, orig_name_location=0, new_name_label=’gene_name “’, new_name_location=1, refill=None, sep=’t’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Convert row names (genes) of dataframe using GTF as reference for new name</div>
+<div class="line"><br /></div>
+<div class="line">Important Notes:</div>
+<div class="line-block">
+<div class="line">- A cursory look at the GTF may be required to determine where in the final field the conversion data lies. Position is relative to delimiter in the final field (usally a “;”), so if the new name is in the third position, new_name_location=2, etc.</div>
+<div class="line">- This function is pulling original and new gene name information from any row where the third field is “gene”. You can run <code class="xref py py-data docutils literal notranslate"><span class="pre">--helpcat</span> <span class="pre">transcripts.gtf</span> <span class="pre">|</span> <span class="pre">awk</span> <span class="pre">'$3</span> <span class="pre">==</span> <span class="pre">&quot;gene&quot;'</span> <span class="pre">|</span> <span class="pre">less</span> <span class="pre">-S</span></code> from the command line of your reference file to identify the positions of the required text fields</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Dataframe to convert rows names</div>
+<div class="line"><strong>gtf</strong>: Path and name of gtf reference file</div>
+<div class="line"><strong>orig_name_label</strong>: Label of original name (usually a “gene_id “’)</div>
+<div class="line"><strong>orig_name_location</strong>: Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)</div>
+<div class="line"><strong>new_name_label</strong>: Label of original name (usually “gene_name “)</div>
+<div class="line"><strong>new_name_location</strong>: Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)</div>
+<div class="line"><strong>refill</strong>: In some cases, where common gene names are unavailable, the dataframe will fill the gene name with the improper field of the GTF. In this case, specify this improper string and these values will be replaced with the original name</div>
+<div class="line"><strong>sep</strong>: GTF delimiter (usually tab-delimited)</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data</strong>: Pandas dataframe with modified data matrix</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+     <span class="n">gene_names</span>     <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">0</span>    <span class="n">YXZ1034C</span>       <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1</span>    <span class="n">YXA7834D</span>       <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">2</span>    <span class="n">YXZ349C</span>        <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">3</span>    <span class="n">YXZ1994A</span>       <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>  <span class="o">...</span>            <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">convert_names_gtf</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;/path/to/transcripts.gtf&#39;</span><span class="p">,</span> <span class="n">new_name_label</span><span class="o">=</span><span class="s1">&#39;gene_name </span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">new_name_location</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+     <span class="n">gene_names</span>    <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
+<span class="mi">0</span>    <span class="n">Gene1</span>         <span class="mf">8.98104</span>   <span class="mf">8.59941</span>   <span class="mf">8.25395</span>   <span class="mf">8.72981</span>   <span class="o">...</span>
+<span class="mi">1</span>    <span class="n">Gene2</span>         <span class="mf">5.84313</span>   <span class="mf">6.59168</span>   <span class="mf">8.27881</span>   <span class="mf">6.64005</span>   <span class="o">...</span>
+<span class="mi">2</span>    <span class="n">Gene3</span>         <span class="mf">6.17189</span>   <span class="mf">5.73603</span>   <span class="mf">5.55673</span>   <span class="mf">5.69374</span>   <span class="o">...</span>
+<span class="mi">3</span>    <span class="n">Gene4</span>         <span class="mf">6.97009</span>   <span class="mf">6.80003</span>   <span class="mf">5.56620</span>   <span class="mf">7.43816</span>   <span class="o">...</span>
+<span class="o">...</span>  <span class="o">...</span>           <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>       <span class="o">...</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="rename-dataframe-row-names">
 <h2>Rename dataframe row names<a class="headerlink" href="#rename-dataframe-row-names" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
@@ -553,7 +628,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="formatting.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="formatting.html" class="btn btn-neutral float-right" title="Reference File Modification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="general-usage.html" class="btn btn-neutral float-left" title="General Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

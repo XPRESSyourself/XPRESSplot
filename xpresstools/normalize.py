@@ -53,15 +53,16 @@ def r_fpkm(data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='
     #process gtf data for gene_name and gene_length
     gtf = pd.read_csv(str(gtf),sep=sep,comment='#', low_memory=False, header=None)
     gtf_genes = gtf.loc[gtf[2] == 'gene']
-    gtf_genes[gene_name_prefix] = gtf[8].str.split(';').str[gene_name_location]
+    gtf_genes['gene_name'] = gtf[8].str.split(';').str[gene_name_location]
     gtf_genes['length'] = abs((gtf[4]) - (gtf[3]))
-    gtf_genes[gene_name_prefix] = gtf_genes[gene_name_prefix].map(lambda x: x.lstrip(gene_name_prefix).rstrip('\"').rstrip(' '))
+    gtf_genes['gene_name'] = gtf_genes['gene_name'].map(lambda x: x.lstrip(gene_name_prefix).rstrip('\"').rstrip(' '))
 
     #Create dictionary
-    length_df = gtf_genes[[gene_name_prefix,'length']].copy()
-    dict_df.columns = ['gene', 'length']
-    length_df = length_df.set_index('gene')
+    length_df = gtf_genes[['gene_name','length']].copy()
+    length_df = length_df.set_index('gene_name')
     del length_df.index.name
+    length_df = length_df[length_df.index.isin(data.index.values.tolist())]
+    length_df.length = length_df.length / 1e3
 
     #Perform per-million calculations
     data_c = data.copy()
@@ -72,6 +73,44 @@ def r_fpkm(data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='
     data_rpkm = data_rpkm.dropna(axis=0)
 
     return data_rpkm
+
+"""
+DESCRIPTION: Perform log2(TE) normalization on ribosome profiling values
+ASSUMPTIONS: Table is such that the paired RPF and RNA files are next to each other, in that order
+                Values have been properly normalized already (ie. RPM, RPKM)
+"""
+def te(data, samples=None, log2=True):
+
+    data_c = data.copy()
+    data_c += .1
+
+    #Perform translation efficiency calculations
+    y = 0
+    z = 1
+    if samples == None:
+        samples = []
+        for x in range(int(len(data_c.columns)/2)):
+            name = str(data_c.columns[y]) + '_te'
+            samples.append(name)
+            data_c[name] = data_c[data_c.columns[y]]/data_c[data_c.columns[z]]
+            #Move counters for next set of samples
+            y = y + 2
+            z = z + 2
+    else:
+        for x in samples:
+            data_c[x] = data_c[data_c.columns[y]]/data_c[data_c.columns[z]]
+            #Move counters for next set of samples
+            y = y + 2
+            z = z + 2
+
+    #Get TE_normalized columns
+    df_te = data_c[samples]
+
+    #Perform log2 scaling of data
+    if log2 == True:
+        df_logte = np.log2(df_te)
+
+    return df_logte
 
 """
 DESCRIPTION: Log-scale a sample-normalized dataframe
