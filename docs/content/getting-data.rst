@@ -345,7 +345,7 @@ Rename genes with GTF
 |
 | Important Notes:
 |   - A cursory look at the GTF may be required to determine where in the final field the conversion data lies. Position is relative to delimiter in the final field (usally a ";"), so if the new name is in the third position, new_name_location=2, etc.
-|   - This function is pulling original and new gene name information from any row where the third field is "gene". You can run :data:`--helpcat transcripts.gtf | awk '$3 == "gene"' | less -S` from the command line of your reference file to identify the positions of the required text fields
+|   - This function is pulling original and new gene name information from any row where the third field is "gene". You can run :data:`cat transcripts.gtf | awk '$3 == "gene"' | less -S` from the command line of your reference file to identify the positions of the required text fields
 |
 | Parameters:
 | **data**: Dataframe to convert rows names

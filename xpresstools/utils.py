@@ -22,7 +22,12 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 IMPORT DEPENDENCIES
 """
+import pandas as pd
+import numpy as np
+from functools import partial
 from multiprocessing import cpu_count, Pool
+from .utils_analyze import calculate_fc, calculate_p
+from .utils_truncator import truncate
 
 """
 DESCRIPTION: Check directory formatting
@@ -53,8 +58,6 @@ def parallelize(func, *args):
         func = partial(calculate_fc, label_comp=args[1], label_base=args[2])
     elif func == calculate_p:
         func = partial(calculate_p, label_comp=args[1], label_base=args[2], drop_index=args[3])
-    elif func == threshold_util:
-        func = partial(threshold_util, minimum=args[1], maximum=args[2])
     elif func == truncate:
         func = partial(truncate, truncate_amount=args[1])
     else:

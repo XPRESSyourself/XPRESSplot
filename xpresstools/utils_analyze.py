@@ -29,6 +29,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from mpl_toolkits.mplot3d import Axes3D
+import seaborn as sns
 
 """
 DESCRIPTION: Default data prep for all analysis functions
@@ -175,7 +176,7 @@ def get_array(data, gene):
 
     data_c = data.copy()
 
-    gene = data_c[str(gene)].values.tolist()
+    gene = data_c.loc[str(gene)].values.tolist()
     gene = np.array(gene).astype(np.float)
     gene = np.ndarray.tolist(gene)
 
@@ -258,7 +259,7 @@ def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, grid, 
 """
 DESCRIPTION: Add confidence intervals to scatterplot
 """
-def set_confidence(df_pca, pca_plot, unique_labels, palette):
+def set_confidence(df_pca, pca_plot, unique_labels, palette, ci):
 
     for x in unique_labels:
         #slice df into label specific datasets
@@ -284,10 +285,10 @@ def set_confidence(df_pca, pca_plot, unique_labels, palette):
 """
 DESCRIPTION: 2D Non-interactive PCA scatterplot
 """
-def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches):
+def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title):
 
     pca_plot = sns.scatterplot(df_pca.PCa, df_pca.PCb, hue=df_pca['label'], palette=palette)
-    set_confidence(df_pca, pca_plot, unique_labels, palette)
+    set_confidence(df_pca, pca_plot, unique_labels, palette, ci)
 
     # Put the legend out of the figure
     handles,labels = pca_plot.get_legend_handles_labels()

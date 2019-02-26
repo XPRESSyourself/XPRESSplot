@@ -24,64 +24,9 @@ IMPORT DEPENDENCIES
 """
 import csv
 import pandas as pd
-pd.options.mode.chained_assignment = None
 from .utils import check_directories
 from .utils_truncator import execute_truncator, parallelize_truncator
-
-"""
-DESCRIPTION: Create a GTF reference file with only protein coding genes and the first n nucleotides of each first exon
-
-RETURNS: Return the truncated, coding only table when running the function
-
-METHODS: Considers strandedness
-Multiprocesses chunks of a dataframe on cores of computer
-
-VARIABLES:
-input_gtf= GTF reference file path and name
-truncate_amount= Number of nucleotides to truncate from the 5' end of each exon 1 (considers strandedness)
-save_coding_path= Location to save coding-only GTF, set to None to avoid outputting file
-save_truncated_path= Location to save coding-only truncated GTF
-sep= Separator type of the GTF file (generally always tab-delimited)
-
-ASSUMPTIONS:
-Input file is a properly formatted GTF file
-Protein coding transcripts are denoted by 'protein_coding in the final column of the GTF'
-"""
-def truncate(input_gtf, truncate_amount=45, save_coding_path='./', save_truncated_path='./', sep='\t', return_files=False):
-
-    if save_coding_path != None:
-        save_coding_path = check_directories(save_coding_path)
-    if save_truncated_path != None:
-        save_truncated_path = check_directories(save_truncated_path)
-
-    #Import gtf reference file to
-    if str(input_gtf).endswith('.gtf'):
-        gtf = pd.read_csv(str(input_gtf), sep=sep, header=None, comment='#', low_memory=False)
-    else:
-        raise Exception('Error: A GTF-formatted file was not provided')
-
-    #Get only protein_coding coordinates
-    gtf_coding = gtf[gtf.iloc[:, 8].str.contains('protein_coding') == True]
-
-    #Save to .gtf file (tsv)
-    if save_coding_path != None:
-        gtf_coding.to_csv(str(save_coding_path) + 'transcripts_coding.gtf', sep='\t', header=None, index=False, quoting=csv.QUOTE_NONE)
-
-    if truncate_amount != None:
-        gtf_coding_c = gtf_coding.copy()
-
-        print("Multiprocessing reference chunks -- this may take a while...")
-        gtf_truncated = parallelize_truncator(execute_truncator, gtf_coding_c, truncate_amount)
-
-
-        if save_truncated_path != None:
-            gtf_truncated.to_csv(str(save_truncated_path) + 'transcripts_coding_truncated.gtf', sep='\t', header=None, index=False, quoting=csv.QUOTE_NONE)
-
-    if return_files != False:
-        if truncate_amount == None:
-            return gtf_coding
-        else:
-            return gtf_coding, gtf_truncated
+pd.options.mode.chained_assignment = None
 
 """
 DESCRIPTION: Convert row names (genes) of dataframe using GTF as reference for new name

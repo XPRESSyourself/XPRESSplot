@@ -183,7 +183,7 @@ grid= Control plot gridlines (default: False)
 ASSUMPTIONS:
 data and info dataframes are properly formatted for MICARtools and any appropriate sample/gene normalizations have been performed
 """
-def gene_overview(data, info, gene_name, palette, order=None, save_fig=None, dpi=600, bbox_inches='tight', grid=False, whitegrid= False):
+def gene_overview(data, info, gene_name, palette, order=None, save_fig=None, dpi=600, bbox_inches='tight', grid=False, whitegrid=False):
 
     reset_plot(whitegrid)
     data_c = analysis_prep(data).T
@@ -253,22 +253,27 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
         _x, _y, r_value, title = make_linreg(data_c, x, y)
         ax.plot(_x, _y, '-k')
 
-    #Plot selected genes if user-specified
-    if highlight_genes != None:
-        data_sub = data_subset(data_c, highlight_genes)
-        data_genes = data_sub.dropna(axis=0)
-        ax = sns.scatterplot(x=str(x), y=xtr(y), data=data_genes, color=str(highlight_color), alpha=alpha_highlights)
-
-    if label_genes != None and type(label_genes) is dict:
-        for key, value in label_genes.items():
-            ax.text(value[0], value[1], str(key), horizontalalignment='left', size='medium', color='black', weight='semibold')
-
     #Plot thresholds
     if y_threshold != None:
         add_threshold(y_threshold, threshold_color, ax)
 
     if x_threshold != None:
         add_threshold(x_threshold, threshold_color, ax)
+
+    #Plot selected genes if user-specified
+    if highlight_genes != None:
+        if type(highlight_genes) is list:
+            y = 0
+            for x in highlight_genes:
+                data_sub = data_subset(data_c, highlight_genes[x])
+                data_genes = data_sub.dropna(axis=0)
+                ax = sns.scatterplot(x=str(x), y=xtr(y), data=data_genes, color=str(highlight_color[y]), alpha=alpha_highlights)
+                y += 1
+    if label_genes != None and type(label_genes) is dict:
+        for key, value in label_genes.items():
+            ax.text(value[0], value[1], str(key), horizontalalignment='left', size='medium', color='black', weight='semibold')
+
+
 
     # Put the legend out of the figure
     handles,labels = ax.get_legend_handles_labels()
@@ -316,7 +321,7 @@ whitegrid= Use whitegrid background in plot
 ASSUMPTIONS:
 MICARtools formatted data and info dataframes, palette (if used) is a dictionary of labels and colors to plot points with
 """
-def jointplot(data, info, gene1, gene2, kind='reg', palette=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', whitegrid=False, grid=False):
+def jointplot(data, info, gene1, gene2, kind='reg', palette=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', whitegrid=False, grid=False, y_pos_r=0.92, x_pos_r=0.09):
 
     reset_plot(whitegrid)
 
@@ -335,8 +340,8 @@ def jointplot(data, info, gene1, gene2, kind='reg', palette=None, order=None, sa
     #Plot
     ax = sns.jointplot(x=gene_a, y=gene_b, kind='reg')
     ax.ax_joint.collections[0].set_visible(False)
-    ax = sns.scatterplot(x=str(gene1), y=str(gene2), data=data_c, hue='label', palette=palette, hue_order=order)
-    ax.set_title('r: ' + str(round(r_value,2)), y=0.92, x=0.09)
+    ax = sns.scatterplot(x=str(gene1), y=str(gene2), data=data_c.T, hue='label', palette=palette, hue_order=order)
+    ax.set_title('r: ' + str(round(r_value,2)), y=y_pos_r, x=x_pos_r)
 
     if r_value > 0:
         plt.legend(loc='lower right')
@@ -395,7 +400,7 @@ data= Sample-normalized, MICARtools-formatted data -- should NOT be gene-normali
 info= MICARtools formatted sample info dataframe
 label_comp= Sample label to compare against base
 label_base= Sample label to use as base for comparison
-highlight_genes= If provided with a list, or a file path and name to a .csv-type series of gene names, will highlight genes of interest in a different color (Gene names are case-sensitive)
+highlight_genes= If provided with a list, or a file path and name to a .csv-type series of gene names, will highlight genes of interest in a different color (Gene names are case-sensitive). Must be a list of lists to allow for multiple highlighting groups
 highlight_color= Color to use for highlighted genes
 y_threshold= -log10(P-Value) threshold to use to identify significant hits. Will create a dotted line on the plot and use to pull significant hits if return_threshold_hits is not None
 x_threshold= log2(Fold Change) threshold to use to identify significant hits. Will take the positive and negative of the number. Will create a dotted line on the plot and use to pull significant hits if return_threshold_hits is not None
@@ -531,12 +536,12 @@ def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=Fal
     while x <= n_components:
         pc = 'PC' + str(x)
         component = x - 1
-        scaled[pc] = pca_result[:,component]
+        plot_data[pc] = pca_result[:,component]
         x += 1
 
     #Scree
     if save_scree != None:
-        scree = make_scree(pca, n_components, save_fig, dpi, bbox_inches, grid, whitegrid)
+        scree = make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, grid, whitegrid)
         if scree_only:
             return
     else:
@@ -564,7 +569,7 @@ def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=Fal
 
             #Non-interactive
             if plotly_login == None:
-                pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches)
+                pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title)
 
             #Plotly
             else:
