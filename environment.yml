@@ -1,0 +1,11 @@
+name: testenv
+dependencies:
+  - python=3.5
+  - pandas
+  - numpy
+  - scipy
+  - seaborn
+  - plotly
+  - matplotlib
+  - scikit-learn
+  - gusdunn::geoparse
