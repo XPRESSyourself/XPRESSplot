@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="quality-control.html" />
+    <link rel="next" title="&lt;no title&gt;" href="collapse-probes.html" />
     <link rel="prev" title="Reference File Modification" href="formatting.html" /> 
 </head>
 
@@ -95,6 +95,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#rpm-reads-per-million">RPM (Reads per Million)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#r-fpkm-reads-fragments-per-kilobase-million">R/FPKM (Reads/Fragments per Kilobase Million)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#te-translation-efficiency">TE (Translation Efficiency)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#log-transformation">Log transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#batch-normalize">Batch Normalize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clean-dataset">Clean dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-gene-threshold">Set Gene Threshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-xpresstools-dataset">Prepare XPRESStools dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#check-sample-expression-distributions">Check Sample Expression Distributions</a></li>
 </ul>
 </li>
 </ul>
@@ -266,7 +272,7 @@
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe contains normalized count data, where samples are along columns and genes across rows</div>
+<div class="line">- Dataframe contains normalized count data, where samples are along columns and genes across rows (unless otherwise desired)</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
@@ -280,7 +286,7 @@
 <div class="line">Examples:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
-                <span class="n">s1_rpf</span>        <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
 <span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="mf">82.49</span>
 <span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
 <span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
@@ -305,6 +311,215 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="log-transformation">
+<h2>Log transformation<a class="headerlink" href="#log-transformation" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.log_scale ( data, log_base=10 )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Log-scale a sample-normalized dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Input dataframe with counts values</div>
+<div class="line"><strong>log_base</strong>: Log base to use for transformation (default: 10; or 2)</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data_log</strong>: Pandas dataframe log-scaled</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+<span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="mf">82.49</span>
+<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
+<span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
+<span class="n">ENSG00000241860</span> <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
+<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="mf">41.28</span>   <span class="mf">92.27</span>   <span class="mf">77.93</span>
+<span class="o">&gt;</span> <span class="n">log_data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">log_scale</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">log_data</span>
+                <span class="n">s1_rpf</span>    <span class="n">s1_rna</span>    <span class="n">s2_rpf</span>    <span class="n">s2_rna</span>
+<span class="n">ENSG00000227232</span> <span class="mf">1.822430</span>  <span class="mf">1.772542</span>  <span class="mf">0.301030</span>  <span class="mf">1.916927</span>
+<span class="n">ENSG00000240361</span> <span class="mf">1.554247</span>  <span class="o">-</span><span class="mf">1.000000</span> <span class="mf">0.873902</span>  <span class="mf">1.863561</span>
+<span class="n">ENSG00000238009</span> <span class="mf">1.303628</span>  <span class="mf">1.847017</span>  <span class="mf">1.930440</span>  <span class="mf">1.897462</span>
+<span class="n">ENSG00000241860</span> <span class="mf">1.983762</span>  <span class="mf">0.880242</span>  <span class="mf">1.971229</span>  <span class="mf">1.585348</span>
+<span class="n">ENSG00000187634</span> <span class="mf">1.869290</span>  <span class="mf">1.616790</span>  <span class="mf">1.965531</span>  <span class="mf">1.892262</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="batch-normalize">
+<h2>Batch Normalize<a class="headerlink" href="#batch-normalize" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.batch_normalize ( input_file, batch_file, output_file, input_sep=’,’, batch_sep=’,’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Control for batch effects between datasets</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired</div>
+<div class="line">- Requires a properly formatted dataframe complying to SVA COMBAT info file (see example below)</div>
+<div class="line">- R is installed on your machine and is in your $PATH</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>input_file</strong>: Input dataframe file with values (can be normalized or unnormalized)</div>
+<div class="line"><strong>batch_file</strong>: Input dataframe containing batch effect information, column naming convention must be followed and <em>is</em> case-sensitive</div>
+<div class="line"><strong>output_file</strong>: Output path and file name for batch normalized data</div>
+<div class="line"><strong>input_sep</strong>: Delimiter for input_file</div>
+<div class="line"><strong>batch_sep</strong>: Delimiter for batch_file</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+<span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="mf">82.49</span>
+<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
+<span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
+<span class="n">ENSG00000241860</span> <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
+<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="mf">41.28</span>   <span class="mf">92.27</span>   <span class="mf">77.93</span>
+<span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/batch_info.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">batch</span>
+  <span class="n">Sample</span>  <span class="n">Batch</span>
+<span class="mi">0</span> <span class="n">s1_rpf</span>  <span class="n">batch1</span>
+<span class="mi">1</span> <span class="n">s1_rna</span>  <span class="n">batch2</span>
+<span class="mi">2</span> <span class="n">s2_rpf</span>  <span class="n">batch1</span>
+<span class="mi">3</span> <span class="n">s2_rna</span>  <span class="n">batch2</span>
+<span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">batch_normalize</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/batch_info.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="clean-dataset">
+<h2>Clean dataset<a class="headerlink" href="#clean-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.clean_df ( data, axis=0 )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Cleans NULL values from axis and clears duplicate indices</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Input dataframe file with values (can be normalized or unnormalized)</div>
+<div class="line"><strong>axis</strong>: Axis to clean NaN values from (default: 0, which corresponds to rows)</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data_clean</strong>: Cleaned pandas dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+<span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="n">NA</span>
+<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
+<span class="n">Gene2</span>           <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
+<span class="n">Gene2</span>           <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
+<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="n">NA</span>      <span class="mf">92.27</span>   <span class="mf">77.93</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">clean_df</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-gene-threshold">
+<h2>Set Gene Threshold<a class="headerlink" href="#set-gene-threshold" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.threshold ( data, minimum=None, maximum=None )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Cleans gene axis (assumed to by rows) of genes containing values below or above user-determined thresholds</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Input dataframe file with values (can be normalized or unnormalized)</div>
+<div class="line"><strong>minimum</strong>: Minimum value all samples need of a given gene to avoid dropping across all samples</div>
+<div class="line"><strong>maximum</strong>: Maximum value all samples can have of a given gene to avoid dropping across all samples</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data_clean</strong>: Cleaned pandas dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+<span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="mf">82.49</span>
+<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
+<span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
+<span class="n">ENSG00000241860</span> <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
+<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="mf">41.28</span>   <span class="mf">92.27</span>   <span class="mf">77.93</span>
+<span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
+<span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
+<span class="n">ENSG00000241860</span> <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
+<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="mf">41.28</span>   <span class="mf">92.27</span>   <span class="mf">77.93</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prepare-xpresstools-dataset">
+<h2>Prepare XPRESStools dataset<a class="headerlink" href="#prepare-xpresstools-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.prep_data ( data, info, gene_scale=True, print_means=False )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Prepare dataframe for downstream analyses</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Requires a properly formatted dataframe for XPRESStools usage (genes as rows, samples as columns)</div>
+<div class="line">- Requires properly formatted XPRESStools metadata dataframe</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools formatted dataframe of expression values</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe</div>
+<div class="line"><strong>gene_scale</strong>: Scale genes (rows) of data</div>
+<div class="line"><strong>print_means</strong>: Print means for each sample verification</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line"><strong>data_normalized</strong>: Normalized pandas dataframe</div>
+<div class="line"><strong>data_labeled</strong>: Labeled pandas dataframe</div>
+</div>
+</div>
+<div class="section" id="check-sample-expression-distributions">
+<h2>Check Sample Expression Distributions<a class="headerlink" href="#check-sample-expression-distributions" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.check_samples ( data )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Visualize gene expression distributions on a sample-by-sample basis</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: Input dataframe file with values (can be normalized or unnormalized)</div>
+<div class="line"><br /></div>
+<div class="line">Returns:</div>
+<div class="line">Boxplot with samples on the x-axis and lump expression distributions for all genes in that sample</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">check_samples</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/quality.png"><img alt="../_images/quality.png" class="align-left" src="../_images/quality.png" style="width: 576.0px; height: 288.0px;" /></a>
+</div>
 </div>
 
 
@@ -315,7 +530,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="quality-control.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="collapse-probes.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="formatting.html" class="btn btn-neutral float-left" title="Reference File Modification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

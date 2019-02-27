@@ -174,7 +174,7 @@
 <div class="section" id="import-data-from-file">
 <h2>Import data from file<a class="headerlink" href="#import-data-from-file" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.get_df ( *file_name, delimiter=’,’, low_memory=False, gene_axis=’row’* )</strong></div>
+<div class="line"><strong>xpresstools.get_df ( file_name, delimiter=’,’, low_memory=False, gene_axis=’row’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Get sequence dataframe from user-provided file.</div>
@@ -213,7 +213,7 @@
 <div class="section" id="import-metadata-from-file">
 <h2>Import metadata from file<a class="headerlink" href="#import-metadata-from-file" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.get_info ( *file_name, delimiter=”,”, axis=”col”, sample_ids=0, labels=1* )</strong></div>
+<div class="line"><strong>xpresstools.get_info ( file_name, delimiter=”,”, axis=”col”, sample_ids=0, labels=1 )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Get sample metadata from user-provided file</div>
@@ -250,7 +250,7 @@
 <div class="section" id="import-data-from-geo-dataset">
 <h2>Import data from GEO dataset<a class="headerlink" href="#import-data-from-geo-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.get_geo ( *geo_id, output_info=False* )</strong></div>
+<div class="line"><strong>xpresstools.get_geo ( geo_id, output_info=False )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Get sample data and metadata from a GEO database</div>
@@ -288,7 +288,7 @@
 <div class="section" id="catenate-raw-counts-files">
 <h2>Catenate raw counts files<a class="headerlink" href="#catenate-raw-counts-files" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.catenate_files ( *directory, file_suffix=’txt’, save_file=None, delimiter=’t’, drop_rows=0* )</strong></div>
+<div class="line"><strong>xpresstools.catenate_files ( directory, file_suffix=’txt’, save_file=None, delimiter=’t’, drop_rows=0 )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Compiles expression counts from multiple files into one table. For example, HTSeq-count outputs each alignment file’s counts as a separate count file. This module will collect all single count files and compile them into a single count table.</div>
@@ -325,7 +325,7 @@
 <div class="section" id="create-count-table-from-file-list">
 <h2>Create count table from file list<a class="headerlink" href="#create-count-table-from-file-list" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.count_table ( *file_list, gene_column=0, sample_column=1, sep=’t’* )</strong></div>
+<div class="line"><strong>xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep=’t’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Collate HTseq counts files (similar to catenate_files(), but input is a file list)</div>
@@ -349,7 +349,7 @@
 <div class="section" id="drop-samples">
 <h2>Drop samples<a class="headerlink" href="#drop-samples" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.drop_samples ( *data, ids* )</strong></div>
+<div class="line"><strong>xpresstools.drop_samples ( data, ids )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Drop samples by sample IDs – pass in a list of names</div>
@@ -389,7 +389,7 @@
 <div class="section" id="drop-label">
 <h2>Drop label<a class="headerlink" href="#drop-label" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.drop_label ( *data, info, label* )</strong></div>
+<div class="line"><strong>xpresstools.drop_label ( data, info, label )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Drop samples by label group name</div>
@@ -431,7 +431,7 @@
 <div class="section" id="keep-labels">
 <h2>Keep labels<a class="headerlink" href="#keep-labels" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.keep_labels ( *data, info, label_list=None* )</strong></div>
+<div class="line"><strong>xpresstools.keep_labels ( data, info, label_list=None )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Keep samples by list of label names</div>
@@ -473,7 +473,7 @@
 <div class="section" id="rename-dataframe-column-names">
 <h2>Rename dataframe column names<a class="headerlink" href="#rename-dataframe-column-names" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.rename_cols ( *data, converters* )</strong></div>
+<div class="line"><strong>xpresstools.rename_cols ( data, converters )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Rename column names using dataframe</div>
@@ -513,7 +513,7 @@
 <div class="section" id="rename-genes-with-gtf">
 <h2>Rename genes with GTF<a class="headerlink" href="#rename-genes-with-gtf" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.convert_names_gtf ( *data, gtf, orig_name_label=’gene_id “’, orig_name_location=0, new_name_label=’gene_name “’, new_name_location=1, refill=None, sep=’t’* )</strong></div>
+<div class="line"><strong>xpresstools.convert_names_gtf ( data, gtf, orig_name_label=’gene_id “’, orig_name_location=0, new_name_label=’gene_name “’, new_name_location=1, refill=None, sep=’t’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Convert row names (genes) of dataframe using GTF as reference for new name</div>
@@ -560,7 +560,7 @@
 <div class="section" id="rename-dataframe-row-names">
 <h2>Rename dataframe row names<a class="headerlink" href="#rename-dataframe-row-names" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.rename_rows ( *data, converters, label=’index’* )</strong></div>
+<div class="line"><strong>xpresstools.rename_rows ( data, converters, label=’index’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Rename values in an index (row names) or a column</div>

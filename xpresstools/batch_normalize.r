@@ -28,7 +28,7 @@ data_m = as.matrix(data)
 info = read.csv(args[2],sep=args[4])
 
 #Identify batch effect to normalize on
-batch = info$Chip
+batch = info$Batch
 
 #Prepare model
 modcombat = model.matrix(~1, data=info)

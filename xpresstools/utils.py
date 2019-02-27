@@ -56,6 +56,8 @@ def parallelize(func, *args):
         func = partial(calculate_fc, label_comp=args[1], label_base=args[2])
     elif func == calculate_p:
         func = partial(calculate_p, label_comp=args[1], label_base=args[2], drop_index=args[3])
+    elif func == threshold_util:
+        func = partial(threshold_util, minimum=args[1], maximum=args[2])
     else:
         return
 
@@ -97,5 +99,22 @@ def calculate_p(data, label_comp, label_base, drop_index):
             drop_index.append(index)
 
     data = data.drop(labels=drop_index, axis=0)
+
+    return data
+
+"""
+DESCRIPTION
+"""
+def threshold_util(data, minimum, maximum):
+
+    data = data.T
+
+    if minimum != None:
+        data = data[data.columns[data.min() > minimum]]
+
+    if maximum != None:
+        data = data[data.columns[data.max() < maximum]]
+
+    data = data.T
 
     return data

@@ -27,7 +27,7 @@ import pandas as pd
 import numpy as np
 import matplotlib
 from sklearn import preprocessing
-from .utils import parallelize
+from .utils import parallelize, threshold_util
 
 """
 INITIALIZATION PARAMETERS
@@ -116,11 +116,11 @@ def te(data, samples=None, log2=True):
 DESCRIPTION: Log-scale a sample-normalized dataframe
 
 VARIABLES:
-data= Sample normalized, MICARtools-formated dataframe
+data= Sample normalized, XPRESStools-formated dataframe
 log_base= Log-scale to normalize data with (Options: 2 or 10)
 
 ASSUMPTIONS:
-Requires a properly formatted dataframe for MICARtools usage where samples are normalized
+Requires a properly formatted dataframe for XPRESStools usage where samples are normalized
 """
 def log_scale(data, log_base=10):
 
@@ -145,7 +145,7 @@ batch_sep= Batch file delimiter
 ASSUMPTIONS:
 Data has already been sample normalized
 """
-def batch_normalize(input_file, batch_file, input_sep=',', batch_sep=','):
+def batch_normalize(input_file, batch_file, output_file, input_sep=',', batch_sep=','):
 
     #Get output file name
     if intput_sep == ',':
@@ -183,7 +183,7 @@ If dataframe has been properly formatted previously and genes are in rows, the d
 def clean_df(data, axis=0):
 
     data = data.dropna(axis=axis)
-    data = data[~data.index.duplicated()]
+    data = data[~data.index.duplicated(keep=False)]
 
     return data
 
@@ -191,62 +191,15 @@ def clean_df(data, axis=0):
 DESCRIPTION: Remove genes from analysis where sequence coverage does not meet minimum
 
 VARIABLES:
-data= MICARtools formatted data
+data= XPRESStools formatted data
 minimum= Float or int of minimum count/read value to accept per gene (all samples need to meet this requirement to keep)
 """
-def threshold_util(data, minimum, maximum):
-
-    data = data.T
-
-    if minimum != None:
-        data = data[data.columns[data.min() > minimum]]
-
-    if maximum != None:
-        data = data[data.columns[data.max() < maximum]]
-
-    data = data.T
-
-    return data
-
 def threshold(data, minimum=None, maximum=None):
 
     data_c = data.copy()
     data_c = parallelize(threshold_util, data_c, minimum, maximum)
 
     return data_c
-
-"""
-DESCRIPTION: Normalize samples, prints sample axis means for verification
-
-METHODS: For each sample axis, divide each cell by the sum the axis divided by the factor provided (default: 1e6)
-
-VARIABLES:
-data= Dataframe of microarray probe data
-axis= Axis where samples are found in the dataframe
-factor= Numeric value to scale samples by
-print_means= Print appropriate means that were scaled for verification
-
-USAGE:
-import micartools as mat
-df_norm = mat.sample_norm(df)
-"""
-def sample_norm(data, axis=1, factor=1e6, print_means=False):
-
-    #Initialize axis variables based on user input
-    if axis == 0:
-        axis_2 = 1
-    elif axis == 1:
-        axis_2 = 0
-    else:
-        pass
-
-    #Perform normalization
-    data_norm = data.divide((data.sum(axis=axis_2) / float(factor)),axis=axis)
-
-    if print_means == True:
-        print(data_norm.mean(axis=axis_2))
-
-    return data_norm
 
 """
 DESCRIPTION: Prepare dataframes for analysis plotting functions found within analyze.py
@@ -256,24 +209,25 @@ Original dataframe is unformatted besides adding labels from info to the first r
 Formatted dataframe is scaled if option provided and dataframe is converted to float
 
 VARIABLES:
-data= MICARtools formatted dataframe of expression values
-info= MICARtools formatted sample info dataframe
+data= XPRESStools formatted dataframe of expression values
+info= XPRESStools formatted sample info dataframe
 gene_scale= Scale genes (rows) of data
 print_means= Print appropriate means that were scaled for verification
 
 USAGE:
-import micartools as mat
+import XPRESStools as mat
 df_scaled, df_collapsed = mat.prep_df(df_collapsed, info)
 
 ASSUMPTIONS:
-Requires properly formatted df and info dataframes for MICARtools usage
+Requires properly formatted df and info dataframes for XPRESStools usage
 """
 def prep_data(data, info, gene_scale=True, print_means=False):
 
     #Convert data to float and drop bad values
-    data_scaled = data.astype(dtype='float')
-    data_scaled = data_scaled.dropna(axis=0)
-    data = data.dropna(axis=0)
+    data_c = data.copy()
+    data_scaled = data_c.astype(dtype='float')
+    data_scaled = clean_df(data_scaled)
+    data_c = clean_df(data_c)
 
     #gene normalization
     if gene_scale == True:
@@ -284,10 +238,10 @@ def prep_data(data, info, gene_scale=True, print_means=False):
 
     #Map labels to samples
     labels = pd.Series(info[1].values,index=info[0]).to_dict()
-    data.loc['label'] = data.columns.map(labels.get)
+    data_c.loc['label'] = data_c.columns.map(labels.get)
 
     #Output collapsed dataframe
-    newIndex = ['label'] + [ind for ind in data.index if ind != 'label']
-    data = data.reindex(index=newIndex)
+    newIndex = ['label'] + [ind for ind in data_c.index if ind != 'label']
+    data_c = data_c.reindex(index=newIndex)
 
-    return data_scaled, data
+    return data_scaled, data_c
