@@ -33,6 +33,7 @@ install:
   - conda info -a
 
   # Install conda dependencies
+  #######################################figure out how to reset version and issues with format_test
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pandas numpy scipy seaborn plotly matplotlib scikit-learn
   - source activate test-environment
   - conda install -q -n test-environment -c gusdunn geoparse
