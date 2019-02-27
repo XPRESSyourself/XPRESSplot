@@ -67,9 +67,9 @@ Get metadata
 Get geo dataset
 Not running currently due to connection time out in testing
 """
-df, meta = xp.get_geo(geo)
+#df, meta = xp.get_geo(geo)
 #assert df.shape == data_large.shape, 'get_geo() failed at accessing values dataframe'
-assert meta.equals(metadata), 'get_geo() failed'
+#assert meta.equals(metadata), 'get_geo() failed'
 
 """
 drop_sample
