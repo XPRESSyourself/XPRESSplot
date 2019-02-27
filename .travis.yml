@@ -15,26 +15,24 @@ before_install:
   - git lfs pull
 
 install:
+  # Install Anaconda
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
 
-  # Install conda
-  - sudo pip install conda
-  # install deps
-  - sudo conda init
-  - sudo conda update conda --yes
-  - deps='pip numpy pandas requests nose numpydoc sphinx'
-  - conda create -p $HOME/py --yes $deps "python=$TRAVIS_PYTHON_VERSION"
-  - export PATH=$HOME/py/bin:$PATH
-
-  # Below, include the dependencies you want to install with conda, optionally
-  # specifying versions used in the matrix above. If you split this into
-  # multiple conda install commands, you should always include numpy=$NUMPY as
-  # the first package to install (for every conda install command) otherwise
-  # numpy may be automatically upgraded.
+  # Install conda dependencies
 
   - conda install --yes -c anaconda pandas numpy scipy seaborn plotly matplotlib scikit-learn
   - conda install --yes -c gusdunn geoparse
 
-  # You can also install some dependencies with pip if not available in conda
+  # Install software to test
 
   - git clone https://github.com/XPRESSyourself/XPRESStools.git
   - cd XPRESStools
@@ -45,7 +43,10 @@ script:
 
   - python fetch_test.py
   - python format_test.py
+  - python normalize_test.py
   #- python analyze_test.py
-
   #- python interactive_test.py
-  #- python normalize_test.py
+  #- python other_test.py
+
+after_success:
+  #- test $TRAVIS_BRANCH = "master" && conda install conda-build && conda install anaconda-client && bash conda/conda_upload.sh

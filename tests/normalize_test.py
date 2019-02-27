@@ -28,7 +28,7 @@ import numpy as np
 import xpresstools as xp
 
 #gtf = './transcripts.gtf'
-gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
+gtf = './transcripts.gtf'
 
 """
 Make test data_set
