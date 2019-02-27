@@ -39,14 +39,14 @@ setup(
     license = 'GPL-3.0',
     zip_safe = False,
     install_requires=[
-          'geoparse',
           'pandas',
           'numpy',
           'scipy',
           'seaborn',
           'plotly',
           'matplotlib',
-          'sklearn'
+          'sklearn',
+          'GEOparse'
       ],
 
     classifiers=[

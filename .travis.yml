@@ -14,114 +14,13 @@ before_install:
 
 install:
 
-  - sudo apt-get update
-
-  # Install Anaconda
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-
-  # Useful for debugging any issues with conda
-  - conda info -a
-
-  # Install conda dependencies
-  #######################################figure out how to reset version and issues with format_test
-  - echo "Python version var"
-  - echo $TRAVIS_PYTHON_VERSION
-  # Edit the environment.yml file for the target Python version
-  - sed -i -E 's/(python=)(.*)/\1'$TRAVIS_PYTHON_VERSION'/' ./environment.yml
-  - conda env create -n testenv -f environment.yml
-  - source activate testenv
+  # Install dependencies
+  - pip install -r requirements.txt
+  - pip install .
 
   # Install software to test
   - python setup.py install
   - cd tests/
-
-script:
-
-  - python fetch_test.py
-  - python format_test.py
-  - python normalize_test.py
-  #- python analyze_test.py
-  #- python interactive_test.py
-  #- python other_test.py
-
-after_success:
-  #- test $TRAVIS_BRANCH = "master" && conda install conda-build && conda install anaconda-client && bash conda/conda_upload.sh
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-language: python
-
-python:
-  #- "3.3"
-  #- "3.4"
-  - "3.5"
-  #- "3.5-dev"  # 3.5 development branch
-  - "3.6"
-  #- "3.6-dev"  # 3.6 development branch
-  - "3.7"
-  #- "3.7-dev"  # 3.7 development branch
-
-before_install:
-
-  - echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
-  - git lfs pull
-
-install:
-  # Install Anaconda
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-
-  # Install conda dependencies
-
-  - conda install --yes -c anaconda pandas numpy scipy seaborn plotly matplotlib scikit-learn
-  #- conda install --yes -c gusdunn geoparse
-
-  # Install software to test
-
-  - git clone https://github.com/XPRESSyourself/XPRESStools.git
-  - cd XPRESStools
-  - python setup.py install
-  - cd ../tests/
 
 script:
 
