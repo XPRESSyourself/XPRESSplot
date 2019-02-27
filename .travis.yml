@@ -7,6 +7,86 @@ python:
   #- "3.5-dev"  # 3.5 development branch
   - "3.6"
   #- "3.6-dev"  # 3.6 development branch
+  - "3.7"
+  #- "3.7-dev"  # 3.7 development branch
+
+before_install:
+
+  - echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
+  - git lfs pull
+
+install:
+  # Install Anaconda
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+
+  # Install conda dependencies
+  - conda install python=$TRAVIS_PYTHON_VERSION
+  - conda install --yes -c anaconda pandas numpy scipy seaborn plotly matplotlib scikit-learn
+  #- conda install --yes -c gusdunn geoparse
+
+  # Install software to test
+
+  - git clone https://github.com/XPRESSyourself/XPRESStools.git
+  - cd XPRESStools
+  - python setup.py install
+  - cd ../tests/
+
+script:
+
+  - python fetch_test.py
+  - python format_test.py
+  - python normalize_test.py
+  #- python analyze_test.py
+  #- python interactive_test.py
+  #- python other_test.py
+
+after_success:
+  #- test $TRAVIS_BRANCH = "master" && conda install conda-build && conda install anaconda-client && bash conda/conda_upload.sh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+language: python
+
+python:
+  #- "3.3"
+  #- "3.4"
+  - "3.5"
+  #- "3.5-dev"  # 3.5 development branch
+  - "3.6"
+  #- "3.6-dev"  # 3.6 development branch
+  - "3.7"
   #- "3.7-dev"  # 3.7 development branch
 
 before_install:
@@ -30,7 +110,7 @@ install:
   # Install conda dependencies
 
   - conda install --yes -c anaconda pandas numpy scipy seaborn plotly matplotlib scikit-learn
-  - conda install --yes -c gusdunn geoparse
+  #- conda install --yes -c gusdunn geoparse
 
   # Install software to test
 
