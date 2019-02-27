@@ -30,6 +30,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
+from .utils import calculate_fc, calculate_p
 
 """
 DESCRIPTION: Default data prep for all analysis functions
@@ -52,40 +53,6 @@ def custom_list(file, delimiter=','):
     gene_list = [val for sublist in genes for val in sublist]
 
     return gene_list
-
-"""
-DESCRIPTION
-"""
-def calculate_fc(data, label_comp, label_base):
-
-    # Average every by cell line
-    data['log$_2$(Fold Change)'] = np.log2((data.filter(regex=str(label_comp)).mean(axis=1)) / \
-                                      (data.filter(regex=str(label_base)).mean(axis=1)))
-    data['-log$_1$$_0$(P-Value)'] = ''
-
-    return data
-
-"""
-DESCRIPTION
-"""
-def calculate_p(data, label_comp, label_base, drop_index):
-
-    # Calculate p-value using 1-way ANOVA with replicates and append to df_oxsm_volc
-    for row in data.iterrows():
-        index, row_data = row
-        comp_row = data.loc[index].filter(regex=str(label_comp)).values.tolist()
-        base_row = data.loc[index].filter(regex=str(label_base)).values.tolist()
-
-        # Append p_value to df_oxsm_volc
-        try:
-            statistic, p_value = stats.ttest_ind(comp_row, base_row)
-            data.loc[index,'-log$_1$$_0$(P-Value)'] = float(-1 * (np.log10(p_value)))
-        except:
-            drop_index.append(index)
-
-    data = data.drop(labels=drop_index, axis=0)
-
-    return data
 
 """
 DESCRIPTION: Reset plotting object to avoid bleed through

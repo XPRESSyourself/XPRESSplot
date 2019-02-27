@@ -26,8 +26,6 @@ import pandas as pd
 import numpy as np
 from functools import partial
 from multiprocessing import cpu_count, Pool
-from .utils_analyze import calculate_fc, calculate_p
-from .utils_truncator import truncate
 
 """
 DESCRIPTION: Check directory formatting
@@ -58,8 +56,6 @@ def parallelize(func, *args):
         func = partial(calculate_fc, label_comp=args[1], label_base=args[2])
     elif func == calculate_p:
         func = partial(calculate_p, label_comp=args[1], label_base=args[2], drop_index=args[3])
-    elif func == truncate:
-        func = partial(truncate, truncate_amount=args[1])
     else:
         return
 
@@ -67,5 +63,39 @@ def parallelize(func, *args):
 
     pool.close()
     pool.join()
+
+    return data
+
+"""
+DESCRIPTION
+"""
+def calculate_fc(data, label_comp, label_base):
+
+    # Average every by cell line
+    data['log$_2$(Fold Change)'] = np.log2((data.filter(regex=str(label_comp)).mean(axis=1)) / \
+                                      (data.filter(regex=str(label_base)).mean(axis=1)))
+    data['-log$_1$$_0$(P-Value)'] = ''
+
+    return data
+
+"""
+DESCRIPTION
+"""
+def calculate_p(data, label_comp, label_base, drop_index):
+
+    # Calculate p-value using 1-way ANOVA with replicates and append to df_oxsm_volc
+    for row in data.iterrows():
+        index, row_data = row
+        comp_row = data.loc[index].filter(regex=str(label_comp)).values.tolist()
+        base_row = data.loc[index].filter(regex=str(label_base)).values.tolist()
+
+        # Append p_value to df_oxsm_volc
+        try:
+            statistic, p_value = stats.ttest_ind(comp_row, base_row)
+            data.loc[index,'-log$_1$$_0$(P-Value)'] = float(-1 * (np.log10(p_value)))
+        except:
+            drop_index.append(index)
+
+    data = data.drop(labels=drop_index, axis=0)
 
     return data

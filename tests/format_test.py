@@ -27,8 +27,12 @@ import pandas as pd
 import numpy as np
 import xpresstools as xp
 
-gtf = './transcripts.gtf'
-gtf_output = './'
+#gtf = './transcripts.gtf'
+#gtf_output = './'
+
+gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
+gtf_output = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/'
+
 
 """
 Test dataset

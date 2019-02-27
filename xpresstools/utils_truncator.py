@@ -22,11 +22,13 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 IMPORT DEPENDENCIES
 """
+import csv
 import pandas as pd
 pd.options.mode.chained_assignment = None
 import numpy as np
 from multiprocessing import cpu_count, Pool
 from functools import partial
+from .utils import check_directories
 
 """
 DESCRIPTION: Create a GTF reference file with only protein coding genes and the first n nucleotides of each first exon
