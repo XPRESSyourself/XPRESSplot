@@ -96,7 +96,7 @@ def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, 
                     method=str(method),
                     xticklabels=xticklabels,
                     linewidths=float(linewidths),
-                    linecolor=str(linecolor),
+                    linecolor=linecolor,
                     col_cluster=col_cluster,
                     row_cluster=row_cluster,
                     col_colors=sample_palette,
@@ -227,6 +227,8 @@ grid= Control plot gridlines (default: False)
 whitegrid= Use whitegrid background in plot
 alpha= Control opacity of points on plot (useful for getting an idea of density in large datasets)
 
+highlight_genes= If plotting multiple highlight colors, make sure this and highlight_colors are lists of lists
+
 ASSUMPTIONS:
 MICARtools formatted data and info dataframes, palette is a dictionary of labels and colors to plot points with
 """
@@ -262,18 +264,22 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
 
     #Plot selected genes if user-specified
     if highlight_genes != None:
-        if type(highlight_genes) is list:
-            y = 0
-            for x in highlight_genes:
-                data_sub = data_subset(data_c, highlight_genes[x])
-                data_genes = data_sub.dropna(axis=0)
-                ax = sns.scatterplot(x=str(x), y=xtr(y), data=data_genes, color=str(highlight_color[y]), alpha=alpha_highlights)
-                y += 1
+        if any(isinstance(el, list) for el in highlight_genes):
+            if type(highlight_genes) is list:
+                y = 0
+                for x in highlight_genes:
+                    data_sub = data_subset(data_c, highlight_genes[x])
+                    data_genes = data_sub.dropna(axis=0)
+                    ax = sns.scatterplot(x=str(x), y=xtr(y), data=data_genes, color=str(highlight_color[y]), alpha=alpha_highlights)
+                    y += 1
+        else:
+            data_sub = data_subset(data_c, highlight_genes)
+            data_genes = data_sub.dropna(axis=0)
+            ax = sns.scatterplot(x=str(x), y=xtr(y), data=data_genes, color=str(highlight_color), alpha=alpha_highlights)
+
     if label_genes != None and type(label_genes) is dict:
         for key, value in label_genes.items():
             ax.text(value[0], value[1], str(key), horizontalalignment='left', size='medium', color='black', weight='semibold')
-
-
 
     # Put the legend out of the figure
     handles,labels = ax.get_legend_handles_labels()

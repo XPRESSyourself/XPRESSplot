@@ -100,3 +100,29 @@ te_test2 = te_test2.round(decimals=4)
 te_truth.columns = ['sample1','sample2']
 te_truth = te_truth.round(decimals=4)
 assert te_test2.equals(te_truth), 'te() failed'
+
+"""
+log_scale()
+"""
+log_test = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
+log_test.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':66.34,'fGSM523243_rna':59.13,'fGSM523244_rpf':1.90,'fGSM523245_rna':82.49})
+log_test.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':35.73,'fGSM523243_rna':0.00,'fGSM523244_rpf':7.38,'fGSM523245_rna':72.94})
+log_test.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':20.02,'fGSM523243_rna':70.21,'fGSM523244_rpf':85.10,'fGSM523245_rna':78.87})
+log_test.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':96.23,'fGSM523243_rna':7.49,'fGSM523244_rpf':93.49,'fGSM523245_rna':38.39})
+log_test.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
+
+log_truth = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
+log_truth.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':1.822430,'fGSM523243_rna':1.772542,'fGSM523244_rpf':0.301030,'fGSM523245_rna':1.916927})
+log_truth.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':1.554247,'fGSM523243_rna':-1.000000,'fGSM523244_rpf':0.873902,'fGSM523245_rna':1.863561})
+log_truth.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':1.303628,'fGSM523243_rna':1.847017,'fGSM523244_rpf':1.930440,'fGSM523245_rna':1.897462})
+log_truth.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':1.983762,'fGSM523243_rna':0.880242,'fGSM523244_rpf':1.971229,'fGSM523245_rna':1.585348})
+log_truth.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':1.869290,'fGSM523243_rna':1.616790,'fGSM523244_rpf':1.965531,'fGSM523245_rna':1.892262})
+
+log_test1 = xp.log_scale(log_test)
+log_test1 = log_test1.round(decimals=4)
+log_truth = log_truth.round(decimals=4)
+assert log_test1.equals(log_truth), 'log_scale() failed'
+
+log_test2 = xp.log_scale(log_test, log_base=2)
+
+xp.log_scale(log_test, log_base=3).value.message

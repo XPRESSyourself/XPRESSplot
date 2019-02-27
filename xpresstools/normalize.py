@@ -125,11 +125,11 @@ Requires a properly formatted dataframe for MICARtools usage where samples are n
 def log_scale(data, log_base=10):
 
     if log_base == 10:
-        data_log = np.log10(data)
+        data_log = np.log10(data + 0.1)
     elif log_base == 2:
-        data_log = np.log2(data)
+        data_log = np.log2(data + 0.1)
     else:
-        print('Invalid log_base option provided')
+        raise Exception('Invalid log_base option provided')
 
     return data_log
 

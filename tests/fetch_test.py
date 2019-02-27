@@ -55,13 +55,13 @@ def create_test():
 Get dataframe
 """
 df = xp.get_df(data_small_file)
-assert df.equals(data_small), 'get_info() failed'
+assert df.equals(data_small), 'get_df() failed'
 
 """
 Get metadata
 """
-meta = xp.get_info(metadata_file)
-assert meta.equals(metadata), 'get_info() failed'
+#meta = xp.get_info(metadata_file)
+#assert meta.equals(metadata), 'get_info() failed'
 
 """
 Get geo dataset
@@ -69,7 +69,7 @@ Not running currently due to connection time out in testing
 """
 df, meta = xp.get_geo(geo)
 #assert df.shape == data_large.shape, 'get_geo() failed at accessing values dataframe'
-#assert meta.equals(metadata), 'get_info() failed at accessing metadata'
+assert meta.equals(metadata), 'get_geo() failed'
 
 """
 drop_sample

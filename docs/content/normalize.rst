@@ -140,3 +140,42 @@ TE (Translation Efficiency)
   ENSG00000238009 -1.8051   0.1095
   ENSG00000241860 3.6658    1.2819
   ENSG00000187634 0.8388    0.2434
+
+===========================
+TE (Translation Efficiency)
+===========================
+| **xpresstools.log_scale ( data, log_base=10 )**
+|
+| Purpose:
+| Log-scale a sample-normalized dataframe
+|
+| Assumptions:
+|   - Requires a properly formatted dataframe for MICARtools usage where samples are normalized
+|
+| Parameters:
+| **data**: Input dataframe with counts values
+| **log_base**: Log base to use for transformation (default: 10; or 2)
+|
+| Returns:
+| **data_log**: Pandas dataframe log-scaled
+|
+| Examples:
+
+.. ident with TABs
+.. code-block:: python
+
+  > data
+                  s1_rpf	s1_rna	s2_rpf	s2_rna
+  ENSG00000227232 66.34   59.13   1.90    82.49
+  ENSG00000240361 35.73   0.00    7.38    72.94
+  ENSG00000238009 20.02   70.21   85.10   78.87
+  ENSG00000241860 96.23   7.49    93.49   38.39
+  ENSG00000187634 73.91   41.28   92.27   77.93
+  > log_data = xp.log_scale(data)
+  > log_data
+                  s1_rpf    s1_rna    s2_rpf    s2_rna
+  ENSG00000227232 1.822430  1.772542  0.301030  1.916927
+  ENSG00000240361 1.554247  -1.000000 0.873902  1.863561
+  ENSG00000238009 1.303628  1.847017  1.930440  1.897462
+  ENSG00000241860 1.983762  0.880242  1.971229  1.585348
+  ENSG00000187634 1.869290  1.616790  1.965531  1.892262
