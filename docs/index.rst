@@ -25,13 +25,7 @@ Table of contents
    content/quality-control
    content/collapse-probes
    content/reference-building
-   content/heatmaps
-   content/sample-overviews
-   content/gene-overviews
-   content/scatterplots
-   content/volcano-plots
-   content/pca
-   content/regressions
+   content/analysis
 
 
 =======
