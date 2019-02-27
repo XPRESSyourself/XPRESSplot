@@ -29,11 +29,9 @@ import xpresstools as xp
 
 geo = 'GSE20916'
 data_small_file = './small_test.csv'
-data_large_file = './full_test.csv'
 metadata_file = './sample_info_test.csv'
 
 data_small = pd.read_csv('./small_test.csv', index_col=0)
-data_large = pd.read_csv('./full_test.csv', index_col=0)
 metadata = pd.read_csv('./sample_info_test.csv', header=None)
 
 count_dir = './'
