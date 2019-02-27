@@ -71,6 +71,8 @@ if gtf_truncated_df[8].str.contains('sense_intronic').any() or gtf_truncated_df[
     raise Exception('truncate() failed to remove non-protein-coding entries')
 
 gtf_truncated_truth = pd.read_csv(str(gtf[:-4]) + '_coding_truncated_truth.gtf', sep='\t', header=None, comment='#', low_memory=False)
+print(gtf_truncated_truth)
+
 assert gtf_truncated_df.equals(gtf_truncated_truth), 'convert_names_gtf() failed'
 
 gtf_coding_truth = pd.read_csv(str(gtf[:-4]) + '_coding_truth.gtf', sep='\t', header=None, comment='#', low_memory=False)
