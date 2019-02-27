@@ -33,4 +33,17 @@ script:
   #- python other_test.py
 
 after_success:
+
+  # Upload to PyPi
+  #python3 setup.py sdist bdist_wheel
+  #python3 -m pip install --user --upgrade twine
+
+  # Test
+  #python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+  #python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps example-pkg-your-username
+
+  # Upload to main
+  #python3 -m twine upload dist/*
+
+  # Upload to Conda
   #- test $TRAVIS_BRANCH = "master" && conda install conda-build && conda install anaconda-client && bash conda/conda_upload.sh

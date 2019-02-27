@@ -46,7 +46,8 @@ setup(
           'plotly',
           'matplotlib',
           'sklearn',
-          'GEOparse'
+          'GEOparse',
+          'git-lfs'
       ],
 
     classifiers=[

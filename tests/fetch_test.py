@@ -30,11 +30,10 @@ import xpresstools as xp
 geo = 'GSE20916'
 data_small_file = './small_test.csv'
 metadata_file = './sample_info_test.csv'
-
-data_small = pd.read_csv('./small_test.csv', index_col=0)
-metadata = pd.read_csv('./sample_info_test.csv', header=None)
-
 count_dir = './'
+
+data_small = pd.read_csv(data_small_file, index_col=0)
+metadata = pd.read_csv(metadata_file, header=None)
 
 """
 Make test data_set
@@ -68,7 +67,7 @@ assert meta.equals(metadata), 'get_info() failed'
 Get geo dataset
 Not running currently due to connection time out in testing
 """
-#df, meta = xp.get_geo('GSE20916')
+df, meta = xp.get_geo(geo)
 #assert df.shape == data_large.shape, 'get_geo() failed at accessing values dataframe'
 #assert meta.equals(metadata), 'get_info() failed at accessing metadata'
 
