@@ -30,8 +30,8 @@ import xpresstools as xp
 gtf = './transcripts.gtf'
 gtf_output = './'
 
-gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
-gtf_output = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/'
+#gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
+#gtf_output = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/'
 
 """
 Test dataset
