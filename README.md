@@ -5,6 +5,7 @@
 
 [![Build Status](https://travis-ci.org/XPRESSyourself/XPRESStools.svg?branch=master)](https://travis-ci.org/XPRESSyourself/XPRESStools)
 [![Documentation Status](https://readthedocs.org/projects/xpresstools/badge/?version=latest)](https://xpresstools.readthedocs.io/en/latest/?badge=latest)
+[![PyPi Status](https://img.shields.io/pypi/v/XPRESStools.svg)](https://pypi.org/project/XPRESStools/)
 
 ##### Find documentation [here](https://xpressyourself.github.io/XPRESStools/)
 
