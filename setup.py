@@ -31,6 +31,7 @@ setup(
     version = version,
     description = 'A toolkit for navigating and analyzing gene expression datasets',
     long_description = open('README.md').read(),
+    long_description_content_type='text/markdown',
     author = 'Jordan Berg',
     author_email = 'jordan.berg@biochem.utah.edu',
     url = 'https://github.com/XPRESSyourself/XPRESStools',
