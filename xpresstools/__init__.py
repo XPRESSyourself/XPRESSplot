@@ -28,7 +28,6 @@ from .collapser import *
 from .interactive import *
 from .utils_analyze import *
 from .utils_truncator import *
-from .utils_collapser import *
 from .utils import *
 
 

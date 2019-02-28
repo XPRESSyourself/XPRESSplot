@@ -348,3 +348,22 @@ Check Sample Expression Distributions
 ==============================
 Microarray Probe Collapse
 ==============================
+| **xpresstools.probe_collapse ( data, reference, gene_list=None, no_multimappers=True )**
+|
+| Purpose:
+| Remove multimapping probes and collapse probes mapping to the same gene by averaging the values for those probes per sample
+|
+| Assumptions:
+|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Assumes GPL .txt file from NCBI is tab delimited
+|
+| Parameters:
+| **data**: Input dataframe file with values (can be normalized or unnormalized)
+|
+| Returns:
+| **data_collapsed**: Pandas dataframe file probes collapsed and the corresponding gene names listed
+|
+| Examples:
+
+.. ident with TABs
+.. code-block:: python

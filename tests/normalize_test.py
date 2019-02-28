@@ -233,3 +233,7 @@ data_scale = np.around(data_scale.astype(float), decimals=3)
 scale_truth = np.around(scale_truth.astype(float), decimals=3)
 assert data_scale.equals(scale_truth), 'prep_data() failed'
 assert data_label_s.equals(label_truth), 'prep_data() failed'
+
+"""
+probe_collapse()
+"""
