@@ -58,6 +58,7 @@ R/FPKM (Reads/Fragments per Kilobase Million)
 |
 | Assumptions:
 |   - Dataframe contains raw count data, where samples are along columns and genes across rows
+|   - As FPKM was developed for paired-end sequencing, it accounts for two reads being able to map to one fragment. Therefore, input counts should have accounted for this is the counting step of sequence quantification. If specifying a paired-end alignment in XPRESSpipe, this will have been accounted for.
 |
 | Parameters:
 | **data**: Input dataframe with counts values
@@ -142,7 +143,7 @@ TE (Translation Efficiency)
   ENSG00000187634 0.8388    0.2434
 
 ===========================
-Log transformation
+Log Transformation
 ===========================
 | **xpresstools.log_scale ( data, log_base=10 )**
 |
@@ -223,7 +224,7 @@ Batch Normalize
   > xp.batch_normalize('/path/to/expression.csv', '/path/to/batch_info.csv')
 
 ====================
-Clean dataset
+Clean Data
 ====================
 | **xpresstools.clean_df ( data, axis=0 )**
 |
@@ -296,7 +297,7 @@ Set Gene Threshold
   ENSG00000187634 73.91   41.28   92.27   77.93
 
 ================================
-Prepare XPRESStools dataset
+Prepare XPRESStools Dataset
 ================================
 | **xpresstools.prep_data ( data, info, gene_scale=True, print_means=False )**
 |
@@ -367,3 +368,35 @@ Microarray Probe Collapse
 
 .. ident with TABs
 .. code-block:: python
+
+  > data
+            fGSM523242  fGSM523243  fGSM523244  fGSM523245  fGSM523246
+  1007_s_at 66          59          1           82          45
+  1053_at   35          0           7           72          2
+  121_at    20          70          85          78          36
+  218024_at 96          7           93          38          85
+  240362_at 73          41          92          77          26
+  > probe_collapse = xp.probe_collapse(probe_test, '/path/to/gpl_ref.txt')
+  > probe_collapse
+        fGSM523242  fGSM523243  fGSM523244  fGSM523245  fGSM523246
+  MPC1  84.5        24.0        92.5        57.5        55.5
+  PAX8  20.0        70.0        85.0        78.0        36.0
+  RFC2  35.0        0.0         7.0         72.0        2.0
+
+.. ident with TABs
+.. code-block:: python
+
+  > data
+            fGSM523242  fGSM523243  fGSM523244  fGSM523245  fGSM523246
+  1007_s_at 66          59          1           82          45
+  1053_at   35          0           7           72          2
+  121_at    20          70          85          78          36
+  218024_at 96          7           93          38          85
+  240362_at 73          41          92          77          26
+  > probe_collapse = xp.probe_collapse(probe_test, '/path/to/gpl_ref.txt', no_multimappers=False))
+  > probe_collapse
+                    fGSM523242  fGSM523243  fGSM523244  fGSM523245  fGSM523246
+  DDR1 /// MIR4640  66.0        59.0        1.0         82.0        45.0
+  MPC1              84.5        24.0        92.5        57.5        55.5
+  PAX8              20.0        70.0        85.0        78.0        36.0
+  RFC2              35.0        0.0         7.0         72.0        2.0

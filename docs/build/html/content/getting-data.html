@@ -93,12 +93,12 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-usage.html">General Usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Retrieving Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#import-data-from-file">Import data from file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#import-metadata-from-file">Import metadata from file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#import-data-from-geo-dataset">Import data from GEO dataset</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#catenate-raw-counts-files">Catenate raw counts files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#create-count-table-from-file-list">Create count table from file list</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#drop-samples">Drop samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-data-from-file">Importing Data from File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-metadata-from-file">Importing metadata from file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-data-from-geo">Importing data from GEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#catenate-raw-counts-files">Catenate Raw Counts Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-count-table-from-file-list">Create Count Table from File List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drop-samples">Drop Samples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#drop-label">Drop label</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#keep-labels">Keep labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rename-dataframe-column-names">Rename dataframe column names</a></li>
@@ -175,8 +175,8 @@
             
   <div class="section" id="retrieving-data">
 <h1>Retrieving Data<a class="headerlink" href="#retrieving-data" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="import-data-from-file">
-<h2>Import data from file<a class="headerlink" href="#import-data-from-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="importing-data-from-file">
+<h2>Importing Data from File<a class="headerlink" href="#importing-data-from-file" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.get_df ( file_name, delimiter=’,’, low_memory=False, gene_axis=’row’ )</strong></div>
 <div class="line"><br /></div>
@@ -214,8 +214,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="import-metadata-from-file">
-<h2>Import metadata from file<a class="headerlink" href="#import-metadata-from-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="importing-metadata-from-file">
+<h2>Importing metadata from file<a class="headerlink" href="#importing-metadata-from-file" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.get_info ( file_name, delimiter=”,”, axis=”col”, sample_ids=0, labels=1 )</strong></div>
 <div class="line"><br /></div>
@@ -251,8 +251,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="import-data-from-geo-dataset">
-<h2>Import data from GEO dataset<a class="headerlink" href="#import-data-from-geo-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="importing-data-from-geo">
+<h2>Importing data from GEO<a class="headerlink" href="#importing-data-from-geo" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.get_geo ( geo_id, output_info=False )</strong></div>
 <div class="line"><br /></div>
@@ -290,7 +290,7 @@
 </div>
 </div>
 <div class="section" id="catenate-raw-counts-files">
-<h2>Catenate raw counts files<a class="headerlink" href="#catenate-raw-counts-files" title="Permalink to this headline">¶</a></h2>
+<h2>Catenate Raw Counts Files<a class="headerlink" href="#catenate-raw-counts-files" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.catenate_files ( directory, file_suffix=’txt’, save_file=None, delimiter=’t’, drop_rows=0 )</strong></div>
 <div class="line"><br /></div>
@@ -327,7 +327,7 @@
 </div>
 </div>
 <div class="section" id="create-count-table-from-file-list">
-<h2>Create count table from file list<a class="headerlink" href="#create-count-table-from-file-list" title="Permalink to this headline">¶</a></h2>
+<h2>Create Count Table from File List<a class="headerlink" href="#create-count-table-from-file-list" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep=’t’ )</strong></div>
 <div class="line"><br /></div>
@@ -351,7 +351,7 @@
 </div>
 </div>
 <div class="section" id="drop-samples">
-<h2>Drop samples<a class="headerlink" href="#drop-samples" title="Permalink to this headline">¶</a></h2>
+<h2>Drop Samples<a class="headerlink" href="#drop-samples" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.drop_samples ( data, ids )</strong></div>
 <div class="line"><br /></div>

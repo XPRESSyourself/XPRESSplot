@@ -378,10 +378,10 @@ Microarray Probe Collapse
   240362_at 73          41          92          77          26
   > probe_collapse = xp.probe_collapse(probe_test, '/path/to/gpl_ref.txt')
   > probe_collapse
-            fGSM523242  fGSM523243  fGSM523244  fGSM523245  fGSM523246
-  MPC1  84.5            24.0        92.5        57.5        55.5
-  PAX8  20.0            70.0        85.0        78.0        36.0
-  RFC2  35.0            0.0         7.0         72.0        2.0
+        fGSM523242  fGSM523243  fGSM523244  fGSM523245  fGSM523246
+  MPC1  84.5        24.0        92.5        57.5        55.5
+  PAX8  20.0        70.0        85.0        78.0        36.0
+  RFC2  35.0        0.0         7.0         72.0        2.0
 
 .. ident with TABs
 .. code-block:: python

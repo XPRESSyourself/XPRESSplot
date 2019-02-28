@@ -97,11 +97,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#rpm-reads-per-million">RPM (Reads per Million)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#r-fpkm-reads-fragments-per-kilobase-million">R/FPKM (Reads/Fragments per Kilobase Million)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#te-translation-efficiency">TE (Translation Efficiency)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#log-transformation">Log transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#log-transformation">Log Transformation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batch-normalize">Batch Normalize</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#clean-dataset">Clean dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clean-data">Clean Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#set-gene-threshold">Set Gene Threshold</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#prepare-xpresstools-dataset">Prepare XPRESStools dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-xpresstools-dataset">Prepare XPRESStools Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#check-sample-expression-distributions">Check Sample Expression Distributions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#microarray-probe-collapse">Microarray Probe Collapse</a></li>
 </ul>
@@ -232,6 +232,7 @@
 <div class="line">Assumptions:</div>
 <div class="line-block">
 <div class="line">- Dataframe contains raw count data, where samples are along columns and genes across rows</div>
+<div class="line">- As FPKM was developed for paired-end sequencing, it accounts for two reads being able to map to one fragment. Therefore, input counts should have accounted for this is the counting step of sequence quantification. If specifying a paired-end alignment in XPRESSpipe, this will have been accounted for.</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
@@ -317,7 +318,7 @@
 </div>
 </div>
 <div class="section" id="log-transformation">
-<h2>Log transformation<a class="headerlink" href="#log-transformation" title="Permalink to this headline">¶</a></h2>
+<h2>Log Transformation<a class="headerlink" href="#log-transformation" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.log_scale ( data, log_base=10 )</strong></div>
 <div class="line"><br /></div>
@@ -399,8 +400,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="clean-dataset">
-<h2>Clean dataset<a class="headerlink" href="#clean-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="clean-data">
+<h2>Clean Data<a class="headerlink" href="#clean-data" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.clean_df ( data, axis=0 )</strong></div>
 <div class="line"><br /></div>
@@ -475,7 +476,7 @@
 </div>
 </div>
 <div class="section" id="prepare-xpresstools-dataset">
-<h2>Prepare XPRESStools dataset<a class="headerlink" href="#prepare-xpresstools-dataset" title="Permalink to this headline">¶</a></h2>
+<h2>Prepare XPRESStools Dataset<a class="headerlink" href="#prepare-xpresstools-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line"><strong>xpresstools.prep_data ( data, info, gene_scale=True, print_means=False )</strong></div>
 <div class="line"><br /></div>
@@ -547,7 +548,35 @@
 <div class="line"><br /></div>
 <div class="line">Examples:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+          <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="mi">1007</span><span class="n">_s_at</span> <span class="mi">66</span>          <span class="mi">59</span>          <span class="mi">1</span>           <span class="mi">82</span>          <span class="mi">45</span>
+<span class="mi">1053</span><span class="n">_at</span>   <span class="mi">35</span>          <span class="mi">0</span>           <span class="mi">7</span>           <span class="mi">72</span>          <span class="mi">2</span>
+<span class="mi">121</span><span class="n">_at</span>    <span class="mi">20</span>          <span class="mi">70</span>          <span class="mi">85</span>          <span class="mi">78</span>          <span class="mi">36</span>
+<span class="mi">218024</span><span class="n">_at</span> <span class="mi">96</span>          <span class="mi">7</span>           <span class="mi">93</span>          <span class="mi">38</span>          <span class="mi">85</span>
+<span class="mi">240362</span><span class="n">_at</span> <span class="mi">73</span>          <span class="mi">41</span>          <span class="mi">92</span>          <span class="mi">77</span>          <span class="mi">26</span>
+<span class="o">&gt;</span> <span class="n">probe_collapse</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">probe_collapse</span><span class="p">(</span><span class="n">probe_test</span><span class="p">,</span> <span class="s1">&#39;/path/to/gpl_ref.txt&#39;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">probe_collapse</span>
+      <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="n">MPC1</span>  <span class="mf">84.5</span>        <span class="mf">24.0</span>        <span class="mf">92.5</span>        <span class="mf">57.5</span>        <span class="mf">55.5</span>
+<span class="n">PAX8</span>  <span class="mf">20.0</span>        <span class="mf">70.0</span>        <span class="mf">85.0</span>        <span class="mf">78.0</span>        <span class="mf">36.0</span>
+<span class="n">RFC2</span>  <span class="mf">35.0</span>        <span class="mf">0.0</span>         <span class="mf">7.0</span>         <span class="mf">72.0</span>        <span class="mf">2.0</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
+          <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="mi">1007</span><span class="n">_s_at</span> <span class="mi">66</span>          <span class="mi">59</span>          <span class="mi">1</span>           <span class="mi">82</span>          <span class="mi">45</span>
+<span class="mi">1053</span><span class="n">_at</span>   <span class="mi">35</span>          <span class="mi">0</span>           <span class="mi">7</span>           <span class="mi">72</span>          <span class="mi">2</span>
+<span class="mi">121</span><span class="n">_at</span>    <span class="mi">20</span>          <span class="mi">70</span>          <span class="mi">85</span>          <span class="mi">78</span>          <span class="mi">36</span>
+<span class="mi">218024</span><span class="n">_at</span> <span class="mi">96</span>          <span class="mi">7</span>           <span class="mi">93</span>          <span class="mi">38</span>          <span class="mi">85</span>
+<span class="mi">240362</span><span class="n">_at</span> <span class="mi">73</span>          <span class="mi">41</span>          <span class="mi">92</span>          <span class="mi">77</span>          <span class="mi">26</span>
+<span class="o">&gt;</span> <span class="n">probe_collapse</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">probe_collapse</span><span class="p">(</span><span class="n">probe_test</span><span class="p">,</span> <span class="s1">&#39;/path/to/gpl_ref.txt&#39;</span><span class="p">,</span> <span class="n">no_multimappers</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+<span class="o">&gt;</span> <span class="n">probe_collapse</span>
+                  <span class="n">fGSM523242</span>  <span class="n">fGSM523243</span>  <span class="n">fGSM523244</span>  <span class="n">fGSM523245</span>  <span class="n">fGSM523246</span>
+<span class="n">DDR1</span> <span class="o">///</span> <span class="n">MIR4640</span>  <span class="mf">66.0</span>        <span class="mf">59.0</span>        <span class="mf">1.0</span>         <span class="mf">82.0</span>        <span class="mf">45.0</span>
+<span class="n">MPC1</span>              <span class="mf">84.5</span>        <span class="mf">24.0</span>        <span class="mf">92.5</span>        <span class="mf">57.5</span>        <span class="mf">55.5</span>
+<span class="n">PAX8</span>              <span class="mf">20.0</span>        <span class="mf">70.0</span>        <span class="mf">85.0</span>        <span class="mf">78.0</span>        <span class="mf">36.0</span>
+<span class="n">RFC2</span>              <span class="mf">35.0</span>        <span class="mf">0.0</span>         <span class="mf">7.0</span>         <span class="mf">72.0</span>        <span class="mf">2.0</span>
 </pre></div>
 </div>
 </div>

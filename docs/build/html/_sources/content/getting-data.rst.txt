@@ -2,9 +2,9 @@
 Retrieving Data
 ###############
 
-=====================
-Import data from file
-=====================
+========================
+Importing Data from File
+========================
 | **xpresstools.get_df ( file_name, delimiter=',', low_memory=False, gene_axis='row' )**
 |
 | Purpose:
@@ -40,9 +40,9 @@ Import data from file
   1294_at       6.97009   6.80003   5.56620   7.43816   ...
   ...           ...       ...       ...       ...       ...
 
-=========================
-Import metadata from file
-=========================
+============================
+Importing metadata from file
+============================
 | **xpresstools.get_info ( file_name, delimiter=",", axis="col", sample_ids=0, labels=1 )**
 |
 | Purpose:
@@ -79,7 +79,7 @@ Import metadata from file
   ... ...       ...
 
 ============================
-Import data from GEO dataset
+Importing data from GEO
 ============================
 | **xpresstools.get_geo ( geo_id, output_info=False )**
 |
@@ -118,7 +118,7 @@ Import data from GEO dataset
   ... ...       ...
 
 ===========================
-Catenate raw counts files
+Catenate Raw Counts Files
 ===========================
 | **xpresstools.catenate_files ( directory, file_suffix='txt', save_file=None, delimiter='\t', drop_rows=0 )**
 |
@@ -154,7 +154,7 @@ Catenate raw counts files
   ...     ...           ...           ...           ...
 
 ======================================
-Create count table from file list
+Create Count Table from File List
 ======================================
 | **xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep='\t' )**
 |
@@ -174,7 +174,7 @@ Create count table from file list
 | **count_table**: Pandas dataframe with the catenated counts. Samples are along columns, genes are along rows
 |
 ============================
-Drop samples
+Drop Samples
 ============================
 | **xpresstools.drop_samples ( data, ids )**
 |

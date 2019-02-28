@@ -91,8 +91,8 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#install-dependencies">Install dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#conda-install">Conda install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-dependencies">Install Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conda-install">Conda Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manual-install">Manual install</a></li>
 </ul>
 </li>
@@ -168,39 +168,41 @@
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="install-dependencies">
-<h2>Install dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li>You may need to manually point your system to python3. You can check this by typing <code class="xref py py-data docutils literal notranslate"><span class="pre">python</span></code> in the command line and seeing if it is running python3. At this time, RiboPipe only works when Python3 is set as the default. If it is not, do the following:</li>
-</ol>
+<h2>Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">1)  You may need to manually point your system to python3. You can check this by typing <code class="xref py py-data docutils literal notranslate"><span class="pre">python</span></code> in the command line and seeing if it is running python3. At this time, RiboPipe only works when Python3 is set as the default. If it is not, do the following:</div>
+</div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">echo</span> <span class="s2">&quot;alias python=&quot;</span>python3<span class="s2">&quot; &gt;&gt; ~/.bash_profile</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
-<li>Download <a class="reference external" href="https://www.anaconda.com/download/">Conda</a>, a package manager, for your operating system. Double click the <cite>.pkg</cite> file if on MacOS, the <cite>.exe</cite> file on Windows, or follow these <a class="reference external" href="https://conda.io/docs/user-guide/install/linux.html#install-linux-silent">instructions</a> on Linux.</li>
-</ol>
+<div class="line-block">
+<div class="line">2)  Download <a class="reference external" href="https://www.anaconda.com/download/">Conda</a>, a package manager, for your operating system. Double click the <cite>.pkg</cite> file if on MacOS, the <cite>.exe</cite> file on Windows, or follow these <a class="reference external" href="https://conda.io/docs/user-guide/install/linux.html#install-linux-silent">instructions</a> on Linux.</div>
+</div>
 </div>
 <div class="section" id="conda-install">
-<h2>Conda install<a class="headerlink" href="#conda-install" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li>Install XPRESStools and associated dependencies via conda:</li>
-</ol>
+<h2>Conda Install<a class="headerlink" href="#conda-install" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">This feature is not yet available…</div>
+<div class="line"><br /></div>
+<div class="line">1)  Install XPRESStools and associated dependencies via conda:</div>
+</div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ conda install -y -c bioconda xpresstools
 </pre></div>
 </div>
 </div>
 <div class="section" id="manual-install">
 <h2>Manual install<a class="headerlink" href="#manual-install" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li>Or download XPRESStools manually:</li>
-</ol>
+<div class="line-block">
+<div class="line">1)  Or download XPRESStools manually:</div>
+</div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/XPRESSyourself/xpresstools.git
 $ <span class="nb">cd</span> XPRESStools
 $ <span class="nb">cd</span> python setup.py install
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
-<li>Or, to download specific version:</li>
-</ol>
+<div class="line-block">
+<div class="line">2)  Or, to download specific version:</div>
+</div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nv">tag</span><span class="o">=</span><span class="s1">&#39;v0.0.1-beta&#39;</span>
 $ wget https://github.com/XPRESSyourself/XPRESStools/archive/<span class="nv">$tag</span>.zip
 $ unzip xpresstools-<span class="si">${</span><span class="nv">tag</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>.zip
@@ -209,9 +211,9 @@ $ <span class="nb">cd</span> xpresstools
 $ <span class="nb">cd</span> python setup.py install
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
-<li>At the end of the installation instructions, an installation location will be given. Add this to your $PATH:</li>
-</ol>
+<div class="line-block">
+<div class="line">3)  At the end of the installation instructions, an installation location will be given. Add this to your $PATH:</div>
+</div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>...
 Installing xpresstools script to /Users/<span class="nv">$USERNAME</span>/anaconda3/bin
 
