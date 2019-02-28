@@ -11,7 +11,7 @@
 -----
 
 ### Development Notes:
-As this toolkit is still in beta production, it only currently is compatible with Python v3.5*
+<b><i>XPRESStools is still in beta production</i></b>
 
 ### Citation:    
 ```
