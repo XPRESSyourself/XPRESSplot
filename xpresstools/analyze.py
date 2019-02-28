@@ -126,7 +126,7 @@ title= Provide title for figure and saved file if save_fig option used
 ASSUMPTIONS:
 Data has been scaled and labeled with the MICARtools prep_data function
 """
-def sample_overview(data_scaled, info, palette=None, gene_list=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False):
+def multigene_overview(data_scaled, info, palette=None, gene_list=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False):
 
     reset_plot(whitegrid)
     data_c = analysis_prep(data)

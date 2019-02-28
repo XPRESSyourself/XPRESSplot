@@ -2,12 +2,12 @@
 General Usage
 #############
 
-XPRESStools is intended as a all-in-one toolkit and interface for analysis of sequencing data
+| XPRESStools is intended as a all-in-one toolkit and interface for analysis of sequencing data
 
 ======================================
-Sequence data
+Sequence Data
 ======================================
-Required format for all functions (unless otherwise noted in documentation).
+| Required format for all functions (unless otherwise noted in documentation).
 
 .. code-block:: python
 
@@ -23,7 +23,7 @@ Required format for all functions (unless otherwise noted in documentation).
 ===========
 Metadata
 ===========
-Required format for all functions (unless otherwise noted in documentation).
+| Required format for all functions (unless otherwise noted in documentation).
 
 .. code-block:: python
 

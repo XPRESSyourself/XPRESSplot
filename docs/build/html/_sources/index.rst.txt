@@ -14,9 +14,13 @@ About
 Table of contents
 =================
 .. toctree::
+   :hidden:
+
+   self
+
+.. toctree::
    :maxdepth: 1
 
-   index
    content/installation
    content/general-usage
    content/getting-data

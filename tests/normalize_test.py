@@ -28,6 +28,10 @@ import numpy as np
 import xpresstools as xp
 
 gtf = './transcripts.gtf'
+gpl_ref = './GPL570.txt'
+
+#gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
+#gpl_ref = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/GPL570.txt'
 
 """
 Make test data_set
@@ -237,3 +241,30 @@ assert data_label_s.equals(label_truth), 'prep_data() failed'
 """
 probe_collapse()
 """
+probe_test = pd.DataFrame(columns=['fGSM523242','fGSM523243','fGSM523244','fGSM523245','fGSM523246'], index=['1007_s_at','1053_at','121_at','218024_at','240362_at'])
+probe_test.loc['1007_s_at'] = pd.Series({'fGSM523242':66,'fGSM523243':59,'fGSM523244':1,'fGSM523245':82,'fGSM523246':45})
+probe_test.loc['1053_at'] = pd.Series({'fGSM523242':35,'fGSM523243':0,'fGSM523244':7,'fGSM523245':72,'fGSM523246':2})
+probe_test.loc['121_at'] = pd.Series({'fGSM523242':20,'fGSM523243':70,'fGSM523244':85,'fGSM523245':78,'fGSM523246':36})
+probe_test.loc['218024_at'] = pd.Series({'fGSM523242':96,'fGSM523243':7,'fGSM523244':93,'fGSM523245':38,'fGSM523246':85})
+probe_test.loc['240362_at'] = pd.Series({'fGSM523242':73,'fGSM523243':41,'fGSM523244':92,'fGSM523245':77,'fGSM523246':26})
+
+probe_truth = pd.DataFrame(columns=['fGSM523242','fGSM523243','fGSM523244','fGSM523245','fGSM523246'], index=['RFC2','PAX8','MPC1'])
+probe_truth.loc['RFC2'] = pd.Series({'fGSM523242':35,'fGSM523243':0,'fGSM523244':7,'fGSM523245':72,'fGSM523246':2})
+probe_truth.loc['PAX8'] = pd.Series({'fGSM523242':20,'fGSM523243':70,'fGSM523244':85,'fGSM523245':78,'fGSM523246':36})
+probe_truth.loc['MPC1'] = pd.Series({'fGSM523242':84.5,'fGSM523243':24,'fGSM523244':92.5,'fGSM523245':57.5,'fGSM523246':55.5})
+
+multimap_truth = pd.DataFrame(columns=['fGSM523242','fGSM523243','fGSM523244','fGSM523245','fGSM523246'], index=['DDR1 /// MIR4640','RFC2','PAX8','MPC1'])
+multimap_truth.loc['DDR1 /// MIR4640'] = pd.Series({'fGSM523242':66,'fGSM523243':59,'fGSM523244':1,'fGSM523245':82,'fGSM523246':45})
+multimap_truth.loc['RFC2'] = pd.Series({'fGSM523242':35,'fGSM523243':0,'fGSM523244':7,'fGSM523245':72,'fGSM523246':2})
+multimap_truth.loc['PAX8'] = pd.Series({'fGSM523242':20,'fGSM523243':70,'fGSM523244':85,'fGSM523245':78,'fGSM523246':36})
+multimap_truth.loc['MPC1'] = pd.Series({'fGSM523242':84.5,'fGSM523243':24,'fGSM523244':92.5,'fGSM523245':57.5,'fGSM523246':55.5})
+
+probe_collapse = xp.probe_collapse(probe_test, gpl_ref)
+probe_collapse = probe_collapse.sort_index().astype(float)
+probe_truth = probe_truth.sort_index().astype(float)
+assert probe_collapse.equals(probe_truth), 'probe_collapse() failed during no_multimappers test'
+
+multimap_collapse = xp.probe_collapse(probe_test, gpl_ref, no_multimappers=False)
+multimap_collapse = multimap_collapse.sort_index().astype(float)
+multimap_truth = multimap_truth.sort_index().astype(float)
+assert multimap_collapse.equals(multimap_truth), 'probe_collapse() failed during multimappers test'

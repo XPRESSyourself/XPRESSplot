@@ -3,22 +3,23 @@ Installation
 ############
 
 ====================
-Install dependencies
+Install Dependencies
 ====================
 
-1)  You may need to manually point your system to python3. You can check this by typing :data:`python` in the command line and seeing if it is running python3. At this time, RiboPipe only works when Python3 is set as the default. If it is not, do the following:
+| 1)  You may need to manually point your system to python3. You can check this by typing :data:`python` in the command line and seeing if it is running python3. At this time, RiboPipe only works when Python3 is set as the default. If it is not, do the following:
 
 .. code-block:: shell
 
   $ echo "alias python="python3" >> ~/.bash_profile
 
-2)  Download `Conda <https://www.anaconda.com/download/>`_, a package manager, for your operating system. Double click the `.pkg` file if on MacOS, the `.exe` file on Windows, or follow these `instructions <https://conda.io/docs/user-guide/install/linux.html#install-linux-silent>`_ on Linux.
+| 2)  Download `Conda <https://www.anaconda.com/download/>`_, a package manager, for your operating system. Double click the `.pkg` file if on MacOS, the `.exe` file on Windows, or follow these `instructions <https://conda.io/docs/user-guide/install/linux.html#install-linux-silent>`_ on Linux.
 
 ====================
-Conda install
+Conda Install
 ====================
-
-1)  Install XPRESStools and associated dependencies via conda:
+| This feature is not yet available...
+|
+| 1)  Install XPRESStools and associated dependencies via conda:
 
 .. code-block:: shell
 
@@ -28,7 +29,7 @@ Conda install
 Manual install
 ======================
 
-1)  Or download XPRESStools manually:
+| 1)  Or download XPRESStools manually:
 
 .. code-block:: shell
 
@@ -36,7 +37,7 @@ Manual install
   $ cd XPRESStools
   $ cd python setup.py install
 
-2)  Or, to download specific version:
+| 2)  Or, to download specific version:
 
 .. code-block:: shell
 
@@ -47,7 +48,7 @@ Manual install
   $ cd xpresstools
   $ cd python setup.py install
 
-3)  At the end of the installation instructions, an installation location will be given. Add this to your $PATH:
+| 3)  At the end of the installation instructions, an installation location will be given. Add this to your $PATH:
 
 .. code-block:: shell
 

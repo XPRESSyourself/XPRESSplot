@@ -3,7 +3,7 @@ Reference Building
 ###########################
 
 ======================
-Truncate reference GTF
+Truncate Reference GTF
 ======================
 | **xpresstools.truncate ( input_gtf, truncate_amount=45, save_coding_path='./', save_truncated_path='./', sep='\t', return_files=False )**
 |
