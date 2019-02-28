@@ -52,7 +52,7 @@ setup(
       ],
 
     classifiers=[
-        'Development Status :: Beta',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Bio-Informatics'
         ]
