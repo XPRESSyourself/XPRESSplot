@@ -344,3 +344,7 @@ Check Sample Expression Distributions
 .. image:: quality.png
    :scale: 100 %
    :align: left
+
+==============================
+Microarray Probe Collapse
+==============================

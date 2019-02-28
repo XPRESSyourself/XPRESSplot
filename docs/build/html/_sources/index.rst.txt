@@ -1,15 +1,14 @@
-==================================================================================
-**XPRESStools**: *A toolkit for navigating and analyzing gene expression datasets*
-==================================================================================
-
+##############
+XPRESStools
+##############
 |build-status| |docs|
 
-**XPRESStools** is a part of the **XPRESSyourself** suite of sequencing tools. **XPRESStools** is a python
-toolkit importing, cleaning, normalizing, and analyzing sequence data from Microarray or RNAseq platforms.
-
-**XPRESStools** is developed by Jordan Berg in the `Rutter Lab <https://biochem.utah.edu/rutter/index.html>`_
-@ the `University of Utah <https://www.utah.edu/>`_, along with other collaborators.
-
+=================
+About
+=================
+| `XPRESStools <https://github.com/XPRESStools>`_ is a part of the `XPRESSyourself <https://github.com/XPRESSyourself/>`_ suite of sequencing tools. `XPRESStools <https://github.com/XPRESSyourself/XPRESStools>`_ is a Python toolkit for navigating and analyzing gene expression (Microarray or RNAseq) datasets. Features include the ability to import GEO-accessible datasets and metadata or your own datasets, clean, normalize, and analyze sequence data.
+|
+| `XPRESStools <https://github.com/XPRESSyourself/XPRESStools>`_ and the `XPRESSyourself <https://github.com/XPRESSyourself/>`_ suite is developed and maintained by Jordan Berg in the `Rutter Lab <https://biochem.utah.edu/rutter/index.html>`_ @ the `University of Utah <https://www.utah.edu/>`_, along with other collaborators.
 
 =================
 Table of contents
@@ -17,28 +16,24 @@ Table of contents
 .. toctree::
    :maxdepth: 1
 
+   index
    content/installation
    content/general-usage
    content/getting-data
-   content/formatting
    content/normalize
-   content/quality-control
-   content/collapse-probes
-   content/reference-building
    content/analysis
-
+   content/reference-building
 
 =======
 License
 =======
-XPRESStools is freely available under a GNU General Public License (v3.0).
-
+| `XPRESStools <https://github.com/XPRESStools>`_ is freely available under a GNU General Public License (v3.0).
 
 ==========
 Questions?
 ==========
-If you have questions, requests, or bugs to report, please use the `Github issues forum
-<https://github.com/XPRESSyourself/XPRESStools/issues>`_.
+| If you have questions, requests, or bugs to report, please use the `Github issues forum <https://github.com/XPRESSyourself/XPRESStools/issues>`_.
+
 
 
 .. |build-status| image:: https://travis-ci.org/XPRESSyourself/XPRESStools.svg?branch=master

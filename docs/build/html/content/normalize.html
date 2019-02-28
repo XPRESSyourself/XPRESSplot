@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Normalization &mdash; xpresstools 0.0.1-beta documentation</title>
+  <title>Normalization and Quality Control &mdash; xpresstools 0.0.1-beta documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="collapse-probes.html" />
-    <link rel="prev" title="Reference File Modification" href="formatting.html" /> 
+    <link rel="next" title="&lt;no title&gt;" href="analysis.html" />
+    <link rel="prev" title="Retrieving Data" href="getting-data.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,11 +87,36 @@
             
             
               <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">XPRESStools</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#about">About</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#table-of-contents">Table of contents</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="general-usage.html">General Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Normalization and Quality Control</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rpm-reads-per-million">RPM (Reads per Million)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#r-fpkm-reads-fragments-per-kilobase-million">R/FPKM (Reads/Fragments per Kilobase Million)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#te-translation-efficiency">TE (Translation Efficiency)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-transformation">Log transformation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#batch-normalize">Batch Normalize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#clean-dataset">Clean dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-gene-threshold">Set Gene Threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prepare-xpresstools-dataset">Prepare XPRESStools dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#check-sample-expression-distributions">Check Sample Expression Distributions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#microarray-probe-collapse">Microarray Probe Collapse</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reference-building.html">Reference Building</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#questions">Questions?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-usage.html">General Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="formatting.html">Reference File Modification</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Normalization</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Normalization and Quality Control</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rpm-reads-per-million">RPM (Reads per Million)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#r-fpkm-reads-fragments-per-kilobase-million">R/FPKM (Reads/Fragments per Kilobase Million)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#te-translation-efficiency">TE (Translation Efficiency)</a></li>
@@ -101,8 +126,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#set-gene-threshold">Set Gene Threshold</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#prepare-xpresstools-dataset">Prepare XPRESStools dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#check-sample-expression-distributions">Check Sample Expression Distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#microarray-probe-collapse">Microarray Probe Collapse</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reference-building.html">Reference Building</a></li>
 </ul>
 
             
@@ -148,7 +175,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Data Normalization</li>
+      <li>Normalization and Quality Control</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -167,8 +194,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="data-normalization">
-<h1>Data Normalization<a class="headerlink" href="#data-normalization" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="normalization-and-quality-control">
+<h1>Normalization and Quality Control<a class="headerlink" href="#normalization-and-quality-control" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="rpm-reads-per-million">
 <h2>RPM (Reads per Million)<a class="headerlink" href="#rpm-reads-per-million" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
@@ -520,6 +547,9 @@
 </div>
 <a class="reference internal image-reference" href="../_images/quality.png"><img alt="../_images/quality.png" class="align-left" src="../_images/quality.png" style="width: 576.0px; height: 288.0px;" /></a>
 </div>
+<div class="section" id="microarray-probe-collapse">
+<h2>Microarray Probe Collapse<a class="headerlink" href="#microarray-probe-collapse" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -530,10 +560,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="collapse-probes.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="analysis.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="formatting.html" class="btn btn-neutral float-left" title="Reference File Modification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="getting-data.html" class="btn btn-neutral float-left" title="Retrieving Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
