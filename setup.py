@@ -35,6 +35,7 @@ setup(
     author_email = 'jordan.berg@biochem.utah.edu',
     url = 'https://github.com/XPRESSyourself/XPRESStools',
     packages = ['xpresstools'],
+    exclude= ['tests','docs'],
     package_dir = {'xpresstools': 'xpresstools'},
     license = 'GPL-3.0',
     zip_safe = False,
