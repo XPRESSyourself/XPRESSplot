@@ -17,6 +17,7 @@ script:
 - python fetch_test.py
 - python format_test.py
 - python normalize_test.py
+- cd ../
 deploy:
   provider: pypi
   user: j-berg
