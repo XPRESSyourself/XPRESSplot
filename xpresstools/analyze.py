@@ -69,7 +69,7 @@ mat.heatmap(data_scaled, data_labeled, color_dict=color_dict, gene_list='/path/t
 ASSUMPTIONS:
 Data has been scaled and labeled with the MICARtools prep_data function
 """
-def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, save_fig=None, dpi=600, bbox_inches='tight', font_scale=.8, cmap=jakes_cmap, center=0, metric='euclidean', method='centroid', xticklabels=True, linewidths=.03, linecolor='#DCDCDC', col_cluster=True, row_cluster=False, figsize=(16,6.5), cbar_kws=None):
+def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, save_fig=None, dpi=600, bbox_inches='tight', font_scale=.8, cmap=jakes_cmap, center=0, metric='euclidean', method='centroid', xticklabels=True, linewidths=0, linecolor='#DCDCDC', col_cluster=True, row_cluster=False, figsize=(16,6.5), cbar_kws=None):
 
     reset_plot(True)
     data_c = analysis_prep(data)
@@ -78,7 +78,7 @@ def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, 
     if sample_palette != None:
         sample_palette = prep_palette(info, sample_palette)
 
-    if gene_info != None and gene_palette != None:
+    if gene_palette != None and isinstance(gene_info, pd.DataFrame):
         gene_palette = prep_palette(gene_info, gene_palette)
 
     #Custom panel heatmap
@@ -126,12 +126,10 @@ title= Provide title for figure and saved file if save_fig option used
 ASSUMPTIONS:
 Data has been scaled and labeled with the MICARtools prep_data function
 """
-def multigene_overview(data_scaled, info, palette=None, gene_list=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False):
+def multigene_overview(data, info, palette=None, gene_list=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False):
 
     reset_plot(whitegrid)
-    data_c = analysis_prep(data)
-    data_c = label(data_c, info)
-    data_c = unstack_data(data_c)
+    data_c = data.copy()
 
     #Custom panel heatmap
     if gene_list != None:
@@ -140,9 +138,13 @@ def multigene_overview(data_scaled, info, palette=None, gene_list=None, order=No
     else:
         plot_data = data_c.dropna(axis=0)
 
+    plot_data_c = analysis_prep(plot_data)
+    plot_data_c = label(plot_data_c, info)
+    plot_data_c = unstack_data(plot_data_c)
+
     #Final formatting check
     try:
-        plot_data[["expr"]] = plot_data[["expr"]].apply(pd.to_numeric)
+        plot_data_c[["expr"]] = plot_data_c[["expr"]].apply(pd.to_numeric)
     except:
         raise Exception('Data is not properly formatted for downstream plotting')
 
@@ -150,7 +152,7 @@ def multigene_overview(data_scaled, info, palette=None, gene_list=None, order=No
     if not order != None and type(order) is list or palette != None and type(palette) is list:
         return
 
-    ax = sns.violinplot(x="type", y="expr", data=plot_data, order=order, palette=palette)
+    ax = sns.violinplot(x=plot_data_c['type'], y=plot_data_c['expr'], data=plot_data_c, order=order, palette=palette)
     ax.set_xlabel('')
     ax.set_ylabel('Expression')
 
@@ -248,19 +250,19 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
 
     #Prep data_scaled by adding labels from info
     labels = pd.Series(info[1].values,index=info[0]).to_dict()
-    data_c.loc['label'] = data_c.columns.map(labels.get).T
+    data_c.loc['label'] = data_c.columns.map(labels.get)
 
-    ax = sns.scatterplot(data_c[str(x)], data_c[str(y)], hue=data_c['label'], palette=palette, alpha=alpha)
+    ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], palette=palette, alpha=alpha)
 
     if add_linreg == True:
         _x, _y, r_value, title = make_linreg(data_c, x, y)
         ax.plot(_x, _y, '-k')
 
     #Plot thresholds
-    if y_threshold != None:
+    if type(y_threshold) != list and y_threshold != None or type(y_threshold) == list and None not in y_threshold:
         add_threshold(y_threshold, threshold_color, ax)
 
-    if x_threshold != None:
+    if type(x_threshold) != list and x_threshold != None or type(x_threshold) == list and None not in x_threshold:
         add_threshold(x_threshold, threshold_color, ax)
 
     #Plot selected genes if user-specified
@@ -287,12 +289,12 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
 
     if order_legend != None:
         if type(order_legend) is list:
-            plt.legend([handles[idx] for idx in order_legend],[labels[idx] for idx in order_legend], bbox_inches=(1.05, 1), loc=2, borderaxespad=0.)
+            plt.legend([handles[idx] for idx in order_legend],[labels[idx] for idx in order_legend], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         else:
-            plt.legend(handles, labels, bbox_inches=(1.05, 1), loc=2, borderaxespad=0.)
+            plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
             print('order_legend datatype is invalid -- plotting samples in default order...')
     else:
-        plt.legend(handles, labels, bbox_inches=(1.05, 1), loc=2, borderaxespad=0.)
+        plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
     plt.xlabel(str(x))
     plt.ylabel(str(y))

@@ -68,6 +68,8 @@ geo_id= GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)
 output_info= Output long-form metadata to txt file
 USAGE:
 sample_data, sample_metadata = mat.get_geo("GSE20716")
+
+Add feature to grab GPL file
 """
 def get_geo(geo_id, output_info=False):
 

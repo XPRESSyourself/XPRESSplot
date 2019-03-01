@@ -34,7 +34,14 @@ conda install -c bioconda xpresstools
 ```
 
 ### Important Notes:    
-Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see documentation for help)    
+* If working with XPRESStools within an interactive notebook (i.e. Jupyter Notebook, Atom Hydrogen, etc), you must include the following line of code after importing XPRESStools
+
+```
+import XPRESStools as xp
+%matplotlib inline 
+```
+
+* Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see documentation for help)    
 
 ```
 >>> geo.head()

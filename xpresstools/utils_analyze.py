@@ -157,8 +157,8 @@ def make_linreg(data, gene1, gene2):
     gene_a = get_array(data_c, gene1)
     gene_b = get_array(data_c, gene2)
 
-    slope, intercept, r_value, p_value, std_err = linregress(gene_a, gene_b)
-    x = np.linspace(data_c[str(gene1)].min(), data_c[str(gene1)].max(), 100)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(gene_a, gene_b)
+    x = np.linspace(data_c.loc[str(gene1)].min(), data_c.loc[str(gene1)].max(), 100)
     y = (slope * x) + intercept
 
     title = 'r = ' + "%.2f" % round(r_value,4)
