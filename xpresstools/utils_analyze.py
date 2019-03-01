@@ -30,7 +30,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
-from .utils import calculate_fc, calculate_p
+from functools import partial
+from multiprocessing import cpu_count, Pool
 
 """
 DESCRIPTION: Default data prep for all analysis functions
@@ -166,6 +167,24 @@ def make_linreg(data, gene1, gene2):
     return x, y, r_value, title
 
 """
+"""
+def add_x_threshold(threshold, threshold_color, ax):
+
+    for x in threshold:
+        if type(x) is int or type(x) is float:
+            ax.axvline(x, ls='--', color=str(threshold_color))
+        else:
+            print('Invalid X threshold provided')
+
+def add_y_threshold(threshold, threshold_color, ax):
+
+    for x in threshold:
+        if type(x) is int or type(x) is float:
+            ax.axhline(x, ls='--', color=str(threshold_color))
+        else:
+            print('Invalid Y threshold provided')
+
+"""
 Initial variable checks
 """
 def init_pca(principle_components, _3d_pca, plotly_login):
@@ -200,7 +219,7 @@ def init_pca(principle_components, _3d_pca, plotly_login):
 """
 DESCRIPTION: Generate scree plot for principle components
 """
-def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, grid, whitegrid):
+def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, save_scree, grid, whitegrid):
 
     vari = 'Explained variation per principal component: {}'.format(np.round(pca.explained_variance_ratio_, decimals=4)*100)
     scree = np.round(pca.explained_variance_ratio_, decimals=4)*100
@@ -210,7 +229,9 @@ def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, grid, 
 
     ax = sns.lineplot(x=sing_vals, y=scree, color="red")
     ax.set(xlabel='Principal Component', ylabel='Proportion of Variance Explained', title='Scree Plot')
-    plt.savefig(str(save_fig[:-4]) + '_scree.pdf', dpi=dpi, bbox_inches=bbox_inches)
+
+    if save_scree == True:
+        plt.savefig(str(save_fig[:-4]) + '_scree.pdf', dpi=dpi, bbox_inches=bbox_inches)
 
     if scree_only == True:
         plt.show()
@@ -225,6 +246,7 @@ def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, grid, 
 
 """
 DESCRIPTION: Add confidence intervals to scatterplot
+NOTE: This code is adapted from Jaime (https://stackoverflow.com/a/20127387/9571488) and Ben (https://stackoverflow.com/a/25022642/9571488) on Stack Overflow
 """
 def set_confidence(df_pca, pca_plot, unique_labels, palette, ci):
 
@@ -252,22 +274,13 @@ def set_confidence(df_pca, pca_plot, unique_labels, palette, ci):
 """
 DESCRIPTION: 2D Non-interactive PCA scatterplot
 """
-def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title):
+def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title, size):
 
-    pca_plot = sns.scatterplot(df_pca.PCa, df_pca.PCb, hue=df_pca['label'], palette=palette)
-    set_confidence(df_pca, pca_plot, unique_labels, palette, ci)
+    ax = sns.scatterplot(df_pca.PCa, df_pca.PCb, hue=df_pca['label'], palette=palette, s=size)
+    set_confidence(df_pca, ax, unique_labels, palette, ci)
 
     # Put the legend out of the figure
-    handles,labels = pca_plot.get_legend_handles_labels()
-
-    if order_legend != None:
-        if type(order_legend) is list:
-            plt.legend([handles[idx] for idx in order_legend],[labels[idx] for idx in order_legend], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-        else:
-            plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-            print('order_legend datatype is invalid -- plotting samples in default order...')
-    else:
-        plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    make_legend(ax, order_legend)
 
     plt.xlabel('PC' + str(principle_components[0]) + ' (' + str(round(scree[(principle_components[0] - 1)],2)) + '%)')
     plt.ylabel('PC' + str(principle_components[1]) + ' (' + str(round(scree[(principle_components[1] - 1)],2)) + '%)')
@@ -285,39 +298,175 @@ def pca2(df_pca, unique_labels, palette, principle_components, scree, order_lege
 """
 DESCRIPTION: 3D Non-interactive PCA scatterplot
 """
-def pca3(df_pca, palette, save_fig, dpi, bbox_inches):
+def pca3(df_pca, palette, save_fig, dpi, bbox_inches, size, order_legend):
 
     fig = plt.figure()
     ax = Axes3D(fig)
 
+    pc_list = df_pca.columns.tolist()
+    while 'label' in pc_list:
+        pc_list.remove('label')
+
     df_pca.columns = ['PCa', 'PCb', 'PCc', 'label']
     unique_labels = df_pca['label'].unique() #Gather unique labels
 
-    pca0 = df_pca.loc[df_pca['label'] == unique_labels[0]]
-    pca1 = df_pca.loc[df_pca['label'] == unique_labels[1]]
-    pca2 = df_pca.loc[df_pca['label'] == unique_labels[2]]
+    #Convert color tuples to arrays
 
-    x0 = pca0.PCa.values
-    y0 = pca0.PCb.values
-    z0 = pca0.PCc.values
-    ax.scatter(x0, y0, z0, c=palette[unique_labels[0]], label=str(unique_labels[0]))
-
-    x1 = pca1.PCa.values
-    y1 = pca1.PCb.values
-    z1 = pca1.PCc.values
-    ax.scatter(x1, y1, z1, c=palette[unique_labels[1]], label=str(unique_labels[1]))
-
-    x2 = pca2.PCa.values
-    y2 = pca2.PCb.values
-    z2 = pca2.PCc.values
-    ax.scatter(x2, y2, z2, c=palette[unique_labels[2]], label=str(unique_labels[2]))
+    for x in unique_labels:
+        pca0 = df_pca.loc[df_pca['label'] == str(x)]
+        x0 = pca0.PCa.values
+        y0 = pca0.PCb.values
+        z0 = pca0.PCc.values
+        ax.scatter(x0, y0, z0, c=np.array([palette[str(x)]]), label=str(x), s=size)
 
     ax.set_xlabel(str(pc_list[0]))
     ax.set_ylabel(str(pc_list[1]))
     ax.set_zlabel(str(pc_list[2]))
-    ax.legend()
 
     plt.show()
 
     if save_fig != None:
         plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
+
+"""
+DESCRIPTION: Parallelize function on a chunk of a dataframe
+"""
+def parallelize(func, *args):
+
+    cores = cpu_count() #Number of CPU cores on your system
+    partitions = cpu_count() #Define as many partitions as you want
+
+    data_split = np.array_split(args[0], partitions)
+    pool = Pool(cores)
+
+    if func == calculate_fc:
+        func = partial(calculate_fc, label_comp=args[1], label_base=args[2])
+    elif func == calculate_p:
+        func = partial(calculate_p, label_comp=args[1], label_base=args[2])
+    elif func == count_threshold_util:
+        func = partial(count_threshold_util, minimum=args[1], maximum=args[2])
+    else:
+        return
+
+    data = pd.concat(pool.map(func, data_split))
+
+    pool.close()
+    pool.join()
+
+    return data
+
+"""
+DESCRIPTION
+"""
+def calculate_fc(data, label_comp, label_base):
+
+    # Average every by cell line
+    data['log$_2$(Fold Change)'] = np.log2((data.filter(regex=str(label_comp)).mean(axis=1)) / \
+                                      (data.filter(regex=str(label_base)).mean(axis=1)))
+    data['-log$_1$$_0$(P-Value)'] = ''
+
+    return data
+
+"""
+DESCRIPTION
+"""
+def calculate_p(data, label_comp, label_base):
+
+    drop_index = []
+
+    # Calculate p-value using 1-way ANOVA with replicates and append to df_oxsm_volc
+    for row in data.iterrows():
+        index, row_data = row
+        comp_row = data.loc[index].filter(regex=str(label_comp)).values.tolist()
+        base_row = data.loc[index].filter(regex=str(label_base)).values.tolist()
+
+        # Append p_value to df_oxsm_volc
+        try:
+            statistic, p_value = stats.ttest_ind(comp_row, base_row)
+            data.loc[index,'-log$_1$$_0$(P-Value)'] = float(-1 * (np.log10(p_value)))
+        except:
+            drop_index.append(index)
+
+    data = data.drop(labels=drop_index, axis=0)
+
+    return data
+
+"""
+DESCRIPTION
+"""
+def count_threshold_util(data, minimum, maximum):
+
+    data = data.T
+
+    if minimum != None:
+        data = data[data.columns[data.min() > minimum]]
+
+    if maximum != None:
+        data = data[data.columns[data.max() < maximum]]
+
+    data = data.T
+
+    return data
+
+"""
+"""
+def make_threshold_list(threshold):
+
+    if threshold != None and type(threshold) != list:
+        threshold = [threshold]
+
+    return threshold
+
+"""
+
+"""
+def output_threshold(data_c, x_threshold, y_threshold, save_threshold_hits, save_threshold_hits_delimiter):
+
+    x_threshold = make_threshold_list(x_threshold)
+    y_threshold = make_threshold_list(y_threshold)
+
+    if len(x_threshold) == 2 and len(y_threshold) == 1:
+        data_c = data_c.rename(columns = {'log$_2$(Fold Change)':'log2 Fold Change', '-log$_1$$_0$(P-Value)':'-log10 P-Value'})
+        df_c = data_c[['log2 Fold Change', '-log10 P-Value']].copy()
+        df_up = df_c.loc[(df_c['log2 Fold Change'] > max(x_threshold)) & (df_c['-log10 P-Value'] > y_threshold[0])] #get upregulated hits
+        df_down = df_c.loc[(df_c['log2 Fold Change'] < min(x_threshold)) & (df_c['-log10 P-Value'] > y_threshold[0])] #get downregulated hits
+        thresh_hits = df_up.append(df_down) #append hits tables
+        thresh_hits.to_csv(str(save_threshold_hits), sep=save_threshold_hits_delimiter)
+
+"""
+"""
+def make_legend(ax, order_legend):
+
+    handles, labels = ax.get_legend_handles_labels()
+
+    if len(labels) > 1:
+        if order_legend != None:
+            if type(order_legend) is list:
+                plt.legend([handles[idx] for idx in order_legend],[labels[idx] for idx in order_legend], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            else:
+                plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                print('order_legend datatype is invalid -- plotting samples in default order...')
+        else:
+            plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    else:
+        ax.get_legend().remove()
+
+    return ax
+
+"""
+"""
+def highlight_markers(data, x, y, highlight_points, highlight_color, alpha_highlights, ax):
+
+    if all(isinstance(z, list) for z in highlight_points):
+        p = 0
+        for h in highlight_points:
+            data_sub = data_subset(data.T, highlight_points[p]).T
+            data_genes = data_sub.dropna(axis=0)
+            ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color[p]), alpha=alpha_highlights)
+            p += 1
+    else:
+        data_sub = data_subset(data.T, highlight_points).T
+        data_genes = data_sub.dropna(axis=0)
+        ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color), alpha=alpha_highlights)
+
+    return ax

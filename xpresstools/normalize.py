@@ -29,7 +29,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
-from .utils import parallelize, threshold_util
+from .utils_analyze import parallelize, count_threshold_util
 
 """
 INITIALIZATION PARAMETERS
@@ -199,7 +199,7 @@ minimum= Float or int of minimum count/read value to accept per gene (all sample
 def threshold(data, minimum=None, maximum=None):
 
     data_c = data.copy()
-    data_c = parallelize(threshold_util, data_c, minimum, maximum)
+    data_c = parallelize(count_threshold_util, data_c, minimum, maximum)
 
     return data_c
 

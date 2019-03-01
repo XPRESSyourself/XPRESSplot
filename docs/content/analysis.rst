@@ -1,7 +1,7 @@
 ####################
 Analysis
 ####################
-
+|The following commands rely heavily on the matplotlib (DOI:10.5281/zenodo.2577644) and seaborn (DOI:10.5281/zenodo.883859) libraries, but have been modified in many cases for ease of plotting given the formatting of XPRESStools datasets.
 
 ===============================
 Single-gene Analysis

@@ -12,7 +12,8 @@
 -----
 
 ### Development Notes:
-<b><i>XPRESStools is still in beta production</i></b>
+<b><i>XPRESStools is still in beta production</i></b>   
+XPRESStools supports Python 2.7 and >=3.5   
 
 ### Citation:    
 ```
@@ -38,7 +39,7 @@ conda install -c bioconda xpresstools
 
 ```
 import XPRESStools as xp
-%matplotlib inline 
+%matplotlib inline
 ```
 
 * Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see documentation for help)    
