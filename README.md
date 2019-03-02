@@ -12,7 +12,8 @@
 -----
 
 ### Development Notes:
-<b><i>XPRESStools is still in beta production</i></b>   
+<b><i>XPRESStools is still in beta production</i></b>  
+Interactive scatter plotting functions are not currently tested    
 XPRESStools supports Python 2.7 and >=3.5   
 
 ### Citation:    

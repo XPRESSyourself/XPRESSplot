@@ -32,12 +32,16 @@ meta_loc = './sample_info_test.csv'
 save_threshold = '.threshold.csv'
 linreg_file = './linreg_results.csv'
 pca_file = './pca_test.pdf'
+probe_loc = './GPL570.txt'
 
+"""
 data_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/large_test.csv'
 meta_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/sample_info_test.csv'
 save_threshold = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/threshold.csv'
 linreg_file = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/linreg_results.csv'
 pca_file = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/pca_test.pdf'
+probe_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/GPL570.txt'
+"""
 
 """
 Get test data
@@ -51,7 +55,7 @@ geo = xp.keep_labels(geo, meta, label_list=['Normal','Adenoma','Adenocarcinoma']
 geo_clean = xp.clean_df(geo)
 
 #Collapse multi-mapping probes
-geo_collapsed = xp.probe_collapse(geo_clean,"/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/GPL570.txt")
+geo_collapsed = xp.probe_collapse(geo_clean, probe_loc)
 
 #Scale sorted dataset
 geo_scaled, geo_labeled = xp.prep_data(geo_collapsed, meta)
@@ -68,7 +72,7 @@ NON-INTERACTIVE TESTS
 """
 #Single-gene summary
 xp.gene_overview(geo_labeled, meta, gene_name='SEC62', palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'])
-xp.gene_overview(geo_labeled, meta, 'CCL5', geo_colors, order=None, save_fig=None, dpi=600, bbox_inches='tight', grid=True, whitegrid=True)
+xp.gene_overview(geo_labeled, meta, 'CCL5', geo_colors, order=None, dpi=600, bbox_inches='tight', grid=True, whitegrid=True)
 
 #Multi-gene summary
 """/anaconda3/lib/python3.6/site-packages/scipy/stats/stats.py:1713: FutureWarning:
@@ -78,11 +82,11 @@ Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr
 This appears to be fine and not of concern (https://stackoverflow.com/a/52595447/9571488)
 """
 
-xp.multigene_overview(geo_labeled, meta, palette=geo_colors, gene_list=['SEC62','CCL5','STX6'], order=None, save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False)
+xp.multigene_overview(geo_labeled, meta, palette=geo_colors, gene_list=['SEC62','CCL5','STX6'], order=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False)
 
-xp.multigene_overview(geo_labeled, meta, palette=geo_colors, gene_list=['STX6'], order=['Normal','Adenoma','Adenocarcinoma'], save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False)
+xp.multigene_overview(geo_labeled, meta, palette=geo_colors, gene_list=['STX6'], order=['Normal','Adenoma','Adenocarcinoma'], dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False)
 
-xp.multigene_overview(geo_labeled, meta, palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'], save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False)
+xp.multigene_overview(geo_labeled, meta, palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'], dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False)
 
 try:
     xp.multigene_overview(geo_labeled, palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'], save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False)
@@ -92,35 +96,35 @@ else:
     fail('multigene_overview() failed to catch an error in not providing metadata')
 
 #Heatmap
-xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, gene_list=['SEC62','STX6','CCL5'], cbar_kws={'label':'z-score'}, figsize=(10,2), save_fig='/Users/jordan/Desktop/heatmap.pdf')
+xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, gene_list=['SEC62','STX6','CCL5'], cbar_kws={'label':'z-score'}, figsize=(20,2))
 
 genes = np.array([['SEC62','Group1'],['STX6','Group2'],['CCL5','Group1']])
 gene_info2 = pd.DataFrame({0:genes[:,0],1:genes[:,1]})
-xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, gene_palette=gene_colors, gene_info=gene_info2, gene_list=['SEC62','STX6','CCL5'], figsize=(10,2), save_fig='/Users/jordan/Desktop/heatmap.pdf', row_cluster=True)
+xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, gene_palette=gene_colors, gene_info=gene_info2, gene_list=['SEC62','STX6','CCL5'], figsize=(20,2), row_cluster=True)
 
 try:
-    xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, gene_palette=gene_colors, xticklabels=True, linewidths=.5, linecolor='red', gene_list=['SEC62','STX6','CCL5'], figsize=(10,2), save_fig='/Users/jordan/Desktop/heatmap.pdf')
+    xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, gene_palette=gene_colors, xticklabels=True, linewidths=.5, linecolor='red', gene_list=['SEC62','STX6','CCL5'], figsize=(10,2))
 except:
     pass
 else:
     fail('heatmap() failed to catch error when only providing part of gene labeling variables')
 
-xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, xticklabels=True, linewidths=.5, linecolor='red', gene_list=['SEC62','STX6','CCL5'], figsize=(10,2), save_fig='/Users/jordan/Desktop/heatmap.pdf')
+xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, xticklabels=True, linewidths=.5, linecolor='black', gene_list=['SEC62','STX6','CCL5'], figsize=(20,2))
 
 #Scatterplot basic
-xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=True, save_fig='/Users/jordan/Desktop/figure.pdf', order_legend=[1,3,2], alpha=.7)
+xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=True, order_legend=[1,3,2], alpha=.7)
 
 try:
-    xp.scatter(geo_labeled, meta, 'SEC62', palette=geo_colors, add_linreg=True, save_fig='/Users/jordan/Desktop/figure.pdf', order_legend=[1,3,2], alpha=.7)
+    xp.scatter(geo_labeled, meta, 'SEC62', palette=geo_colors, add_linreg=True, order_legend=[1,3,2], alpha=.7)
 except:
     pass
 else:
     fail('scatter() failed to catch error when only providing one gene/axis to plot')
 
-xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=False, save_fig='/Users/jordan/Desktop/figure.pdf', alpha=.7)
+xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=False, alpha=.7)
 
 try:
-    xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', highlight_points=['Normal'], highlight_color='DarkRed', palette=geo_colors, add_linreg=False, save_fig='/Users/jordan/Desktop/figure.pdf', alpha=.7)
+    xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', highlight_points=['Normal'], highlight_color='DarkRed', palette=geo_colors, add_linreg=False, alpha=.7)
 except:
     pass
 else:
@@ -143,11 +147,11 @@ else:
     fail('scatter() failed to catch error when only providing one condition to plot')
 
 #Jointplot
-xp.jointplot(geo_labeled, meta, 'STX6', 'STX6', kind='reg', palette=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', whitegrid=False, grid=False)
+xp.jointplot(geo_labeled, meta, 'STX6', 'STX6', kind='reg')
 
-xp.jointplot(geo_labeled, meta, 'STX6', 'CCL5', kind='reg', palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'], save_fig=None, dpi=600, bbox_inches='tight', whitegrid=False, grid=False, title_pad=-305, title_pos='center')
+xp.jointplot(geo_labeled, meta, 'STX6', 'CCL5', kind='reg', palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'], title_pad=-305, title_pos='center')
 
-xp.jointplot(geo_labeled, meta, 'STX6', 'CCL5', kind='kde', palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'], save_fig=None, dpi=600, bbox_inches='tight', whitegrid=False, grid=False)
+xp.jointplot(geo_labeled, meta, 'STX6', 'CCL5', kind='kde', palette=geo_colors, order=['Normal','Adenoma','Adenocarcinoma'])
 
 #Linear Regression
 xp.linreg(geo_labeled, 'STX6', linreg_file, delimiter=',')
@@ -165,7 +169,7 @@ df_pca.head()
 xp.pca(geo_labeled, meta, geo_colors, _3d_pca=False, scree_only=True, save_scree=True, save_fig=pca_file)
 
 #3D-PCA
-xp.pca(geo_labeled, meta, geo_colors, _3d_pca=True, save_fig=pca_file, order_legend=[1,3,2])
+xp.pca(geo_labeled, meta, geo_colors, _3d_pca=True, order_legend=[1,3,2])
 
 """
 INTERACTIVE TESTS

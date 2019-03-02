@@ -231,7 +231,7 @@ def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, save_s
     ax.set(xlabel='Principal Component', ylabel='Proportion of Variance Explained', title='Scree Plot')
 
     if save_scree == True:
-        plt.savefig(str(save_fig[:-4]) + '_scree.pdf', dpi=dpi, bbox_inches=bbox_inches)
+        plt.savefig(str(save_fig[:-4]) + '_scree.png', dpi=dpi, bbox_inches=bbox_inches)
 
     if scree_only == True:
         plt.show()
@@ -324,9 +324,6 @@ def pca3(df_pca, palette, save_fig, dpi, bbox_inches, size, order_legend):
     ax.set_zlabel(str(pc_list[2]))
 
     plt.show()
-
-    if save_fig != None:
-        plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
 
 """
 DESCRIPTION: Parallelize function on a chunk of a dataframe

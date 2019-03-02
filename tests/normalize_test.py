@@ -200,7 +200,7 @@ threshold_truth2 = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM
 threshold_truth2.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':20.02,'fGSM523243_rna':70.21,'fGSM523244_rpf':85.10,'fGSM523245_rna':78.87})
 threshold_truth2.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
 
-threshold_test_util = xp.threshold_util(threshold_test1, 5, None)
+threshold_test_util = xp.count_threshold_util(threshold_test1, 5, None)
 threshold_test1 = xp.threshold(threshold_test1, 5, None)
 assert threshold_test1.equals(threshold_test_util), 'threshold() failed at setting thresholding minimum'
 assert threshold_test1.equals(threshold_truth1), 'threshold() failed at setting thresholding minimum'

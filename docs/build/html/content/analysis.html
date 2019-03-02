@@ -95,20 +95,18 @@
 <li class="toctree-l1"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="normalize.html">Normalization and Quality Control</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#formatting-notes">Formatting Notes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sample-color-palette">Sample Color Palette</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#single-gene-analysis">Single-gene Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#multi-gene-analysis">Multi-gene Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#heatmap">Heatmap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pca">PCA</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#d-non-interactive-pca">2-D Non-interactive PCA</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">3-D Non-interactive PCA</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#d-interactive-pca">2-D Interactive PCA</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">3-D Interactive PCA</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#scatterplot">Scatterplot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#volcano-plot">Volcano Plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#jointplot">Jointplot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#linear-regression">Linear Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jointplot">Jointplot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pca-2-d-3-d-interactive">PCA (2-D, 3-D, Interactive)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference-building.html">Reference Building</a></li>
@@ -178,41 +176,397 @@
             
   <div class="section" id="analysis">
 <h1>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h1>
+<p><a href="#id1"><span class="problematic" id="id2">|</span></a>The following commands rely heavily on the matplotlib (DOI:10.5281/zenodo.2577644) and seaborn (DOI:10.5281/zenodo.883859) libraries, but have been modified in many cases for ease of plotting given the formatting of XPRESStools datasets.</p>
+<div class="section" id="formatting-notes">
+<h2>Formatting Notes<a class="headerlink" href="#formatting-notes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sample-color-palette">
+<h3>Sample Color Palette<a class="headerlink" href="#sample-color-palette" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">A dictionary of experiment groups with corresponding RGB values for colors (use of common color names is not currently tested)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sample_colors</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Adenocarcinoma&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5725490196078431</span><span class="p">,</span> <span class="mf">0.5843137254901961</span><span class="p">,</span> <span class="mf">0.5686274509803921</span><span class="p">),</span>
+              <span class="s1">&#39;Adenoma&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.8705882352941177</span><span class="p">,</span> <span class="mf">0.5607843137254902</span><span class="p">,</span> <span class="mf">0.0196078431372549</span><span class="p">),</span>
+              <span class="s1">&#39;Normal&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.00784313725490196</span><span class="p">,</span> <span class="mf">0.6196078431372549</span><span class="p">,</span> <span class="mf">0.45098039215686275</span><span class="p">)}</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="single-gene-analysis">
 <h2>Single-gene Analysis<a class="headerlink" href="#single-gene-analysis" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.gene_overview ( data, info, gene_name, palette, order=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Create a boxplot with overlaid swarmplot for each experiment group for a particular gene</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>gene_name</strong>: Name of gene to plot (Required)</div>
+<div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Required)</div>
+<div class="line"><strong>order</strong>: List of experiment groups in order to plot (Default: None)</div>
+<div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
+<div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">gene_overview</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">gene_name</span><span class="o">=</span><span class="s1">&#39;SEC62&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">sample_colors</span><span class="p">,</span>
+<span class="go">    order=[&#39;Normal&#39;,&#39;Adenoma&#39;,&#39;Adenocarcinoma&#39;])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/gene_overview1.png"><img alt="../_images/gene_overview1.png" src="../_images/gene_overview1.png" style="width: 450px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">gene_overview</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;CCL5&#39;</span><span class="p">,</span> <span class="n">sample_colors</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">whitegrid</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/gene_overview2.png"><img alt="../_images/gene_overview2.png" src="../_images/gene_overview2.png" style="width: 450px;" /></a>
 </div>
 <div class="section" id="multi-gene-analysis">
 <h2>Multi-gene Analysis<a class="headerlink" href="#multi-gene-analysis" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.multigene_overview ( data, info, palette=None, gene_list=None, order=None, scale=None, title=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Create violin plots of a subset of gene expressions or total gene expression by experiment group</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
+<div class="line"><strong>gene_list</strong>: List of genes to plot (default: None; plots total gene expression for experiment group)</div>
+<div class="line"><strong>order</strong>: List of experiment groups in order to plot (Default: None)</div>
+<div class="line"><strong>scale</strong>: Seaborn violinplot scale argument (default: ‘area’)</div>
+<div class="line"><strong>title</strong>: Plot title (default: None)</div>
+<div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
+<div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">multigene_overview</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">sample_colors</span><span class="p">,</span>
+<span class="go">    gene_list=[&#39;SEC62&#39;,&#39;CCL5&#39;,&#39;STX6&#39;])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/multi_overview1.png"><img alt="../_images/multi_overview1.png" src="../_images/multi_overview1.png" style="width: 450px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">gene_overview</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">sample_colors</span><span class="p">,</span> <span class="n">gene_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;STX6&#39;</span><span class="p">],</span>
+<span class="go">    order=[&#39;Normal&#39;,&#39;Adenoma&#39;,&#39;Adenocarcinoma&#39;])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/multi_overview2.png"><img alt="../_images/multi_overview2.png" src="../_images/multi_overview2.png" style="width: 450px;" /></a>
 </div>
 <div class="section" id="heatmap">
 <h2>Heatmap<a class="headerlink" href="#heatmap" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.heatmap ( data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, col_cluster=True, row_cluster=False, metric=’euclidean’, method=’centroid’, font_scale=0.8, cmap=jakes_cmap, center=0, xticklabels=True, yticklabels=True, linewidths=0, linecolor=’#DCDCDC’, cbar_kws=None, figsize=(16,6.5), save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Create clustered heatmaps for gene expression dataframe</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
 </div>
-<div class="section" id="pca">
-<h2>PCA<a class="headerlink" href="#pca" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="d-non-interactive-pca">
-<h3>2-D Non-interactive PCA<a class="headerlink" href="#d-non-interactive-pca" title="Permalink to this headline">¶</a></h3>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>sample_palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
+<div class="line"><strong>gene_info</strong>: XPRESStools formatted metadata matrix for genes (column0) and gene groups (column1)</div>
+<div class="line"><strong>gene_palette</strong>: Dictionary of labels and colors for plotting, or valid seaborns clustermap col_colors option</div>
+<div class="line"><strong>gene_list</strong>: List of genes to plot (default: None; plots total gene expression for experiment group)</div>
+<div class="line"><strong>col_cluster</strong>: Cluster columns/samples (default: True)</div>
+<div class="line"><strong>row_cluster</strong>: Cluster rows/genes (default: False)</div>
+<div class="line"><strong>metric</strong>: Seaborn clustermap argument (default: ‘euclidean’)</div>
+<div class="line"><strong>method</strong>: Seaborn clustermap argument (default: ‘centroid’)</div>
+<div class="line"><strong>font_scale</strong>: Aspect by which to scale text (default: 0.8)</div>
+<div class="line"><strong>cmap</strong>: Matplotlib colorbar valid entry (default: jakes_cmap; a color-blind friendly color palette)</div>
+<div class="line"><strong>center</strong>: Value at which to center the color scale (default: 0)</div>
+<div class="line"><strong>xticklabels</strong>: Include x-axis labels (default: True)</div>
+<div class="line"><strong>yticklabels</strong>: Include y-axis labels (default: True)</div>
+<div class="line"><strong>linewidths</strong>: Thickness of grid lines (default: 0; no grid-lines printed)</div>
+<div class="line"><strong>linecolor</strong>: Grid line color (default: ‘#DCDCDC’; or white)</div>
+<div class="line"><strong>cbar_kw</strong>: Matplotlib colorbar additional arguments (default: None)</div>
+<div class="line"><strong>figsize</strong>: Figure size tuple; width, height (default: (16,6.5))</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
 </div>
-<div class="section" id="id1">
-<h3>3-D Non-interactive PCA<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">sample_palette</span><span class="o">=</span><span class="n">sample_colors</span><span class="p">,</span> <span class="n">gene_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SEC62&#39;</span><span class="p">,</span><span class="s1">&#39;STX6&#39;</span><span class="p">,</span><span class="s1">&#39;CCL5&#39;</span><span class="p">],</span>
+<span class="go">    cbar_kws={&#39;label&#39;:&#39;z-score&#39;}, figsize=(20,2))</span>
+</pre></div>
 </div>
-<div class="section" id="d-interactive-pca">
-<h3>2-D Interactive PCA<a class="headerlink" href="#d-interactive-pca" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/heatmap1.png"><img alt="../_images/heatmap1.png" src="../_images/heatmap1.png" style="width: 700px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">sample_palette</span><span class="o">=</span><span class="n">sample_colors</span><span class="p">,</span> <span class="n">gene_palette</span><span class="o">=</span><span class="n">gene_colors</span><span class="p">,</span>
+<span class="go">    gene_info=gene_metadata, gene_list=[&#39;SEC62&#39;,&#39;STX6&#39;,&#39;CCL5&#39;], figsize=(20,2),</span>
+<span class="go">    row_cluster=True)</span>
+</pre></div>
 </div>
-<div class="section" id="id2">
-<h3>3-D Interactive PCA<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal image-reference" href="../_images/heatmap2.png"><img alt="../_images/heatmap2.png" src="../_images/heatmap2.png" style="width: 700px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">sample_palette</span><span class="o">=</span><span class="n">sample_colors</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>
+<span class="go">    linecolor=&#39;black&#39;, gene_list=[&#39;SEC62&#39;,&#39;STX6&#39;,&#39;CCL5&#39;], figsize=(20,2))</span>
+</pre></div>
 </div>
+<a class="reference internal image-reference" href="../_images/heatmap3.png"><img alt="../_images/heatmap3.png" src="../_images/heatmap3.png" style="width: 700px;" /></a>
 </div>
 <div class="section" id="scatterplot">
 <h2>Scatterplot<a class="headerlink" href="#scatterplot" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Create scatterplot with the option to include a linear least-squares regression fit of the data</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>x</strong>: X-axis gene or other metric (Required)</div>
+<div class="line"><strong>y</strong>: Y-axis gene or other metric (Required)</div>
+<div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
+<div class="line"><strong>add_linreg</strong>: Add a linear least-squares regression line (default: False)</div>
+<div class="line"><strong>order_legend</strong>: List of experiment groups in order to display on legend (Default: None)</div>
+<div class="line"><strong>title</strong>: Plot title (default: None)</div>
+<div class="line"><strong>alpha</strong>: Opacity percentage for scatter plot</div>
+<div class="line"><strong>highlight_points</strong>: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)</div>
+<div class="line"><strong>highlight_color</strong>: Color to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
+<div class="line"><strong>alpha_highlights</strong>: Opacity percentage for highlighted elements of scatter plot</div>
+<div class="line"><strong>size</strong>: Marker size</div>
+<div class="line"><strong>y_threshold</strong>: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
+<div class="line"><strong>x_threshold</strong>: Include a x-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
+<div class="line"><strong>threshold_color</strong>: Threshold line color (default: ‘b’; black)</div>
+<div class="line"><strong>label_points</strong>: A dictionary where keys are labels and values are a two-element list as [x-coordinate, y-coordinate]</div>
+<div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
+<div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;SEC62&#39;</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">geo_colors</span><span class="p">,</span> <span class="n">add_linreg</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+<span class="go">    order_legend=[1,3,2], alpha=.7)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/scatter1.png"><img alt="../_images/scatter1.png" src="../_images/scatter1.png" style="width: 550px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;SEC62&#39;</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">geo_colors</span><span class="p">,</span> <span class="n">add_linreg</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/scatter2.png"><img alt="../_images/scatter2.png" src="../_images/scatter2.png" style="width: 550px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;SEC62&#39;</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">geo_colors</span><span class="p">,</span> <span class="n">add_linreg</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">2</span><span class="p">,</span>
+<span class="go">    title=&#39;this is a title&#39;, y_threshold=5, x_threshold=[7])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/scatter3.png"><img alt="../_images/scatter3.png" src="../_images/scatter3.png" style="width: 550px;" /></a>
 </div>
 <div class="section" id="volcano-plot">
 <h2>Volcano Plot<a class="headerlink" href="#volcano-plot" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, save_threshold_hits=None, save_threshold_hits_delimiter=’,’, label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Create scatterplot with the option to include a linear least-squares regression fit of the data</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
 </div>
-<div class="section" id="jointplot">
-<h2>Jointplot<a class="headerlink" href="#jointplot" title="Permalink to this headline">¶</a></h2>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe, sample normalized (Required)</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>label_comp</strong>: Experiment group name to act as comparison group (Required)</div>
+<div class="line"><strong>label_base</strong>: Experiment group name to act as base group (Required)</div>
+<div class="line"><strong>order_legend</strong>: List of experiment groups in order to display on legend (Default: None)</div>
+<div class="line"><strong>title</strong>: Plot title (default: None)</div>
+<div class="line"><strong>alpha</strong>: Opacity percentage for scatter plot</div>
+<div class="line"><strong>highlight_points</strong>: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)</div>
+<div class="line"><strong>highlight_color</strong>: Color to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
+<div class="line"><strong>alpha_highlights</strong>: Opacity percentage for highlighted elements of scatter plot</div>
+<div class="line"><strong>size</strong>: Marker size</div>
+<div class="line"><strong>y_threshold</strong>: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
+<div class="line"><strong>x_threshold</strong>: Include a x-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
+<div class="line"><strong>threshold_color</strong>: Threshold line color (default: ‘b’; black)</div>
+<div class="line"><strong>save_threshold_hits</strong>: Include path and filename to save points out of bounds of the threshold points (greater than the Y-threshold, and outside of the X-threshold range)</div>
+<div class="line"><strong>save_threshold_hits_delimiter</strong>: Delimiter to use for saving threshold hits (default: ‘,’; .csv)</div>
+<div class="line"><strong>label_points</strong>: A dictionary where keys are labels and values are a two-element list as [x-coordinate, y-coordinate]</div>
+<div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
+<div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
+<div class="line"><strong>return_data</strong>: Set as True to return dataframe with log2 Fold Changes and -log10 P-values added</div>
+<div class="line"><strong>plotly_login</strong>: Include plotly login username and password to create an interactive plot, ex: [‘username’,’password’]</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">volcano</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;Adenoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Normal&#39;</span><span class="p">,</span> <span class="n">highlight_points</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;STX6&#39;</span><span class="p">,</span><span class="s1">&#39;SCARB1&#39;</span><span class="p">,</span><span class="s1">&#39;CCL5&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/volcano1.png"><img alt="../_images/volcano1.png" src="../_images/volcano1.png" style="width: 450px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">volcano</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;Adenoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Normal&#39;</span><span class="p">,</span> <span class="n">highlight_points</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;STX6&#39;</span><span class="p">,</span><span class="s1">&#39;SCARB1&#39;</span><span class="p">,</span><span class="s1">&#39;CCL5&#39;</span><span class="p">],</span>
+<span class="go">    y_threshold=2, x_threshold=[-1,1], save_threshold_hits=save_threshold)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/volcano2.png"><img alt="../_images/volcano2.png" src="../_images/volcano2.png" style="width: 450px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">volcano</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="s1">&#39;Adenoma&#39;</span><span class="p">,</span> <span class="s1">&#39;Normal&#39;</span><span class="p">,</span> <span class="n">highlight_points</span><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;STX6&#39;</span><span class="p">,</span><span class="s1">&#39;SCARB1&#39;</span><span class="p">,</span><span class="s1">&#39;CCL5&#39;</span><span class="p">],[</span><span class="s1">&#39;BEST4&#39;</span><span class="p">]],</span>
+<span class="go">    highlight_color=[&#39;blue&#39;,&#39;red&#39;], alpha=.3, y_threshold=2, x_threshold=[-1,1],</span>
+<span class="go">    label_points={&#39;BEST4&#39;:[-1.24288077425345,21.782377963035827]})</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/volcano3.png"><img alt="../_images/volcano3.png" src="../_images/volcano3.png" style="width: 450px;" /></a>
 </div>
 <div class="section" id="linear-regression">
 <h2>Linear Regression<a class="headerlink" href="#linear-regression" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.linreg ( data, gene_name, save_file, delimiter=’,’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Calculate r, r^2 values, and p-values for every gene against target gene for given dataset</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe is properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe, sample normalized (Required)</div>
+<div class="line"><strong>gene_name</strong>: Target gene name to run genome-wide comparisons against</div>
+<div class="line"><strong>save_file</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>delimiter</strong>: Field separator for output file (default: ‘,’)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">linreg</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="s1">&#39;path/to/output.csv&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="jointplot">
+<h2>Jointplot<a class="headerlink" href="#jointplot" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.jointplot ( data, info, x, y, kind=’reg’, palette=None, order=None, title_pad=0, title_pos=’right’, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Create linear regression scatterplot that displays r value, confidence, and density distributions for axes</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>x</strong>: X-axis gene or other metric (Required)</div>
+<div class="line"><strong>y</strong>: Y-axis gene or other metric (Required)</div>
+<div class="line"><strong>kind</strong>: Type of plot to create from the seaborns jointplot function (default: ‘reg’; linear regression)</div>
+<div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
+<div class="line"><strong>order</strong>: List of experiment groups in order to display on legend (Default: None)</div>
+<div class="line"><strong>title_pad</strong>: Amount of padding to give title from default position (default: 0)</div>
+<div class="line"><strong>title_pos</strong>: Title position (default: ‘right’; other options: ‘center’, ‘left’)</div>
+<div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
+<div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">geo_labeled</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;reg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/joint1.png"><img alt="../_images/joint1.png" src="../_images/joint1.png" style="width: 450px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">geo_labeled</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="s1">&#39;CCL5&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;reg&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">geo_colors</span><span class="p">,</span>
+<span class="go">    order=[&#39;Normal&#39;,&#39;Adenoma&#39;,&#39;Adenocarcinoma&#39;], title_pad=-305, title_pos=&#39;center&#39;)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/joint2.png"><img alt="../_images/joint2.png" src="../_images/joint2.png" style="width: 450px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">geo_labeled</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;STX6&#39;</span><span class="p">,</span> <span class="s1">&#39;CCL5&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;kde&#39;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">geo_colors</span><span class="p">,</span>
+<span class="go">    order=[&#39;Normal&#39;,&#39;Adenoma&#39;,&#39;Adenocarcinoma&#39;])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/joint3.png"><img alt="../_images/joint3.png" src="../_images/joint3.png" style="width: 450px;" /></a>
+</div>
+<div class="section" id="pca-2-d-3-d-interactive">
+<h2>PCA (2-D, 3-D, Interactive)<a class="headerlink" href="#pca-2-d-3-d-interactive" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.pca ( data, info, palette, grouping=’samples’, gene_list=None, gene_labels=False, _3d_pca=False, principle_components=[1,2], n_components=10, ci=2, scree_only=False, save_scree=False, size=30, order_legend=None, title=None, fig_size=(10,10), grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’, return_pca=False, plotly_login=None )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Plot a 2-D PCA with confidence intervals or a 3-D PCA with no confidence intervals</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe, sample normalized (Required)</div>
+<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
+<div class="line"><strong>grouping</strong>: What axis of the data to perform the analysis (default: ‘samples’ or columns; other options: ‘genes’, not yet implemented)</div>
+<div class="line"><strong>gene_list</strong>: List of genes to perform PCA across</div>
+<div class="line"><strong>gene_labels</strong>: Option for grouping=’genes’, not currently implemented</div>
+<div class="line"><strong>_3d_pca</strong>: Set to True to create 3-D PCA plotting principle components 1-3 (default: False)</div>
+<div class="line"><strong>principle_components</strong>: List of principle components to plot for 2-D PCA</div>
+<div class="line"><strong>n_components</strong>: Number of components to evaluate in the general analysis</div>
+<div class="line"><strong>ci</strong>: Confidence intervals to plot (i.e. 1 == CI1 == 68%, 2 == CI2 == 95%, 3 == CI3 == 99%)</div>
+<div class="line"><strong>scree_only</strong>: Only evaluate scree plot for n_components and exit</div>
+<div class="line"><strong>save_scree</strong>: Output scree plot to path and filename (automatically appends ‘_scree.pdf’)</div>
+<div class="line"><strong>size</strong>: Marker size</div>
+<div class="line"><strong>order_legend</strong>: List of experiment groups in order to display on legend (Default: None)</div>
+<div class="line"><strong>title</strong>: Plot title (default: None)</div>
+<div class="line"><strong>fig_size</strong>: Figure size tuple; width, height (default: (16,6.5))</div>
+<div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
+<div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+<div class="line"><strong>return_pca</strong>: Set as True to return dataframe with principle component values added</div>
+<div class="line"><strong>plotly_login</strong>: Include plotly login username and password to create an interactive plot, ex: [‘username’,’password’] – not yet implemented</div>
+<div class="line"><br /></div>
+<div class="line">Notes:</div>
+<div class="line-block">
+<div class="line">- Exporting 3-D static PCA plots is not currently supported</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">geo_labeled</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">geo_colors</span><span class="p">,</span> <span class="n">grouping</span><span class="o">=</span><span class="s1">&#39;samples&#39;</span><span class="p">,</span> <span class="n">gene_list</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">gene_labels</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+<span class="go">    ci=2, principle_components=[1,2], n_components=10, _3d_pca=False, scree_only=False,</span>
+<span class="go">    save_scree=None, size=10)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/pca2d.png"><img alt="../_images/pca2d.png" src="../_images/pca2d.png" style="width: 550px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">geo_labeled</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">geo_colors</span><span class="p">,</span> <span class="n">_3d_pca</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">order_legend</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">save_fig</span><span class="o">=</span><span class="n">pca_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/pca3d.png"><img alt="../_images/pca3d.png" src="../_images/pca3d.png" style="width: 450px;" /></a>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">geo_labeled</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">geo_colors</span><span class="p">,</span> <span class="n">_3d_pca</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">scree_only</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">save_scree</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/test_scree.png"><img alt="../_images/test_scree.png" src="../_images/test_scree.png" style="width: 450px;" /></a>
 </div>
 </div>
 

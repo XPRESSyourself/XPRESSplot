@@ -68,7 +68,7 @@ mat.heatmap(data_scaled, data_labeled, color_dict=color_dict, gene_list='/path/t
 ASSUMPTIONS:
 Data has been scaled and labeled with the MICARtools prep_data function
 """
-def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, save_fig=None, dpi=600, bbox_inches='tight', font_scale=.8, cmap=jakes_cmap, center=0, metric='euclidean', method='centroid', xticklabels=True, linewidths=0, linecolor='#DCDCDC', col_cluster=True, row_cluster=False, figsize=(16,6.5), cbar_kws=None):
+def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, col_cluster=True, row_cluster=False, metric='euclidean', method='centroid', font_scale=.8, cmap=jakes_cmap, center=0, xticklabels=True, yticklabels=True, linewidths=0, linecolor='#DCDCDC', cbar_kws=None, figsize=(16,6.5), save_fig=None, dpi=600, bbox_inches='tight'):
 
     reset_plot(True)
     data_c = analysis_prep(data)
@@ -95,6 +95,7 @@ def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, 
                     metric=str(metric),
                     method=str(method),
                     xticklabels=xticklabels,
+                    yticklabels=yticklabels,
                     linewidths=float(linewidths),
                     linecolor=linecolor,
                     col_cluster=col_cluster,
@@ -125,7 +126,7 @@ title= Provide title for figure and saved file if save_fig option used
 ASSUMPTIONS:
 Data has been scaled and labeled with the MICARtools prep_data function
 """
-def multigene_overview(data, info, palette=None, gene_list=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False):
+def multigene_overview(data, info, palette=None, gene_list=None, order=None, scale='area', save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False):
 
     reset_plot(whitegrid)
     data_c = data.copy()
@@ -151,7 +152,7 @@ def multigene_overview(data, info, palette=None, gene_list=None, order=None, sav
     if not order != None and type(order) is list or palette != None and type(palette) is list:
         return
 
-    ax = sns.violinplot(x=plot_data_c['type'], y=plot_data_c['expr'], data=plot_data_c, order=order, palette=palette)
+    ax = sns.violinplot(x=plot_data_c['type'], y=plot_data_c['expr'], data=plot_data_c, order=order, palette=palette, scale=scale)
     ax.set_xlabel('')
     ax.set_ylabel('Expression')
 
@@ -160,8 +161,8 @@ def multigene_overview(data, info, palette=None, gene_list=None, order=None, sav
 
     #Save fig
     if save_fig is not None:
-        if title is not None:
-            plt.savefig('./MICARtools_violin_plot.pdf', dpi=dpi, bbox_inches=bbox_inches)
+        if title is None:
+            plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
         else:
             ax.set_title(str(title))
             plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
@@ -185,7 +186,7 @@ grid= Control plot gridlines (default: False)
 ASSUMPTIONS:
 data and info dataframes are properly formatted for MICARtools and any appropriate sample/gene normalizations have been performed
 """
-def gene_overview(data, info, gene_name, palette, order=None, save_fig=None, dpi=600, bbox_inches='tight', grid=False, whitegrid=False):
+def gene_overview(data, info, gene_name, palette, order=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
 
     reset_plot(whitegrid)
     data_c = analysis_prep(data).T
@@ -236,7 +237,7 @@ thresholds can be list of ints or int or None
 ASSUMPTIONS:
 MICARtools formatted data and info dataframes, palette is a dictionary of labels and colors to plot points with
 """
-def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, save_fig=None, dpi=600, bbox_inches='tight', grid=False, whitegrid=False, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, y_threshold=[None], x_threshold=[None], threshold_color='b', label_points=None):
+def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
 
     reset_plot(whitegrid)
     data_c = analysis_prep(data)
@@ -246,9 +247,9 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
     data_c.loc['label'] = data_c.columns.map(labels.get)
 
     if palette == None:
-        ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], color='black', alpha=alpha)
+        ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], color='black', alpha=alpha, s=size)
     else:
-        ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], palette=palette, alpha=alpha)
+        ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], palette=palette, alpha=alpha, s=size)
 
     if add_linreg == True:
         _x, _y, r_value, title = make_linreg(data_c, x, y)
@@ -311,7 +312,7 @@ Full functionality only supported for kind='reg' currently
 ASSUMPTIONS:
 MICARtools formatted data and info dataframes, palette (if used) is a dictionary of labels and colors to plot points with
 """
-def jointplot(data, info, gene1, gene2, kind='reg', palette=None, order=None, save_fig=None, dpi=600, bbox_inches='tight', whitegrid=False, grid=False, title_pad=0, title_pos='right'):
+def jointplot(data, info, x, y, kind='reg', palette=None, order=None, title_pad=0, title_pos='right', grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
 
     reset_plot(whitegrid)
 
@@ -324,8 +325,8 @@ def jointplot(data, info, gene1, gene2, kind='reg', palette=None, order=None, sa
         data_c.loc['label'] = data_c.columns.map(labels.get).T
 
     #Get r
-    gene_a = get_array(data_c, gene1)
-    gene_b = get_array(data_c, gene2)
+    gene_a = get_array(data_c, x)
+    gene_b = get_array(data_c, y)
 
     #Plot
     ax = sns.jointplot(x=gene_a, y=gene_b, kind=kind)
@@ -334,12 +335,11 @@ def jointplot(data, info, gene1, gene2, kind='reg', palette=None, order=None, sa
     if kind.lower() == 'reg':
         r_value = stats.pearsonr(gene_a, gene_b)[0]
 
-        ax = sns.scatterplot(x=str(gene1), y=str(gene2), data=data_c.T, hue='label', palette=palette, hue_order=order)
+        ax = sns.scatterplot(x=str(x), y=str(y), data=data_c.T, hue='label', palette=palette, hue_order=order)
 
-        plt.xlabel(str(gene1))
-        plt.ylabel(str(gene2))
+        plt.xlabel(str(x))
+        plt.ylabel(str(y))
         ax.set_title('r: ' + str(round(r_value,2)), pad=float(title_pad), loc=title_pos.lower())
-
 
     if grid == False:
         plt.grid(False)
@@ -349,7 +349,7 @@ def jointplot(data, info, gene1, gene2, kind='reg', palette=None, order=None, sa
     plt.show()
 
     if save_fig != None:
-        fig.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
+        plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
 
 """
 DESCRIPTION: Calculates r, r^2 values, and p-values for every gene against target gene for given dataset
@@ -421,7 +421,7 @@ ASSUMPTIONS:
 data should ONLY be sample normalized. If using a previous function that returned a modified original
 y_threshold must be a postive integer or float
 """
-def volcano(data, info, label_comp, label_base, order_legend=None, highlight_points=None, highlight_color='DarkRed', alpha=1, alpha_highlights=1, y_threshold=None, x_threshold=None, save_threshold_hits=None, save_threshold_hits_delimiter=',', save_fig=None, dpi=600, bbox_inches='tight', whitegrid=False, return_data=False, plotly_login=False, label_points=None, title=None, grid=False, threshold_color='b'):
+def volcano(data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight'):
 
     reset_plot(whitegrid)
     data_c = analysis_prep(data)
@@ -444,7 +444,7 @@ def volcano(data, info, label_comp, label_base, order_legend=None, highlight_poi
 
     #Plot all genes
     if plotly_login == False:
-        scatter(data_c.T, info, 'log$_2$(Fold Change)', '-log$_1$$_0$(P-Value)', palette=None, add_linreg=False, order_legend=order_legend, title=title, save_fig=save_fig, dpi=dpi, bbox_inches=bbox_inches, grid=grid, whitegrid=whitegrid, alpha=alpha, highlight_points=highlight_points, highlight_color=highlight_color, alpha_highlights=alpha_highlights, y_threshold=y_threshold, x_threshold=x_threshold, threshold_color=threshold_color, label_points=label_points)
+        scatter(data_c.T, info, 'log$_2$(Fold Change)', '-log$_1$$_0$(P-Value)', palette=None, add_linreg=False, order_legend=order_legend, title=title, save_fig=save_fig, dpi=dpi, bbox_inches=bbox_inches, grid=grid, whitegrid=whitegrid, alpha=alpha, highlight_points=highlight_points, highlight_color=highlight_color, alpha_highlights=alpha_highlights, y_threshold=y_threshold, x_threshold=x_threshold, threshold_color=threshold_color, label_points=label_points, size=size)
 
     else:
         data_c = data_c.rename(columns = {'log$_2$(Fold Change)':'log2 Fold Change', '-log$_1$$_0$(P-Value)':'-log10 P-Value'})
@@ -510,7 +510,7 @@ Allow for compatibility with adding labels for gene classes for plotting
 Option to order legend and rearrange in 3d static plot
 Add options to vary marker size and opacity
 """
-def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=False, ci=2, principle_components=[1,2], n_components=10, _3d_pca=False, plotly_login=None, scree_only=False, save_scree=False, size=30, whitegrid=False, title=None, save_fig=None, dpi=600, bbox_inches='tight', order_legend=None, grid=False, fig_size=(10,10), return_pca=False):
+def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=False, _3d_pca=False, principle_components=[1,2], n_components=10, ci=2, scree_only=False, save_scree=False, size=30, order_legend=None, title=None, fig_size=(10,10), grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight', return_pca=False, plotly_login=None):
 
     reset_plot(whitegrid)
     principle_components = init_pca(principle_components, _3d_pca, plotly_login)
