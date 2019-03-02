@@ -31,4 +31,4 @@ from .utils_truncator import *
 from .utils import *
 
 
-__version__ = '0.0.1-alpha'
+__version__ = '0.0.2-beta'
