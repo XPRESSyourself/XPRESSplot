@@ -1,7 +1,7 @@
 ##############
 XPRESStools
 ##############
-|build-status| |docs|
+|build-status| |docs| |pypi| |doi|
 
 =================
 About
@@ -47,3 +47,11 @@ Questions?
 .. |docs| image:: https://readthedocs.org/projects/xpresstools/badge/?version=latest
     :target: https://xpresstools.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+    
+.. |pypi| image:: https://img.shields.io/pypi/v/XPRESStools.svg
+    :target: https://pypi.org/project/XPRESStools
+    :alt: PyPi Status
+
+.. |doi| image:: https://zenodo.org/badge/170940002.svg
+   :target: https://zenodo.org/badge/latestdoi/170940002
+   :alt: DOI Status
