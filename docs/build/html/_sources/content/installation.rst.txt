@@ -15,6 +15,15 @@ Install Dependencies
 | 2)  Download `Conda <https://www.anaconda.com/download/>`_, a package manager, for your operating system. Double click the `.pkg` file if on MacOS, the `.exe` file on Windows, or follow these `instructions <https://conda.io/docs/user-guide/install/linux.html#install-linux-silent>`_ on Linux.
 
 ====================
+PyPi Install
+====================
+| 1)  Install XPRESStools and associated dependencies via pip:
+
+.. code-block:: shell
+
+  $ pip isntall xpresstools
+
+====================
 Conda Install
 ====================
 | This feature is not yet available...
