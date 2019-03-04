@@ -23,7 +23,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 IMPORT DEPENDENCIES AND DATASETS
 """
 import xpresstools as xp
-%matplotlib inline
 
 """
 utils.py tests

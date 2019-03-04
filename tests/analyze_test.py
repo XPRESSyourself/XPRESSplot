@@ -24,7 +24,6 @@ IMPORT DEPENDENCIES AND DATASETS
 """
 import pandas as pd
 import xpresstools as xp
-%matplotlib inline
 import numpy as np
 
 data_loc = './large_test.csv'
