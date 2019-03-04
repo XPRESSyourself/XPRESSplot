@@ -3,25 +3,13 @@ Installation
 ############
 
 ====================
-Install Dependencies
-====================
-
-| 1)  You may need to manually point your system to python3. You can check this by typing :data:`python` in the command line and seeing if it is running python3. At this time, RiboPipe only works when Python3 is set as the default. If it is not, do the following:
-
-.. code-block:: shell
-
-  $ echo "alias python="python3" >> ~/.bash_profile
-
-| 2)  Download `Conda <https://www.anaconda.com/download/>`_, a package manager, for your operating system. Double click the `.pkg` file if on MacOS, the `.exe` file on Windows, or follow these `instructions <https://conda.io/docs/user-guide/install/linux.html#install-linux-silent>`_ on Linux.
-
-====================
 PyPi Install
 ====================
 | 1)  Install XPRESStools and associated dependencies via pip:
 
 .. code-block:: shell
 
-  $ pip isntall xpresstools
+  $ pip install xpresstools
 
 ====================
 Conda Install

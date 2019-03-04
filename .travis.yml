@@ -10,14 +10,21 @@ before_install:
 - git lfs pull
 install:
 - pip install -r requirements.txt
+- pip install codecov
 - pip install .
 - python setup.py install
 - cd tests/
 script:
-- python fetch_test.py
-- python format_test.py
-- python normalize_test.py
+- coverage run fetch_test.py
+- coverage run format_test.py
+- coverage run normalize_test.py
+- coverage run analyze_test.py
+- coverage run utils_test.py
+- coverage xml
+- coverage report -m
 - cd ../
+after_success:
+- codecov
 deploy:
   provider: pypi
   user: j-berg

@@ -20,14 +20,14 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'xpresstools'
+project = 'XPRESStools'
 copyright = '2019, Jordan A. Berg'
 author = 'Jordan A. Berg'
 
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.0.1-beta'
+release = '0.0.2-beta'
 
 
 # -- General configuration ---------------------------------------------------
