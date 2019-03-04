@@ -24,7 +24,7 @@ Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis m
 
 ### Installation:   
 ```
-conda install -c bioconda xpresstools
+pip install xpresstools
 ```
 
 ### QuickStart:   

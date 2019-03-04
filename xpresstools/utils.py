@@ -24,7 +24,7 @@ IMPORT DEPENDENCIES
 """
 
 """
-DESCRIPTION: Check directory formatting
+DESCRIPTION: Pass in a directory as string to check for proper formatting formatting
 """
 #Check directory formatting
 def check_directories(directory):

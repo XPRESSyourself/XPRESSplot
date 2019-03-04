@@ -41,10 +41,10 @@ DESCRIPTION: Plots heatmap for prep_data formatted data
 METHODS: We use centroid method as default as it looks at the gene set for each sample holistically to determine a 'centroid' then used for clustering. Other valid options are available (see VARIABLES)
 
 VARIABLES:
-data_scaled= Scaled (generally) dataframe as created with the MICARtools prep_data function
-info= MICARtools formatted info matrix
+data_scaled= Scaled (generally) dataframe as created with the XPRESStools prep_data function
+info= XPRESStools formatted info matrix
 sample_palette= Dictionary of labels and colors for plotting, or valid seaborns.clustermap col_colors option
-gene_info= MICARtools formatted info matrix for genes (column0) and groupings (column1)
+gene_info= XPRESStools formatted info matrix for genes (column0) and groupings (column1)
 gene_palette= Dictionary of labels and colors for plotting, or valid seaborns.clustermap col_colors option
 gene_list= List of genes (either as list or as .csv file path and name with list of genes) to plot (IMPORTANT: Gene names are case-sensitive)
 save_fig= If not None, provide full file path, name, and extension to save the file as
@@ -57,16 +57,16 @@ center, metric, method, xticklabels, linewidths, linecolor, col_cluster, row_clu
 figsize= (Width, Height)
 
 USAGE:
-import micartools as mat
+import xpresstools as xp
 col_colors = {'adenocarcinoma': 'grey',
         'adenoma': (0.8705882352941177, 0.5607843137254902, 0.0196078431372549),
         'normal': (0.00784313725490196, 0.6196078431372549, 0.45098039215686275)}
 cbar_kws= {'label': 'z-score',"shrink": 0.2, 'aspect': 10}
 
-mat.heatmap(data_scaled, data_labeled, color_dict=color_dict, gene_list='/path/to/gene_list.csv', figsize=(40,8))
+xp.heatmap(data_scaled, data_labeled, color_dict=color_dict, gene_list='/path/to/gene_list.csv', figsize=(40,8))
 
 ASSUMPTIONS:
-Data has been scaled and labeled with the MICARtools prep_data function
+Data has been scaled and labeled with the XPRESStools prep_data function
 """
 def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, col_cluster=True, row_cluster=False, metric='euclidean', method='centroid', font_scale=.8, cmap=jakes_cmap, center=0, xticklabels=True, yticklabels=True, linewidths=0, linecolor='#DCDCDC', cbar_kws=None, figsize=(16,6.5), save_fig=None, dpi=600, bbox_inches='tight'):
 
@@ -114,7 +114,7 @@ def heatmap(data, info, sample_palette=None, gene_info=None, gene_palette=None, 
 DESCRIPTION: Create violin plots of subset of gene expressions or all gene expression by sample
 
 VARIABLES:
-data_labeled= Unscaled dataframe with sample labels as created with the MICARtools prep_data function
+data_labeled= Unscaled dataframe with sample labels as created with the XPRESStools prep_data function
 gene_list= List of genes (either as list or as .csv file path and name with list of genes) to plot (IMPORTANT: Gene names are case-sensitive)
 order= List of samples in order to plot
 palette= Dictionary of matplotlib compatible colors for samples
@@ -124,7 +124,7 @@ bbox_inches= Format saved figure (often useful for making sure no text is cut of
 title= Provide title for figure and saved file if save_fig option used
 
 ASSUMPTIONS:
-Data has been scaled and labeled with the MICARtools prep_data function
+Data has been scaled and labeled with the XPRESStools prep_data function
 """
 def multigene_overview(data, info, palette=None, gene_list=None, order=None, scale='area', save_fig=None, dpi=600, bbox_inches='tight', title=None, grid=False, whitegrid=False):
 
@@ -174,7 +174,7 @@ DESCRIPTION: Plot boxplot overlaid with swarmplot of each sample type's gene exp
 
 VARIABLES:
 data= Dataframe (can be sample-normalized, prep_data() scaled, or log_scale() scaled)
-info= MICARtools formatted sample info dataframe
+info= XPRESStools formatted sample info dataframe
 gene_name= Name of gene to plot
 palette= Dictionary of matplotlib compatible colors for samples
 order= List of samples in order to plot
@@ -184,7 +184,7 @@ bbox_inches= Format saved figure (often useful for making sure no text is cut of
 grid= Control plot gridlines (default: False)
 
 ASSUMPTIONS:
-data and info dataframes are properly formatted for MICARtools and any appropriate sample/gene normalizations have been performed
+data and info dataframes are properly formatted for XPRESStools and any appropriate sample/gene normalizations have been performed
 """
 def gene_overview(data, info, gene_name, palette, order=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
 
@@ -216,7 +216,7 @@ DESCRIPTION: Create scatterplot comparing gene expression of two genes across sa
 
 VARIABLES:
 data= Dataframe of expression data (samples are columns, genes are rows)
-info= MICARtools formatted sample info dataframe
+info= XPRESStools formatted sample info dataframe
 gene1= Name of gene to plot on x_axis
 gene1= Name of gene to plot on y_axis
 palette= Dictionary of matplotlib compatible colors for samples
@@ -235,7 +235,7 @@ highlight_points= If plotting multiple highlight colors, make sure this and high
 thresholds can be list of ints or int or None
 
 ASSUMPTIONS:
-MICARtools formatted data and info dataframes, palette is a dictionary of labels and colors to plot points with
+XPRESStools formatted data and info dataframes, palette is a dictionary of labels and colors to plot points with
 """
 def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
 
@@ -295,7 +295,7 @@ DESCRIPTION: Create scatterplot with r value and jointplot density distributions
 
 VARIABLES:
 data= Dataframe of expression data (samples are columns, genes are rows)
-info= MICARtools formatted sample info dataframe
+info= XPRESStools formatted sample info dataframe
 gene1= Name of gene to plot on x_axis
 gene1= Name of gene to plot on y_axis
 kind= See seaborn jointplot documentation for options (https://seaborn.pydata.org/generated/seaborn.jointplot.html)
@@ -310,7 +310,7 @@ whitegrid= Use whitegrid background in plot
 Full functionality only supported for kind='reg' currently
 
 ASSUMPTIONS:
-MICARtools formatted data and info dataframes, palette (if used) is a dictionary of labels and colors to plot points with
+XPRESStools formatted data and info dataframes, palette (if used) is a dictionary of labels and colors to plot points with
 """
 def jointplot(data, info, x, y, kind='reg', palette=None, order=None, title_pad=0, title_pos='right', grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
 
@@ -361,7 +361,7 @@ save_file= File path and name to save correlations matrix with
 delimiter= Delimiter to use for save_file
 
 ASSUMPTIONS:
-data dataframes is properly formatted for MICARtools, sample scaling required but gene scaling is not necessary
+data dataframes is properly formatted for XPRESStools, sample scaling required but gene scaling is not necessary
 data should not contain labels
 """
 def linreg(data, gene_name, save_file, delimiter=','):
@@ -396,8 +396,8 @@ def linreg(data, gene_name, save_file, delimiter=','):
 DESCRIPTION: Plot volcano plot for dataframe, can highlight subset of genes
 
 VARIABLES:
-data= Sample-normalized, MICARtools-formatted data -- should NOT be gene-normalized
-info= MICARtools formatted sample info dataframe
+data= Sample-normalized, XPRESStools-formatted data -- should NOT be gene-normalized
+info= XPRESStools formatted sample info dataframe
 label_comp= Sample label to compare against base
 label_base= Sample label to use as base for comparison
 highlight_points= If provided with a list, or a file path and name to a .csv-type series of gene names, will highlight genes of interest in a different color (Gene names are case-sensitive). Must be a list of lists to allow for multiple highlighting groups
@@ -467,8 +467,8 @@ RETURNS: Dataframe with PCs calculated
 METHODS: 3-D PCA -- option to output as interactive plot by providing plotly credentials, or as a static plot without these credentials (default)
 
 VARIABLES:
-data_scaled= Scaled dataframe as created with the MICARtools prep_data and scaling function -- can be a dataframe prepared using the prep_data() function or log_scale() function
-info= MICARtools formatted sample info dataframe
+data_scaled= Scaled dataframe as created with the XPRESStools prep_data and scaling function -- can be a dataframe prepared using the prep_data() function or log_scale() function
+info= XPRESStools formatted sample info dataframe
 palette= Dictionary of matplotlib compatible colors for samples; for plotly 3-D PCA,
 grouping= Perform PCA sample-wise (default) or gene-wise (grouping='genes')
 gene_list= List of genes (either as list or as .csv file path and name with list of genes) to plot (IMPORTANT: Gene names are case-sensitive) (only functional when grouping='samples')
@@ -503,7 +503,7 @@ USAGE:
 
 ASSUMPTIONS:
 Plotly and api key generation, addition
-Data has been scaled and labeled with the MICARtools prep_data function
+Data has been scaled and labeled with the XPRESStools prep_data function
 
 FEATURES TO ADD:
 Allow for compatibility with adding labels for gene classes for plotting

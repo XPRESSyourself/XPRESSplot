@@ -34,8 +34,8 @@ gene_list= Full path and file name to .csv file listing gene names to get probes
 no_multimappers= Do not allow ambiguous probes in the probe-gene dictionary (default: True)
 
 USAGE:
-import micartools as mat
-gene_dict = mat.prep_collapser("~/Desktop/GPL570.txt")
+import xpresstools as xp
+gene_dict = xp.prep_collapser("~/Desktop/GPL570.txt")
 
 ASSUMPTIONS:
 If using gene_list option, file must be a .csv
@@ -89,8 +89,8 @@ data= Dataframe of microarray probe data to be collapsed
 dict= Probe collapser dictionary created in the prep_collapser function
 
 USAGE:
-import micartools as mat
-df_collapsed = mat.probe_collapse(df, collapser_dict)
+import xpresstools as xp
+df_collapsed = xp.probe_collapse(df, collapser_dict)
 
 ASSUMPTIONS:
 A probe collapser dictionary has been previously prepared using the prep_collapser function
@@ -144,8 +144,8 @@ gene_list= Full path and file name to .csv file listing gene names to get probes
 no_multimappers= Do not allow ambiguous probes in the probe-gene dictionary (default: True)
 
 USAGE:
-import micartools as mat
-df_collapsed = mat.auto_collapse(df, "~/Desktop/GPL570.csv")
+import xpresstools as xp
+df_collapsed = xp.auto_collapse(df, "~/Desktop/GPL570.csv")
 
 ASSUMPTIONS:
 See assumptions for prep_collapser and probe_collapse functions

@@ -218,7 +218,7 @@ print_means= Print appropriate means that were scaled for verification
 
 USAGE:
 import XPRESStools as mat
-df_scaled, df_collapsed = mat.prep_df(df_collapsed, info)
+df_scaled, df_collapsed = xp.prep_df(df_collapsed, info)
 
 ASSUMPTIONS:
 Requires properly formatted df and info dataframes for XPRESStools usage

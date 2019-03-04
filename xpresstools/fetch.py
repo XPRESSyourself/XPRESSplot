@@ -37,8 +37,8 @@ delimiter= delimiter type for importing file, default: ','
 low_memory= Specify memory limits for importing large files, default: False (allows for large imports)
 gene_axis= Orientiation of the data, where categorical data is either column-wise, (default: 'col') or row-wise ('row'). Case insensitive
 USAGE:
-import micartools as mat
-data = mat.get_df("~/Desktop/data.csv")
+import xpresstools as xp
+data = xp.get_df("~/Desktop/data.csv")
 ASSUMPTIONS:
 Dataset does not contain axis labels (i.e. a column header for 'gene names')
 Dataset only has gene names and sample_ids as column headers and row indices. Orientation is flexible, but needs to be specified in options if genes are not rows
@@ -67,7 +67,7 @@ VARIABLES:
 geo_id= GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)
 output_info= Output long-form metadata to txt file
 USAGE:
-sample_data, sample_metadata = mat.get_geo("GSE20716")
+sample_data, sample_metadata = xp.get_geo("GSE20716")
 
 Add feature to grab GPL file
 """
@@ -123,8 +123,8 @@ axis= Orientiation of the data, where categorical data is either column-wise, (d
 sample_ids= Column or row number where sample IDs are found (default: 0)
 labels= Column or row number where categorical label data are found (default: 1)
 USAGE:
-import micartools as mat
-sample_info = mat.get_info("~/Desktop/sample_info.csv")
+import xpresstools as xp
+sample_info = xp.get_info("~/Desktop/sample_info.csv")
 ASSUMPTIONS:
 Data categories are not labeled
 If orientation is not default, it is then specified or else function will not be able to properly format the dataframe for downstream application
@@ -160,8 +160,8 @@ VARIABLES:
 data= Dataframe containing expression data
 ids= List of sample IDs to remove from the dataframe
 USAGE:
-import micartools as mat
-df = mat.drop_samples(df, sample_list)
+import xpresstools as xp
+df = xp.drop_samples(df, sample_list)
 ASSUMPTIONS:
 Dataframe axes have been properly formatted (samples are columns, genes are rows)
 """
@@ -185,8 +185,8 @@ data= Dataframe containing expression data
 info= Dataframe containing sample information data
 label= Name of sample type to drop (string)
 USAGE:
-import micartools as mat
-df = mat.drop_label(df, sample_info, "WT")
+import xpresstools as xp
+df = xp.drop_label(df, sample_info, "WT")
 ASSUMPTIONS:
 Dataframe axes have been properly formatted (samples are columns, genes are rows)
 Only one string is given to drop per call instance of function
@@ -216,8 +216,8 @@ data= Dataframe containing expression data
 info= Dataframe containing sample information data
 labels= List of sample types to keep
 USAGE:
-import micartools as mat
-df = mat.keep_labels(df, sample_info, ['normal','adenoma'])
+import xpresstools as xp
+df = xp.keep_labels(df, sample_info, ['normal','adenoma'])
 ASSUMPTIONS:
 Dataframe axes have been properly formatted (samples are columns, genes are rows)
 Labels provided are in list format
