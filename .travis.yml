@@ -20,8 +20,6 @@ script:
 - coverage run normalize_test.py
 - coverage run analyze_test.py
 - coverage run utils_test.py
-- coverage xml
-- coverage report -m
 - bash <(curl -s https://codecov.io/bash) -cF python
 - cd ../
 after_success:
