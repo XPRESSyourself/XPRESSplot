@@ -13,8 +13,8 @@ install:
 - pip install codecov
 - pip install .
 - python setup.py install
-- cd tests/
 script:
+- cd tests/
 - coverage run fetch_test.py
 - coverage run format_test.py
 - coverage run normalize_test.py

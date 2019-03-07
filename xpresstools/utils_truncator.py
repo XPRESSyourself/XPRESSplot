@@ -75,7 +75,6 @@ def truncate(input_gtf, truncate_amount=45, save_coding_path='./', save_truncate
         print("Multiprocessing reference chunks -- this may take a while...")
         gtf_truncated = parallelize_truncator(execute_truncator, gtf_coding_c, truncate_amount)
 
-
         if save_truncated_path != None:
             gtf_truncated.to_csv(str(save_truncated_path) + 'transcripts_coding_truncated.gtf', sep='\t', header=None, index=False, quoting=csv.QUOTE_NONE)
 
@@ -90,15 +89,15 @@ DESCRIPTION: GTF truncation function
 """
 def execute_truncator(gtf, truncate_amount):
 
-    gtf[8] = gtf[8].replace({'\"':''}, regex=True)
+    #gtf[8] = gtf[8].replace({'\"':''}, regex=True)
 
     gtf['plus'] = gtf[[2,3,4,6,8]].apply(lambda x:
-        (x[3] + truncate_amount) if x[2] == "exon" and x[3] + truncate_amount <= x[4] and x[6] == "+" and "exon_number 1;" in x[8] else (
-        "delete_this" if x[2] == "exon" and x[3] + truncate_amount > x[4] and x[6] == "+" and "exon_number 1;" in x[8] else x[3]),axis=1)
+        (x[3] + truncate_amount) if x[2] == "exon" and x[3] + truncate_amount <= x[4] and x[6] == "+" and "exon_number \"1;" in x[8] else (
+        "delete_this" if x[2] == "exon" and x[3] + truncate_amount > x[4] and x[6] == "+" and "exon_number \"1;" in x[8] else x[3]),axis=1)
 
     gtf['minus'] = gtf[[2,3,4,6,8]].apply(lambda x:
-        (x[4] - truncate_amount) if x[2] == "exon" and x[3] <= x[4] - truncate_amount and x[6] == "-" and "exon_number 1;" in x[8] else (
-        "delete_this" if x[2] == "exon" and x[3] > x[4] - truncate_amount and x[6] == "-" and "exon_number 1;" in x[8] else x[4]),axis=1)
+        (x[4] - truncate_amount) if x[2] == "exon" and x[3] <= x[4] - truncate_amount and x[6] == "-" and "exon_number \"1;" in x[8] else (
+        "delete_this" if x[2] == "exon" and x[3] > x[4] - truncate_amount and x[6] == "-" and "exon_number \"1;" in x[8] else x[4]),axis=1)
 
     #remove exon1s that are too short
     gtf = gtf[~gtf['plus'].isin(['delete_this'])]
