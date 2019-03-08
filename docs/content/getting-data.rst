@@ -156,7 +156,7 @@ Catenate Raw Counts Files
 ======================================
 Create Count Table from File List
 ======================================
-| **xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep='\t' )**
+| **xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep='\t', drop_rows=5 )**
 |
 | Purpose:
 | Collate HTseq counts files (similar to catenate_files(), but input is a file list)
@@ -169,6 +169,7 @@ Create Count Table from File List
 | **gene_column**: Column location in all count files of gene names
 | **gene_column**: Column location in all count files of samples
 | **sep**: Separator of counts files
+| **drop_rows**: Number of rows to drop from the end of each count file. HTSeq-count provides 5 lines of summary statistics at the end of each file, so for HTSeq-count files, use drop_rows=5
 |
 | Returns:
 | **count_table**: Pandas dataframe with the catenated counts. Samples are along columns, genes are along rows

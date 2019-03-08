@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=source
 set BUILDDIR=build
-set SPHINXPROJ=ribopipe
+set SPHINXPROJ=xpresstools
 
 if "%1" == "" goto help
 
