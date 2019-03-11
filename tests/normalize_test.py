@@ -128,11 +128,11 @@ log_test.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':96.23,'fGSM523243_
 log_test.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
 
 log_truth = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-log_truth.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':1.822430,'fGSM523243_rna':1.772542,'fGSM523244_rpf':0.301030,'fGSM523245_rna':1.916927})
-log_truth.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':1.554247,'fGSM523243_rna':-1.000000,'fGSM523244_rpf':0.873902,'fGSM523245_rna':1.863561})
-log_truth.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':1.303628,'fGSM523243_rna':1.847017,'fGSM523244_rpf':1.930440,'fGSM523245_rna':1.897462})
-log_truth.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':1.983762,'fGSM523243_rna':0.880242,'fGSM523244_rpf':1.971229,'fGSM523245_rna':1.585348})
-log_truth.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':1.869290,'fGSM523243_rna':1.616790,'fGSM523244_rpf':1.965531,'fGSM523245_rna':1.892262})
+log_truth.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':1.828273,'fGSM523243_rna':1.779091,'fGSM523244_rpf':0.462398,'fGSM523245_rna':1.921634})
+log_truth.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':1.565021,'fGSM523243_rna':0.000000,'fGSM523244_rpf':0.923244,'fGSM523245_rna':1.868879})
+log_truth.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':1.322633,'fGSM523243_rna':1.852541,'fGSM523244_rpf':1.935003,'fGSM523245_rna':1.902384})
+log_truth.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':1.987800,'fGSM523243_rna':0.928908,'fGSM523244_rpf':1.975386,'fGSM523245_rna':1.595386})
+log_truth.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':1.874540,'fGSM523243_rna':1.626135,'fGSM523244_rpf':1.969742,'fGSM523245_rna':1.897242})
 #Check output
 log_test1 = xp.log_scale(log_test)
 log_test1 = log_test1.round(decimals=4)
