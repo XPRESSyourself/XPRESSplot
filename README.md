@@ -28,6 +28,9 @@ Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis m
 pip install xpresstools
 ```
 
+### Other Requirements:
+If using this package to perform batch effect normalization or differential expression analysis, you must install [R](https://www.r-project.org/)
+
 ### QuickStart:   
 ```
 >>> import pandas as pd

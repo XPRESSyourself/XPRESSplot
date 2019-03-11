@@ -127,9 +127,9 @@ Requires a properly formatted dataframe for XPRESStools usage where samples are 
 def log_scale(data, log_base=10):
 
     if log_base == 10:
-        data_log = np.log10(data + 0.1)
+        data_log = np.log10(data + 1)
     elif log_base == 2:
-        data_log = np.log2(data + 0.1)
+        data_log = np.log2(data + 1)
     else:
         raise Exception('Invalid log_base option provided')
 
@@ -147,18 +147,16 @@ batch_sep= Batch file delimiter
 ASSUMPTIONS:
 Data has already been sample normalized
 """
-def batch_normalize(input_file, batch_file, output_file, input_sep=',', batch_sep=','):
+def batch_normalize(input_file, batch_file):
 
     #Get output file name
-    if intput_sep == ',':
-        output_file = str(input_file[:-4]) + '_batch.csv'
-    elif intput_sep == '\t':
-        output_file = str(input_file[:-4]) + '_batch.tsv'
+    if input_file.endswith('.txt') or input_file.endswith('.tsv'):
+        output_file = str(input_file[:-4]) + '_batched.tsv'
     else:
-        raise Exception('Unrecognized input_file delimiter type')
+        raise Exception('Unrecognized input_file delimiter type. Files must be tab-delimited')
 
     #Run sva combat in R
-    os.system('rscript ' + str(__path__) + '/batch_normalize.r ' + str(input_file) + ' ' + str(batch_file) + str(input_sep) + ' ' + str(batch_sep) + ' ' + str(output_file))
+    os.system('rscript ' + str(__path__) + '/batch_normalize.r ' + str(input_file) + ' ' + str(batch_file) + ' ' + str(output_file))
 
 """
 DESCRIPTION: Check sample means and medians

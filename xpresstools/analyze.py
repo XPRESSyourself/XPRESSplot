@@ -22,6 +22,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 IMPORT DEPENDENCIES
 """
+import os, sys
 import pandas as pd
 import numpy as np
 from scipy.stats import linregress
@@ -34,6 +35,34 @@ sns.set(font='arial')
 jakes_cmap = sns.diverging_palette(212, 61, s=99, l=77, sep=1, n=16, center='dark') #Custom aesthetics
 from .utils_analyze import *
 from .interactive import *
+
+"""
+INITIALIZATION PARAMETERS
+"""
+#Retrieve path for scripts used in this pipeline, appended to argument dictionary for every function
+__path__, xpresstools_arguments = os.path.split(__file__)
+
+"""
+DESCRIPTION: Run Differential Expression analysis using DESeq2
+"""
+def diff_xpress(input_file, sample_file, equation):
+
+    #Get output file name
+    if input_file.endswith('.txt') or input_file.endswith('.tsv'):
+        output_file = str(input_file[:-4]) + '_diffx.tsv'
+    else:
+        raise Exception('Unrecognized input_file delimiter type. Files must be tab-delimited')
+
+    if sample_file.endswith('.txt') or sample_file.endswith('.tsv'):
+        pass
+    else:
+        raise Exception('Unrecognized sample_file delimiter type. Files must be tab-delimited')
+
+    if equation.startswith('~'):
+        raise Exception('Tilde should not be included in design formula, script will automatically add this syntax.')
+
+    #Run deseq2 in R
+    os.system('rscript ' + str(__path__) + '/diffxpress.r ' + str(input_file) + ' ' + str(sample_file) + ' ' + str(output_file) + ' ' + str(equation))
 
 """
 DESCRIPTION: Plots heatmap for prep_data formatted data
