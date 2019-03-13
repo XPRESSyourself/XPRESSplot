@@ -34,6 +34,7 @@ pca_file = './pca_test.pdf'
 probe_loc = './GPL570.txt'
 
 """
+%matplotlib inline
 data_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/large_test.csv'
 meta_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/sample_info_test.csv'
 save_threshold = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/threshold.csv'
@@ -135,6 +136,8 @@ xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=Tr
 xp.volcano(geo_labeled, meta, 'Adenoma', 'Normal', highlight_points=['STX6','SCARB1','CCL5'])
 
 xp.volcano(geo_labeled, meta, 'Adenoma', 'Normal', highlight_points=['STX6','SCARB1','CCL5'], y_threshold=2, x_threshold=[-1,1], save_threshold_hits=save_threshold)
+
+xp.volcano(geo_labeled, meta, 'Adenoma', 'Normal', highlight_points=['STX6','SCARB1','CCL5'], highlight_names=['gene_set'], y_threshold=2, x_threshold=[-1,1], save_threshold_hits=save_threshold)
 
 xp.volcano(geo_labeled, meta, 'Adenoma', 'Normal', highlight_points=[['STX6','SCARB1','CCL5'],['BEST4']], highlight_color=['blue','red'], alpha=.3, y_threshold=2, x_threshold=[-1,1], label_points={'BEST4':[-1.24288077425345,21.782377963035827]})
 

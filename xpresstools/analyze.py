@@ -266,9 +266,11 @@ thresholds can be list of ints or int or None
 ASSUMPTIONS:
 XPRESStools formatted data and info dataframes, palette is a dictionary of labels and colors to plot points with
 """
-def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
+def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight', figsize=(10,10)):
 
     reset_plot(whitegrid)
+    plt.figure(figsize=figsize)
+
     data_c = analysis_prep(data)
 
     #Prep data_scaled by adding labels from info
@@ -276,9 +278,13 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
     data_c.loc['label'] = data_c.columns.map(labels.get)
 
     if palette == None:
-        ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], color='black', alpha=alpha, s=size)
+        ax = sns.scatterplot(data_c[str(x)], data_c[str(y)], color='black', alpha=alpha, s=size)
     else:
-        ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], palette=palette, alpha=alpha, s=size)
+        #Transpose dataframe so whatever you want to plot is in columns
+        if x in data.columns or y in data.columns:
+            ax = sns.scatterplot(data_c[str(x)], data_c[str(y)], hue=data_c['label'], palette=palette, alpha=alpha, s=size)
+        else:
+            ax = sns.scatterplot(data_c.loc[str(x)], data_c.loc[str(y)], hue=data_c.loc['label'], palette=palette, alpha=alpha, s=size)
 
     if add_linreg == True:
         _x, _y, r_value, title = make_linreg(data_c, x, y)
@@ -295,7 +301,7 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
 
     #Plot selected genes if user-specified
     if highlight_points != None:
-        ax = highlight_markers(data_c, x, y, highlight_points, highlight_color, alpha_highlights, ax)
+        ax = highlight_markers(data_c, x, y, highlight_points, highlight_color, highlight_names, alpha_highlights, ax)
 
     #Label points
     if label_points != None and type(label_points) is dict:
@@ -303,7 +309,7 @@ def scatter(data, info, x, y, palette=None, add_linreg=False, order_legend=None,
             ax.text(value[0], value[1], str(key), horizontalalignment='left', size='medium', color='black', weight='semibold')
 
     # Put the legend out of the figure
-    ax = make_legend(ax, order_legend)
+    ax = make_legend(ax, order_legend, highlight_color, highlight_names)
 
     plt.xlabel(str(x))
     plt.ylabel(str(y))
@@ -341,9 +347,10 @@ Full functionality only supported for kind='reg' currently
 ASSUMPTIONS:
 XPRESStools formatted data and info dataframes, palette (if used) is a dictionary of labels and colors to plot points with
 """
-def jointplot(data, info, x, y, kind='reg', palette=None, order=None, title_pad=0, title_pos='right', grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight'):
+def jointplot(data, info, x, y, kind='reg', palette=None, order=None, title_pad=0, title_pos='right', grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight', figsize=(10,10)):
 
     reset_plot(whitegrid)
+    plt.figure(figsize=figsize)
 
     data_c = data.copy()
     data_c = analysis_prep(data_c)
@@ -450,9 +457,10 @@ ASSUMPTIONS:
 data should ONLY be sample normalized. If using a previous function that returned a modified original
 y_threshold must be a postive integer or float
 """
-def volcano(data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight'):
+def volcano(data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight', figsize=(10,10)):
 
     reset_plot(whitegrid)
+
     data_c = analysis_prep(data)
     info_c = info.copy()
 
@@ -473,11 +481,11 @@ def volcano(data, info, label_comp, label_base, order_legend=None, title=None, a
 
     #Plot all genes
     if plotly_login == False:
-        scatter(data_c.T, info, 'log$_2$(Fold Change)', '-log$_1$$_0$(P-Value)', palette=None, add_linreg=False, order_legend=order_legend, title=title, save_fig=save_fig, dpi=dpi, bbox_inches=bbox_inches, grid=grid, whitegrid=whitegrid, alpha=alpha, highlight_points=highlight_points, highlight_color=highlight_color, alpha_highlights=alpha_highlights, y_threshold=y_threshold, x_threshold=x_threshold, threshold_color=threshold_color, label_points=label_points, size=size)
+        scatter(data_c, info_c, 'log$_2$(Fold Change)', '-log$_1$$_0$(P-Value)', palette=None, add_linreg=False, order_legend=order_legend, title=title, save_fig=save_fig, dpi=dpi, bbox_inches=bbox_inches, grid=grid, whitegrid=whitegrid, alpha=alpha, highlight_points=highlight_points, highlight_color=highlight_color, highlight_names=highlight_names,  alpha_highlights=alpha_highlights, y_threshold=y_threshold, x_threshold=x_threshold, threshold_color=threshold_color, label_points=label_points, size=size, figsize=figsize)
 
     else:
         data_c = data_c.rename(columns = {'log$_2$(Fold Change)':'log2 Fold Change', '-log$_1$$_0$(P-Value)':'-log10 P-Value'})
-        interactive_scatter(data_c, info, x='log2 Fold Change', y='-log10 P-Value', plotly_login=plotly_login, file_name=save_fig, highlight='sample', palette=None)
+        interactive_scatter(data_c, info_c, x='log2 Fold Change', y='-log10 P-Value', plotly_login=plotly_login, file_name=save_fig, highlight='sample', palette=None)
 
     #Output threshold hits outer bounds, specific to volcano plot
     if save_threshold_hits != None:

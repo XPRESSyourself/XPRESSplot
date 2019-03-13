@@ -377,6 +377,9 @@ def calculate_p(data, label_comp, label_base):
         comp_row = data.loc[index].filter(regex=str(label_comp)).values.tolist()
         base_row = data.loc[index].filter(regex=str(label_base)).values.tolist()
 
+        if len(comp_row) < 2 or len(base_row) < 2:
+            raise Exception('Calculating a P-value requires replicates for each sample type')
+
         # Append p_value to df_oxsm_volc
         try:
             statistic, p_value = stats.ttest_ind(comp_row, base_row)
@@ -432,7 +435,7 @@ def output_threshold(data_c, x_threshold, y_threshold, save_threshold_hits, save
 
 """
 """
-def make_legend(ax, order_legend):
+def make_legend(ax, order_legend, highlight_color, highlight_names):
 
     handles, labels = ax.get_legend_handles_labels()
 
@@ -445,25 +448,45 @@ def make_legend(ax, order_legend):
                 print('order_legend datatype is invalid -- plotting samples in default order...')
         else:
             plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+    elif len(labels) == 0:
+        if highlight_names != None and type(highlight_names) is list:
+            if type(highlight_color) is str:
+                highlight_color = [highlight_color]
+
+            if len(highlight_names) == len(highlight_color):
+                #Make a custom legend using the provided info
+                #Adapted from https://stackoverflow.com/a/47749903
+                f = lambda m,c: plt.plot([],[],marker='o', color=c, ls="none")[0]
+                handles = [f("s", highlight_color[i]) for i in range(len(highlight_color))]
+                plt.legend(handles, highlight_names, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            else:
+                raise Exception('Highlight colors and names lists are not of equal size')
+        else:
+            pass #raise Exception('Highlight names is not a list')
+
     else:
-        ax.get_legend().remove()
+        pass #ax.get_legend().remove()
 
     return ax
 
 """
 """
-def highlight_markers(data, x, y, highlight_points, highlight_color, alpha_highlights, ax):
+def highlight_markers(data, x, y, highlight_points, highlight_color, highlight_names, alpha_highlights, ax):
 
     if all(isinstance(z, list) for z in highlight_points):
         p = 0
         for h in highlight_points:
-            data_sub = data_subset(data.T, highlight_points[p]).T
-            data_genes = data_sub.dropna(axis=0)
-            ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color[p]), alpha=alpha_highlights)
+            data_sub = data_subset(data, highlight_points[p]).T
+            data_genes = data_sub.dropna(axis=1)
+            if type(alpha_highlights) is list:
+                ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color[p]), alpha=alpha_highlights[p])
+            else:
+                ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color[p]), alpha=alpha_highlights)
             p += 1
     else:
-        data_sub = data_subset(data.T, highlight_points).T
-        data_genes = data_sub.dropna(axis=0)
+        data_sub = data_subset(data, highlight_points).T
+        data_genes = data_sub.dropna(axis=1)
         ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color), alpha=alpha_highlights)
 
     return ax
