@@ -275,7 +275,7 @@ Heatmap
 ===============================
 Scatterplot
 ===============================
-| **xpresstools.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpresstools.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create scatterplot with the option to include a linear least-squares regression fit of the data
@@ -294,7 +294,8 @@ Scatterplot
 | **title**: Plot title (default: None)
 | **alpha**: Opacity percentage for scatter plot
 | **highlight_points**: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)
-| **highlight_color**: Color to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)
+| **highlight_color**: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)
+| **highlight_names**: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color)
 | **alpha_highlights**: Opacity percentage for highlighted elements of scatter plot
 | **size**: Marker size
 | **y_threshold**: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted
@@ -338,7 +339,7 @@ Scatterplot
 ===============================
 Volcano Plot
 ===============================
-| **xpresstools.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpresstools.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create scatterplot with the option to include a linear least-squares regression fit of the data
@@ -355,7 +356,8 @@ Volcano Plot
 | **title**: Plot title (default: None)
 | **alpha**: Opacity percentage for scatter plot
 | **highlight_points**: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)
-| **highlight_color**: Color to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)
+| **highlight_color**: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)
+| **highlight_names**: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color)
 | **alpha_highlights**: Opacity percentage for highlighted elements of scatter plot
 | **size**: Marker size
 | **y_threshold**: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted

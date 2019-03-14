@@ -549,6 +549,9 @@ Add options to vary marker size and opacity
 """
 def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=False, _3d_pca=False, principle_components=[1,2], n_components=10, ci=2, scree_only=False, save_scree=False, size=30, order_legend=None, title=None, fig_size=(10,10), grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight', return_pca=False, plotly_login=None):
 
+    highlight_color = None
+    highlight_names = None
+
     reset_plot(whitegrid)
     principle_components = init_pca(principle_components, _3d_pca, plotly_login)
 
@@ -619,7 +622,7 @@ def pca(data, info, palette, grouping='samples', gene_list=None, gene_labels=Fal
 
             #Non-interactive
             if plotly_login == None:
-                pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title, size)
+                pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title, size, highlight_color, highlight_names)
 
             #Plotly
             else:

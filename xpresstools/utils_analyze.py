@@ -274,13 +274,13 @@ def set_confidence(df_pca, pca_plot, unique_labels, palette, ci):
 """
 DESCRIPTION: 2D Non-interactive PCA scatterplot
 """
-def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title, size):
+def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title, size, highlight_color, highlight_names):
 
     ax = sns.scatterplot(df_pca.PCa, df_pca.PCb, hue=df_pca['label'], palette=palette, s=size)
     set_confidence(df_pca, ax, unique_labels, palette, ci)
 
     # Put the legend out of the figure
-    make_legend(ax, order_legend)
+    make_legend(ax, order_legend, highlight_color, highlight_names)
 
     plt.xlabel('PC' + str(principle_components[0]) + ' (' + str(round(scree[(principle_components[0] - 1)],2)) + '%)')
     plt.ylabel('PC' + str(principle_components[1]) + ' (' + str(round(scree[(principle_components[1] - 1)],2)) + '%)')
