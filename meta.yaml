@@ -1,10 +1,10 @@
 package:
   name: XPRESStools
-  version: 0.0.2-beta
+  version: 0.0.3-beta
 
 source:
-  fn: XPRESStools-0.0.2b1.tar.gz
-  url: https://github.com/XPRESSyourself/XPRESStools/archive/XPRESStools-0.0.2b1.tar.gz
+  fn: XPRESStools-0.0.3b1.tar.gz
+  url: https://github.com/XPRESSyourself/XPRESStools/archive/XPRESStools-0.0.3b1.tar.gz
 
 about:
   home: https://xpresstools.readthedocs.io/en/latest/
