@@ -20,7 +20,7 @@ XPRESStools supports Python 2.7 and >=3.5
 
 ### Citation:    
 ```
-Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis made easy. https://github.com/XPRESSyourself.
+Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis made easy. https://github.com/XPRESSyourself. DOI: 10.5281/zenodo.2581692.
 ```
 
 ### Installation:   
@@ -29,18 +29,12 @@ pip install xpresstools
 ```
 
 ### Other Requirements:
-Python3 is recommended   
-If using this package to perform batch effect normalization or differential expression analysis, you must install [R](https://www.r-project.org/)
-If using the interactive notebook provided, Jupyter should be installed (most modern installations of python include this software)    
+- Python3 is recommended   
+- If using this package to perform batch effect normalization or differential expression analysis, you must install [R](https://www.r-project.org/)   
+- If using the interactive notebook provided, Jupyter needs to be [installed](https://jupyter.org/install) if not already
 
 ### QuickStart:   
-```
->>> import pandas as pd
->>> import xpresstools as xp   
-
->>> geo, metadata = xp.get_geo('GSE20916')
->>> geo = xp.rpm(geo)
-```
+Download the repository and modify the [interactive Jupyter notebook](https://github.com/XPRESSyourself/XPRESStools/blob/master/example_notebook.ipynb) to get started quick!   
 
 ### Important Notes:    
 * If working with XPRESStools within an interactive notebook (i.e. Jupyter Notebook, Atom Hydrogen, etc), you must include the following line of code after importing XPRESStools
@@ -50,7 +44,7 @@ import XPRESStools as xp
 %matplotlib inline
 ```
 
-* Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see documentation for help)    
+* Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see [documentation](https://xpresstools.readthedocs.io/en/latest/content/general-usage.html) for help)    
 
 ```
 >>> geo.head()
