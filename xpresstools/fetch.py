@@ -71,10 +71,11 @@ sample_data, sample_metadata = xp.get_geo("GSE20716")
 
 Add feature to grab GPL file
 """
-def get_geo(geo_id, output_info=False):
+def get_geo(geo_id, output_info=False, output_path="./"):
 
     #Get data
-    gse = GEOparse.get_GEO(geo=str(geo_id).upper()) #Import GSE dataset
+    gse = GEOparse.get_GEO(geo=str(geo_id).upper(), destdir=output_path) #Import GSE dataset
+
     data = gse.pivot_samples('VALUE')
     data = clean_df(data)
 

@@ -81,6 +81,19 @@ Importing metadata from file
 ============================
 Importing data from GEO
 ============================
+--------------------
+RNAseq Datasets
+--------------------
+| A module will be added in the future to automate this conversion and import from GEO 
+| Download the csv or tsv file provided in supplement and ensure formatted follows XPRESStools standards
+| Sometimes the delimiter is formatted incorrectly. If so, a simple find/replace can be used to replace the incorrect delimiter with a \t
+| Remove the gene name column header, but keep the trailing tab
+| Create a metadata file following XPRESStools standards
+| Import data
+
+---------------------
+MicroArray Datasets
+---------------------
 | **xpresstools.get_geo ( geo_id, output_info=False )**
 |
 | Purpose:

@@ -29,7 +29,9 @@ pip install xpresstools
 ```
 
 ### Other Requirements:
+Python3 is recommended   
 If using this package to perform batch effect normalization or differential expression analysis, you must install [R](https://www.r-project.org/)
+If using the interactive notebook provided, Jupyter should be installed (most modern installations of python include this software)    
 
 ### QuickStart:   
 ```
