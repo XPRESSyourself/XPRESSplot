@@ -30,5 +30,4 @@ from .utils_analyze import *
 from .utils_truncator import *
 from .utils import *
 
-
 __version__ = '0.0.3-beta'
