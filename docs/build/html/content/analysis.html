@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Analysis &mdash; xpresstools 0.0.1-beta documentation</title>
+  <title>Analysis &mdash; XPRESStools 0.0.3-beta documentation</title>
   
 
   
@@ -53,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> xpresstools
+            <a href="../index.html" class="icon icon-home"> XPRESStools
           
 
           
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESStools</a></li>
 </ul>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="beginner.html">Wait! I’ve never programmed before!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-usage.html">General Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
@@ -99,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#sample-color-palette">Sample Color Palette</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#differential-expression-analysis">Differential Expression Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#single-gene-analysis">Single-gene Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#multi-gene-analysis">Multi-gene Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#heatmap">Heatmap</a></li>
@@ -124,7 +126,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">xpresstools</a>
+          <a href="../index.html">XPRESStools</a>
         
       </nav>
 
@@ -191,6 +193,104 @@
               <span class="s1">&#39;Normal&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.00784313725490196</span><span class="p">,</span> <span class="mf">0.6196078431372549</span><span class="p">,</span> <span class="mf">0.45098039215686275</span><span class="p">)}</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="differential-expression-analysis">
+<h2>Differential Expression Analysis<a class="headerlink" href="#differential-expression-analysis" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpresstools.diff_xpress ( input_file, sample_file, equation )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Perform differential expression analysis on dataset using DESeq2</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired</div>
+<div class="line">- Requires a properly formatted dataframe complying to DESeq2 info file (see example below)</div>
+<div class="line">- R is installed on your machine and is in your $PATH</div>
+<div class="line">- All input files are tab-delimited (with .txt or .tsv suffix)</div>
+<div class="line">- Design formula does not include the tilde (~) and there are no spaces</div>
+<div class="line">- Your base parameter in a given column in the sample_info file must be first alphabetically. If this is not the base, you can append letters to the beginning to force alphabetical order</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Parameters:</div>
+<div class="line"><strong>input_file</strong>: Input dataframe file with values (must be positive-integer counts)</div>
+<div class="line"><strong>sample_file</strong>: Input dataframe containing sample effect information, column naming convention must be followed and <em>is</em> case-sensitive</div>
+<div class="line"><strong>equation</strong>: Output path and file name for batch normalized data</div>
+<div class="line"><br /></div>
+<div class="line">Examples:</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/expression_counts.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1</span>  <span class="n">s2</span>  <span class="n">s3</span>  <span class="n">s4</span>  <span class="o">...</span>
+<span class="n">ENSG00000227232</span> <span class="mi">66</span>  <span class="mi">59</span>  <span class="mi">1</span>   <span class="mi">82</span>  <span class="o">...</span>
+<span class="n">ENSG00000240361</span> <span class="mi">35</span>  <span class="mi">0</span>   <span class="mi">7</span>   <span class="mi">72</span>  <span class="o">...</span>
+<span class="n">ENSG00000238009</span> <span class="mi">20</span>  <span class="mi">70</span>  <span class="mi">85</span>  <span class="mi">78</span>  <span class="o">...</span>
+<span class="n">ENSG00000241860</span> <span class="mi">96</span>  <span class="mi">7</span>   <span class="mi">93</span>  <span class="mi">38</span>  <span class="o">...</span>
+<span class="n">ENSG00000187634</span> <span class="mi">73</span>  <span class="mi">41</span>  <span class="mi">92</span>  <span class="mi">77</span>  <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">batch</span>
+  <span class="n">Sample</span>  <span class="n">Replicate</span> <span class="n">Condition</span>
+<span class="mi">0</span> <span class="n">s1</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>
+<span class="mi">1</span> <span class="n">s2</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>
+<span class="mi">2</span> <span class="n">s3</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>
+<span class="mi">3</span> <span class="n">s4</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>
+<span class="mi">4</span> <span class="n">s5</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>
+<span class="mi">5</span> <span class="n">s6</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>
+<span class="mi">6</span> <span class="n">s7</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>
+<span class="mi">7</span> <span class="n">s8</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>
+<span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff_xpress</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">equation</span><span class="o">=</span><span class="s1">&#39;Condition&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">If samples were processed separately in different batches, this information should be included in the sample information table</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/expression_counts.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1</span>  <span class="n">s2</span>  <span class="n">s3</span>  <span class="n">s4</span>  <span class="o">...</span>
+<span class="n">ENSG00000227232</span> <span class="mi">66</span>  <span class="mi">59</span>  <span class="mi">1</span>   <span class="mi">82</span>  <span class="o">...</span>
+<span class="n">ENSG00000240361</span> <span class="mi">35</span>  <span class="mi">0</span>   <span class="mi">7</span>   <span class="mi">72</span>  <span class="o">...</span>
+<span class="n">ENSG00000238009</span> <span class="mi">20</span>  <span class="mi">70</span>  <span class="mi">85</span>  <span class="mi">78</span>  <span class="o">...</span>
+<span class="n">ENSG00000241860</span> <span class="mi">96</span>  <span class="mi">7</span>   <span class="mi">93</span>  <span class="mi">38</span>  <span class="o">...</span>
+<span class="n">ENSG00000187634</span> <span class="mi">73</span>  <span class="mi">41</span>  <span class="mi">92</span>  <span class="mi">77</span>  <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">batch</span>
+  <span class="n">Sample</span>  <span class="n">Replicate</span> <span class="n">Condition</span> <span class="n">Batch</span>
+<span class="mi">0</span> <span class="n">s1</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
+<span class="mi">1</span> <span class="n">s2</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
+<span class="mi">2</span> <span class="n">s3</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
+<span class="mi">3</span> <span class="n">s4</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
+<span class="mi">4</span> <span class="n">s5</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
+<span class="mi">5</span> <span class="n">s6</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
+<span class="mi">6</span> <span class="n">s7</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
+<span class="mi">7</span> <span class="n">s8</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
+<span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff_xpress</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">equation</span><span class="o">=</span><span class="s1">&#39;Batch+Condition&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">For ribosome profiling, you need to divide the footprint samples by their corresponding mRNA sample to account for translation efficiency</div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/expression_counts.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">data</span>
+                <span class="n">s1_fp</span>   <span class="n">s1_rna</span>  <span class="n">s2_fp</span>   <span class="n">s2_rna</span>  <span class="o">...</span>
+<span class="n">ENSG00000227232</span> <span class="mi">66</span>      <span class="mi">59</span>      <span class="mi">1</span>       <span class="mi">82</span>      <span class="o">...</span>
+<span class="n">ENSG00000240361</span> <span class="mi">35</span>      <span class="mi">0</span>       <span class="mi">7</span>       <span class="mi">72</span>      <span class="o">...</span>
+<span class="n">ENSG00000238009</span> <span class="mi">20</span>      <span class="mi">70</span>      <span class="mi">85</span>      <span class="mi">78</span>      <span class="o">...</span>
+<span class="n">ENSG00000241860</span> <span class="mi">96</span>      <span class="mi">7</span>       <span class="mi">93</span>      <span class="mi">38</span>      <span class="o">...</span>
+<span class="n">ENSG00000187634</span> <span class="mi">73</span>      <span class="mi">41</span>      <span class="mi">92</span>      <span class="mi">77</span>      <span class="o">...</span>
+<span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">batch</span>
+  <span class="n">Sample</span>  <span class="n">Replicate</span> <span class="n">Condition</span> <span class="n">Type</span>
+<span class="mi">0</span> <span class="n">s1_fp</span>   <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">RPF</span>
+<span class="mi">1</span> <span class="n">s1_rna</span>  <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">RNA</span>
+<span class="mi">2</span> <span class="n">s2_fp</span>   <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">RPF</span>
+<span class="mi">3</span> <span class="n">s2_rna</span>  <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">RNA</span>
+<span class="mi">4</span> <span class="n">s3_fp</span>   <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">RPF</span>
+<span class="mi">5</span> <span class="n">s3_rna</span>  <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">RNA</span>
+<span class="mi">6</span> <span class="n">s4_fp</span>   <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">RPF</span>
+<span class="mi">7</span> <span class="n">s4_rna</span>  <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">RNA</span>
+<span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff_xpress</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">equation</span><span class="o">=</span><span class="s1">&#39;Type+Condition+Type:Condition&#39;</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="single-gene-analysis">
@@ -329,7 +429,7 @@
 <div class="section" id="scatterplot">
 <h2>Scatterplot<a class="headerlink" href="#scatterplot" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpresstools.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Create scatterplot with the option to include a linear least-squares regression fit of the data</div>
@@ -350,7 +450,8 @@
 <div class="line"><strong>title</strong>: Plot title (default: None)</div>
 <div class="line"><strong>alpha</strong>: Opacity percentage for scatter plot</div>
 <div class="line"><strong>highlight_points</strong>: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)</div>
-<div class="line"><strong>highlight_color</strong>: Color to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
+<div class="line"><strong>highlight_color</strong>: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
+<div class="line"><strong>highlight_names</strong>: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color)</div>
 <div class="line"><strong>alpha_highlights</strong>: Opacity percentage for highlighted elements of scatter plot</div>
 <div class="line"><strong>size</strong>: Marker size</div>
 <div class="line"><strong>y_threshold</strong>: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
@@ -383,7 +484,7 @@
 <div class="section" id="volcano-plot">
 <h2>Volcano Plot<a class="headerlink" href="#volcano-plot" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, save_threshold_hits=None, save_threshold_hits_delimiter=’,’, label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpresstools.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, save_threshold_hits=None, save_threshold_hits_delimiter=’,’, label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Create scatterplot with the option to include a linear least-squares regression fit of the data</div>
@@ -402,7 +503,8 @@
 <div class="line"><strong>title</strong>: Plot title (default: None)</div>
 <div class="line"><strong>alpha</strong>: Opacity percentage for scatter plot</div>
 <div class="line"><strong>highlight_points</strong>: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)</div>
-<div class="line"><strong>highlight_color</strong>: Color to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
+<div class="line"><strong>highlight_color</strong>: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
+<div class="line"><strong>highlight_names</strong>: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color)</div>
 <div class="line"><strong>alpha_highlights</strong>: Opacity percentage for highlighted elements of scatter plot</div>
 <div class="line"><strong>size</strong>: Marker size</div>
 <div class="line"><strong>y_threshold</strong>: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>

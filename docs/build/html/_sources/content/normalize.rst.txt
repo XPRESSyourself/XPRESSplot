@@ -184,7 +184,7 @@ Log Transformation
 =====================
 Batch Normalize
 =====================
-| **xpresstools.batch_normalize ( input_file, batch_file, output_file, input_sep=',', batch_sep=',' )**
+| **xpresstools.batch_normalize ( input_file, batch_file )**
 |
 | Purpose:
 | Control for batch effects between datasets
@@ -193,20 +193,18 @@ Batch Normalize
 |   - Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired
 |   - Requires a properly formatted dataframe complying to SVA COMBAT info file (see example below)
 |   - R is installed on your machine and is in your $PATH
+|   - All input files are tab-delimited (with .txt or .tsv suffix)
 |
 | Parameters:
 | **input_file**: Input dataframe file with values (can be normalized or unnormalized)
 | **batch_file**: Input dataframe containing batch effect information, column naming convention must be followed and *is* case-sensitive
-| **output_file**: Output path and file name for batch normalized data
-| **input_sep**: Delimiter for input_file
-| **batch_sep**: Delimiter for batch_file
 |
 | Examples:
 
 .. ident with TABs
 .. code-block:: python
 
-  > data = pd.read_csv('/path/to/expression.csv', index_col=0)
+  > data = pd.read_csv('/path/to/expression.tsv', index_col=0)
   > data
                   s1_rpf  s1_rna  s2_rpf  s2_rna
   ENSG00000227232 66.34   59.13   1.90    82.49
@@ -214,14 +212,14 @@ Batch Normalize
   ENSG00000238009 20.02   70.21   85.10   78.87
   ENSG00000241860 96.23   7.49    93.49   38.39
   ENSG00000187634 73.91   41.28   92.27   77.93
-  > batch = pd.read_csv('/path/to/batch_info.csv', index_col=0)
+  > batch = pd.read_csv('/path/to/batch_info.tsv', index_col=0)
   > batch
     Sample  Batch
   0 s1_rpf  batch1
   1 s1_rna  batch2
   2 s2_rpf  batch1
   3 s2_rna  batch2
-  > xp.batch_normalize('/path/to/expression.csv', '/path/to/batch_info.csv')
+  > xp.batch_normalize('/path/to/expression.tsv', '/path/to/batch_info.tsv')
 
 ====================
 Clean Data

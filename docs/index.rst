@@ -21,6 +21,7 @@ Table of contents
 .. toctree::
    :maxdepth: 1
 
+   content/beginner
    content/installation
    content/general-usage
    content/getting-data

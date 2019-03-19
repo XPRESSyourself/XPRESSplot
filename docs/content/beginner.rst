@@ -1,0 +1,69 @@
+###################################
+Wait! I've never programmed before!
+###################################
+| If you don't have any programming experience and find this all very daunting, this is the documentation for you!
+| We will walk through installation and usage step by step, and explain what we are doing along the way.
+|
+=======================
+Installation
+=======================
+| Installation requires the use of the command line interface (CLI). If you would like some background on how this programming environment works, you can try the `Codecademy module <https://www.codecademy.com/learn/learn-the-command-line>`_ which will familiarize you with this language
+| To begin, you will need to install the software package, XPRESStools. To do so, we will use a Package Manager which will ease the overhead involved in installing software and other software packages it relies on.
+| 1. We will need to use the command line interface (CLI, also known as the Terminal) to install and begin using the software
+| - Linux: Press Ctrl + Alt + T on your keyboard and the Terminal will open
+| - Mac: Click on the Finder icon (a magnifying glass) at the top right corner of your Desktop, type in Terminal, and double-click the corresponding icon
+| 2. We recommend using Python3 as Python2 is being deprecated (will no longer be updated, debugged, etc)
+| - You can check the version of Python you have by typing :data:`python -v` in the command line
+| - If you only have Python2 installed and want to use Python3, you can download this `here <https://www.python.org/downloads/>`_
+| - Now we need the computer to recognize Python3 as the default Python by typing :data:`newalias() {echo "python=python3" >> $HOME/.bash_aliases; source ~/.bash_aliases; }`
+| - Now we can test this by executing :data:`python -v` again
+| 3. With newer versions of Python, the package manager PyPi should already by installed. We can install XPRESStools by executing the following: :data:`pip install XPRESStools`. This should install XPRESStools and all dependencies.
+| 4. Let's test that the installation worked:
+
+.. code-block:: shell
+
+  $ python
+
+| This will open the python interactive mode. Next, type the following:
+
+.. code-block:: python
+
+  >>> import xpresstools
+
+| If the command executes without error, XPRESStools and all dependencies have been successfully installed.
+| NOTE: If any installation up to this point fails due to priviledges warnings, you should run the pip install or other command using :data:`sudo`. You will append this to the beginning of the command and will likely be asked to provide your account password for your machine. :data:`sudo` means "substitute user do", which essentially tells your computer you are a authorized user to install software on the system.
+
+=======================
+Use
+=======================
+| Assuming you are a beginner user, you will likely want to run the interactive notebook. This has many example functions you can run with a toy dataset, which can be easily modified for your use. Instructions are provided with each block of code. In order to run this interactive notebook, we will need Jupyter Notebook, which is automatically installed with the Anaconda package manager
+| 1. Let's install Anaconda
+| - The version you install depends on the version of Python you are using
+| - Follow this `link <https://www.anaconda.com/distribution/#download-section>`_ to install the appropriate version of Anaconda
+| 2. Let's check that Anaconda installed correctly:
+
+.. code-block:: shell
+
+  $ conda update conda
+
+| 3. Now, let's update Jupyter notebook
+
+.. code-block:: shell
+
+  $ conda install jupyter
+
+| 4. Now we can open Jupyter notebook:
+
+.. code-block:: shell
+
+  $ cd /path/to/notebook/
+
+| This process of navigating to the directory with the notebook can be made easy by typing :data:`cd ` and dragging and dropping the directory icon to the CLI and pressing Enter
+
+.. code-block:: shell
+
+  $ jupyter notebook
+
+| This will launch a browser window with Jupyter. Now we can open the :data:`example_notebook.ipynb` file and start running the analysis.
+| Execute blocks of code in the Jupyter Notebook by pressing Shift + Enter
+| And that's about it! Feel free to submit any issues you have `here <https://github.com/XPRESSyourself/XPRESStools/issues>`_. It is helpful to copy and paste any errors that appear or the lines of code you are struggling with.

@@ -29,12 +29,22 @@ pip install xpresstools
 ```
 
 ### Other Requirements:
+- Tested on 64-bit Linux, compatible with Mac OS X
 - Python3 is recommended   
+  - Current test cases build to:
+    - Python2.7
+    - Python3.5
+    - Python3.6
+    - Python3.7
+- If [PyPi](https://pip.pypa.io/en/stable/installing/) and [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html?highlight=conda) are not already installed, these should be installed
 - If using this package to perform batch effect normalization or differential expression analysis, you must install [R](https://www.r-project.org/)   
 - If using the interactive notebook provided, Jupyter needs to be [installed](https://jupyter.org/install) if not already
 
 ### QuickStart:   
 Download the repository and modify the [interactive Jupyter notebook](https://github.com/XPRESSyourself/XPRESStools/blob/master/example_notebook.ipynb) to get started quick!   
+Read the instructions as you navigate through the code blocks for a guide on how to use the example code   
+Code blocks are run by selecting the block and pressing Shift + Enter   
+See [documentation](https://xpresstools.readthedocs.io/en/latest/) for more detailed instructions   
 
 ### Important Notes:    
 * If working with XPRESStools within an interactive notebook (i.e. Jupyter Notebook, Atom Hydrogen, etc), you must include the following line of code after importing XPRESStools

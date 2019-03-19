@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Retrieving Data &mdash; xpresstools 0.0.1-beta documentation</title>
+  <title>Retrieving Data &mdash; XPRESStools 0.0.3-beta documentation</title>
   
 
   
@@ -53,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> xpresstools
+            <a href="../index.html" class="icon icon-home"> XPRESStools
           
 
           
@@ -90,12 +90,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESStools</a></li>
 </ul>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="beginner.html">Wait! I’ve never programmed before!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="general-usage.html">General Usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Retrieving Data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#importing-data-from-file">Importing Data from File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#importing-metadata-from-file">Importing metadata from file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#importing-data-from-geo">Importing data from GEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#importing-data-from-geo">Importing data from GEO</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rnaseq-datasets">RNAseq Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#microarray-datasets">MicroArray Datasets</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#catenate-raw-counts-files">Catenate Raw Counts Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create-count-table-from-file-list">Create Count Table from File List</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#drop-samples">Drop Samples</a></li>
@@ -123,7 +128,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">xpresstools</a>
+          <a href="../index.html">XPRESStools</a>
         
       </nav>
 
@@ -253,6 +258,19 @@
 </div>
 <div class="section" id="importing-data-from-geo">
 <h2>Importing data from GEO<a class="headerlink" href="#importing-data-from-geo" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rnaseq-datasets">
+<h3>RNAseq Datasets<a class="headerlink" href="#rnaseq-datasets" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">A module will be added in the future to automate this conversion and import from GEO</div>
+<div class="line">Download the csv or tsv file provided in supplement and ensure formatted follows XPRESStools standards</div>
+<div class="line">Sometimes the delimiter is formatted incorrectly. If so, a simple find/replace can be used to replace the incorrect delimiter with a t</div>
+<div class="line">Remove the gene name column header, but keep the trailing tab</div>
+<div class="line">Create a metadata file following XPRESStools standards</div>
+<div class="line">Import data</div>
+</div>
+</div>
+<div class="section" id="microarray-datasets">
+<h3>MicroArray Datasets<a class="headerlink" href="#microarray-datasets" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line"><strong>xpresstools.get_geo ( geo_id, output_info=False )</strong></div>
 <div class="line"><br /></div>
@@ -287,6 +305,7 @@
 <span class="mi">3</span>   <span class="n">GSM523245</span> <span class="n">colonic_crypt_epithelial_cells_normal_colon</span>
 <span class="o">...</span> <span class="o">...</span>       <span class="o">...</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="catenate-raw-counts-files">
@@ -329,7 +348,7 @@
 <div class="section" id="create-count-table-from-file-list">
 <h2>Create Count Table from File List<a class="headerlink" href="#create-count-table-from-file-list" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep=’t’ )</strong></div>
+<div class="line"><strong>xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep=’t’, drop_rows=5 )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Collate HTseq counts files (similar to catenate_files(), but input is a file list)</div>
@@ -344,6 +363,7 @@
 <div class="line"><strong>gene_column</strong>: Column location in all count files of gene names</div>
 <div class="line"><strong>gene_column</strong>: Column location in all count files of samples</div>
 <div class="line"><strong>sep</strong>: Separator of counts files</div>
+<div class="line"><strong>drop_rows</strong>: Number of rows to drop from the end of each count file. HTSeq-count provides 5 lines of summary statistics at the end of each file, so for HTSeq-count files, use drop_rows=5</div>
 <div class="line"><br /></div>
 <div class="line">Returns:</div>
 <div class="line"><strong>count_table</strong>: Pandas dataframe with the catenated counts. Samples are along columns, genes are along rows</div>
