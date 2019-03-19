@@ -362,7 +362,7 @@ No headers are included in the count files
 def count_table(file_list, gene_column=0, sample_column=1, sep='\t', drop_rows=5):
 
     #Read in first count file to get gene names
-    df = pd.read_csv(str(file_list[gene_column]), sep=sep, comment='#', header=None)
+    df = pd.read_csv(str(file_list[0]), sep=sep, comment='#', header=None)
     pos_starter = [gene_column,sample_column]
     colname = df.columns[pos_starter]
     df = df[colname]

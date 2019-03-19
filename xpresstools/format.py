@@ -43,7 +43,7 @@ new_name_location= Position in last column of GTF where relevant data is found (
 refill= In some cases, where common gene names are unavailable, the dataframe will fill the gene name with the improper field of the GTF. In this case, specify this improper string and these values will be replaced with the original name
 sep= GTF delimiter (usually tab-delimited)
 """
-def convert_names_gtf(data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=1, refill=None, sep='\t'):
+def convert_names_gtf(data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=2, refill=None, sep='\t'):
 
     #Import reference GTF
     gtf = pd.read_csv(str(gtf),sep=sep,comment='#', low_memory=False, header=None)
