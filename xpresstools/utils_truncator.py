@@ -93,11 +93,11 @@ def execute_truncator(gtf, truncate_amount):
 
     gtf['plus'] = gtf[[2,3,4,6,8]].apply(lambda x:
         (x[3] + truncate_amount) if x[2] == "exon" and x[3] + truncate_amount <= x[4] and x[6] == "+" and "exon_number \"1;" in x[8] else (
-        "delete_this" if x[2] == "exon" and x[3] + truncate_amount > x[4] and x[6] == "+" and "exon_number \"1;" in x[8] else x[3]),axis=1)
+        "delete_this" if x[2] == "exon" and x[3] + truncate_amount > x[4] and x[6] == "+" and "exon_number \"1;" in x[8] else x[3]), axis=1)
 
     gtf['minus'] = gtf[[2,3,4,6,8]].apply(lambda x:
         (x[4] - truncate_amount) if x[2] == "exon" and x[3] <= x[4] - truncate_amount and x[6] == "-" and "exon_number \"1;" in x[8] else (
-        "delete_this" if x[2] == "exon" and x[3] > x[4] - truncate_amount and x[6] == "-" and "exon_number \"1;" in x[8] else x[4]),axis=1)
+        "delete_this" if x[2] == "exon" and x[3] > x[4] - truncate_amount and x[6] == "-" and "exon_number \"1;" in x[8] else x[4]), axis=1)
 
     #remove exon1s that are too short
     gtf = gtf[~gtf['plus'].isin(['delete_this'])]
