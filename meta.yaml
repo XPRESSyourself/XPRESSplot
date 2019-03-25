@@ -1,6 +1,6 @@
 package:
-  name: XPRESStools
-  version: 0.0.3-beta
+  name: xpresstools
+  version: 0.0.3b
 
 source:
   fn: XPRESStools-0.0.3b1.tar.gz

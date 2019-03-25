@@ -26,7 +26,7 @@ import os, sys
 import pandas as pd
 import numpy as np
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 from .utils_analyze import parallelize, count_threshold_util
