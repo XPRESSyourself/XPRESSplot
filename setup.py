@@ -46,7 +46,7 @@ setup(
           'scipy',
           'seaborn',
           'plotly',
-          'matplotlib',
+          #'matplotlib',
           'sklearn',
           'GEOparse',
           'git-lfs'
