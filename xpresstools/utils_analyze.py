@@ -399,14 +399,14 @@ def count_threshold_util(data, minimum, maximum):
     data = data.T
 
     if minimum != None:
-        data = data[data.columns[data.min() > minimum]]
+        data = data.loc[data.min(axis=1) > minimum]
+        data = data.T
+        return data
 
     if maximum != None:
-        data = data[data.columns[data.max() < maximum]]
-
-    data = data.T
-
-    return data
+        data = data.loc[data.min(axis=1) > minimum]
+        data = data.T
+        return data 
 
 """
 """

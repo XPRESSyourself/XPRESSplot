@@ -48,6 +48,34 @@ def rpm(data):
     return data_rpm
 
 """
+"""
+def tpm(data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='\t'):
+
+    #process gtf data for gene_name and gene_length
+    gtf = pd.read_csv(str(gtf),sep=sep,comment='#', low_memory=False, header=None)
+    gtf_genes = gtf.loc[gtf[2] == 'gene']
+    gtf_genes['gene_name'] = gtf[8].str.split(';').str[gene_name_location]
+    gtf_genes['length'] = abs((gtf[4]) - (gtf[3]))
+    gtf_genes['gene_name'] = gtf_genes['gene_name'].map(lambda x: x.lstrip(gene_name_prefix).rstrip('\"').rstrip(' '))
+
+    #Create dictionary
+    length_df = gtf_genes[['gene_name','length']].copy()
+    length_df = length_df.set_index('gene_name')
+    del length_df.index.name
+    length_df = length_df[length_df.index.isin(data.index.values.tolist())]
+    length_df.length = length_df.length / 1e3
+
+    #Perform kilobase calculations
+    data_c = data.copy()
+    data_rpk = data_c.div(length_df.length, axis=0)
+    data_rpk = data_rpk.dropna(axis=0)
+
+    #Perform per-million calculations
+    data_tpm = rpm(data_rpk)
+
+    return data_tpm
+
+"""
 DESCRIPTION: Perform reads/fragments per kilobase million sample normalization on RNAseq data
 """
 def r_fpkm(data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='\t'):
@@ -84,7 +112,7 @@ ASSUMPTIONS: Table is such that the paired RPF and RNA files are next to each ot
 def te(data, samples=None, log2=True):
 
     data_c = data.copy()
-    data_c += .1
+    data_c += 1
 
     #Perform translation efficiency calculations
     y = 0
