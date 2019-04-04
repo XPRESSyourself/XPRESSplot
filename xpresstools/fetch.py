@@ -19,37 +19,26 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-"""
-IMPORT DEPENDENCIES
-"""
-import os, sys
+"""IMPORT DEPENDENCIES"""
+import os
+import sys
 import re
 import pandas as pd
 import GEOparse
+
+"""IMPORT INTERNAL DEPENDENCIES"""
 from .normalize import clean_df
 from .utils import check_directories
 
-"""
-DESCRIPTION: Get dataframe from user file
-VARIABLES:
-file_name= full path of file to import into pandas dataframe
-delimiter= delimiter type for importing file, default: ','
-low_memory= Specify memory limits for importing large files, default: False (allows for large imports)
-gene_axis= Orientiation of the data, where categorical data is either column-wise, (default: 'col') or row-wise ('row'). Case insensitive
-USAGE:
-import xpresstools as xp
-data = xp.get_df("~/Desktop/data.csv")
-ASSUMPTIONS:
-Dataset does not contain axis labels (i.e. a column header for 'gene names')
-Dataset only has gene names and sample_ids as column headers and row indices. Orientation is flexible, but needs to be specified in options if genes are not rows
-If orientation is not default, it is then specified or else function will not be able to properly format the dataframe for downstream application
-"""
-def get_df(file_name, delimiter=",", low_memory=False, gene_axis='row'):
+"""Get dataframe from user file"""
+def get_df(
+    file_name,
+    delimiter=",", low_memory=False, gene_axis='row'):
 
-    #Read in file
+    # Read in file
     data = pd.read_csv(str(file_name), sep=delimiter, index_col=0, header=0, low_memory=low_memory)
 
-    #Check data orientation
+    # Check data orientation
     if str(gene_axis).lower() == 'row':
         data = data
     elif str(gene_axis).lower() == 'col':
@@ -61,35 +50,28 @@ def get_df(file_name, delimiter=",", low_memory=False, gene_axis='row'):
 
     return data
 
-"""
-DESCRIPTION: Get GEO dataframe and metadata
-VARIABLES:
-geo_id= GEO ID for dataset of interest, input is case insensitive (ex: GSE20716)
-output_info= Output long-form metadata to txt file
-USAGE:
-sample_data, sample_metadata = xp.get_geo("GSE20716")
+"""Get GEO dataframe and metadata"""
+def get_geo(
+    geo_id,
+    output_info=False, output_path="./"):
 
-Add feature to grab GPL file
-"""
-def get_geo(geo_id, output_info=False, output_path="./"):
-
-    #Get data
-    gse = GEOparse.get_GEO(geo=str(geo_id).upper(), destdir=output_path) #Import GSE dataset
+    # Get data
+    gse = GEOparse.get_GEO(geo=str(geo_id).upper(), destdir=output_path) # Import GSE dataset
 
     data = gse.pivot_samples('VALUE')
     data = clean_df(data)
 
-    #Get metadata
-    #Write data to output file
+    # Get metadata
+    # Write data to output file
     if output_info != False:
-        with open(str(geo_id).upper() + '.txt', 'w+') as f: #Save all information as text file for reference
+        with open(str(geo_id).upper() + '.txt', 'w+') as f: # Save all information as text file for reference
             for gsm_name, gsm in gse.gsms.items():
                 f.write(gsm_name + '\n')
                 for key, value in gsm.metadata.items():
                     f.write(" - %s : %s" % (key, ", ".join(value)) + '\n')
 
-    #Populate metadata with sample ids and names
-    metadata = pd.DataFrame(columns=['gsm', 'title']) #Create dataframe
+    # Populate metadata with sample ids and names
+    metadata = pd.DataFrame(columns=['gsm', 'title']) # Create dataframe
     gsm_list, title_list, data_processing_list = [], [], []
     for gsm_name, gsm in gse.gsms.items():
         for key, value in gsm.metadata.items():
@@ -103,127 +85,86 @@ def get_geo(geo_id, output_info=False, output_path="./"):
     metadata['gsm'], metadata['title'] = gsm_list, title_list
     metadata.columns = range(metadata.shape[1])
 
-    #Output processing style
-    print('Data processing summary:\n' + str(set(data_processing_list))) #To determine if all samples have undergone the sample data processing
+    # Output processing style
+    print('Data processing summary:\n' + str(set(data_processing_list))) # To determine if all samples have undergone the sample data processing
 
-    #Clean data
+    # Clean data
     del data.columns.name
     del data.index.name
 
-    #Clean metadata
+    # Clean metadata
     metadata[1] = metadata[1].apply(lambda x: x[0:(re.search("\d", x).start()) - 1])
 
     return data, metadata
 
-"""
-DESCRIPTION: Get user file with pertinent sample information
-VARIABLES:
-file_name= full path of file to import into pandas dataframe
-delimiter= delimiter type for importing file, default: ','
-axis= Orientiation of the data, where categorical data is either column-wise, (default: 'col') or row-wise ('row'). Case insensitive
-sample_ids= Column or row number where sample IDs are found (default: 0)
-labels= Column or row number where categorical label data are found (default: 1)
-USAGE:
-import xpresstools as xp
-sample_info = xp.get_info("~/Desktop/sample_info.csv")
-ASSUMPTIONS:
-Data categories are not labeled
-If orientation is not default, it is then specified or else function will not be able to properly format the dataframe for downstream application
-"""
-def get_info(file_name, delimiter=",", axis="col", sample_ids=0, labels=1):
+"""Get user file with pertinent sample information"""
+def get_info(
+    file_name,
+    delimiter=",", axis="col",
+    sample_ids=0, labels=1):
 
-    #Read in file
+    # Read in file
     info = pd.read_csv(str(file_name), sep=delimiter, header=None)
 
-    #Reorganize dataframe as necessary so that data is column-wise and
-    #sample_ids are the first column, labels are the second column
+    # Reorganize dataframe as necessary so that data is column-wise and
+    # sample_ids are the first column, labels are the second column
     if str(axis).lower() == 'col':
         if sample_ids == 0 and labels == 1:
             info = info
         else:
-            info = info[[sample_ids, labels]] #Reorder dataframe columns
+            info = info[[sample_ids, labels]] # Reorder dataframe columns
             info.columns = [0, 1]
     elif str(axis).lower() == 'row':
-        info = info.T #Rotate dataframe to make it column-wise
+        info = info.T # Rotate dataframe to make it column-wise
         if sample_ids == 0 and labels == 1:
             info = info
         else:
-            info = info[[sample_ids, labels]] #Reorder dataframe columns
+            info = info[[sample_ids, labels]] # Reorder dataframe columns
             info.columns = [0, 1]
     else:
         print("Incorrect axis option specified")
 
     return info
 
-"""
-DESCRIPTION: Drop samples by sample IDs -- pass in a list of names
-VARIABLES:
-data= Dataframe containing expression data
-ids= List of sample IDs to remove from the dataframe
-USAGE:
-import xpresstools as xp
-df = xp.drop_samples(df, sample_list)
-ASSUMPTIONS:
-Dataframe axes have been properly formatted (samples are columns, genes are rows)
-"""
-def drop_samples(data, ids):
+"""Drop samples by sample IDs -- pass in a list of names"""
+def drop_samples(
+    data, ids):
 
-    #Check file formats
+    # Check file formats
     if type(ids) is not list:
 
         return
 
-    #Drop samples in list
+    # Drop samples in list
     else:
         data_dropped = data.drop(ids, axis=1)
 
         return data_dropped
 
-"""
-DESCRIPTION: Drop samples by label group name
-VARIABLES:
-data= Dataframe containing expression data
-info= Dataframe containing sample information data
-label= Name of sample type to drop (string)
-USAGE:
-import xpresstools as xp
-df = xp.drop_label(df, sample_info, "WT")
-ASSUMPTIONS:
-Dataframe axes have been properly formatted (samples are columns, genes are rows)
-Only one string is given to drop per call instance of function
-"""
-def drop_label(data, info, label):
+"""Drop samples by label group name"""
+def drop_label(
+    data, info, label):
 
-    #Check file formats
+    # Check file formats
     if type(label) is not str:
 
         return
 
-    #Drop samples by name (will grab from info df)
+    # Drop samples by name (will grab from info df)
     else:
-        #Create list of sample_ids based on name provided
+        # Create list of sample_ids based on name provided
         drop_ids = info[info[1] == str(label)]
         drop_ids_list = list(drop_ids[0])
 
-        #Remove these samples from data
+        # Remove these samples from data
         data_dropped = data.drop(drop_ids_list, axis=1)
 
         return data_dropped
 
-"""
-DESCRIPTION: Keep samples by list of label names
-VARIABLES:
-data= Dataframe containing expression data
-info= Dataframe containing sample information data
-labels= List of sample types to keep
-USAGE:
-import xpresstools as xp
-df = xp.keep_labels(df, sample_info, ['normal','adenoma'])
-ASSUMPTIONS:
-Dataframe axes have been properly formatted (samples are columns, genes are rows)
-Labels provided are in list format
-"""
-def keep_labels(data, info, label_list=None):
+"""Keep samples by list of label names"""
+def keep_labels(
+    data, info,
+    label_list=None):
 
     if label_list == None:
         label_list = list(set(info[1]))
@@ -231,50 +172,40 @@ def keep_labels(data, info, label_list=None):
         keep_ids = info[info[1].isin(label_list)]
         keep_ids_list = list(keep_ids[0])
 
-        #Drop samples not given in list to keep
+        # Drop samples not given in list to keep
         data_dropped = data[keep_ids_list]
 
     else:
-        #Check file formats
+        # Check file formats
         if type(label_list) is not list:
 
             return
 
-        #Keep samples by name (will grab from info df)
+        # Keep samples by name (will grab from info df)
         else:
 
-            #Create list of sample_ids based on what is not provided in keep list
+            # Create list of sample_ids based on what is not provided in keep list
             drop_ids = info[~info[1].isin(label_list)]
             drop_ids_list = list(drop_ids[0])
 
-            #Drop samples not given in list to keep
+            # Drop samples not given in list to keep
             data_dropped = data.drop(drop_ids_list, axis=1)
 
     return data_dropped
 
-"""
-DESCRIPTION: Rename column names using dictionary
-
-VARIABLES:
-data= Dataframe to rename column names
-converters= Dataframe where column 0 contains old names and column 1 contains new names
-"""
-def rename_cols(data, converters):
+"""Rename column names using dictionary"""
+def rename_cols(
+    data, converters):
 
     data_c = data.copy()
     dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
     data_set = data_c.rename(columns=dictionary, inplace=False)
     return data_set
 
-"""
-DESCRIPTION: Rename values in a column (selected by providing column name) with a dictionary of keys and sort_values
-
-VARIABLES:
-data= Dataframe to rename row values
-converters=  Dataframe where column 0 contains old names and column 1 contains new names
-label= Name of column to convert names; if 'index' is provided, will rename the index of the dataframe
-"""
-def rename_rows(data, converters, label='index'):
+"""Rename values in a column (selected by providing column name) with a dictionary of keys and sort_values"""
+def rename_rows(
+    data, converters,
+    label='index'):
 
     data_c = data.copy()
 
@@ -292,41 +223,35 @@ def rename_rows(data, converters, label='index'):
     return data_c
 
 
-"""
-DESCRIPTION: Compiles expression counts from multiple files into one table
+"""Compiles expression counts from multiple files into one table"""
+def catenate_files(
+    directory,
+    file_suffix='txt', save_file=None, delimiter='\t',
+    drop_rows=0):
 
-VARIABLES:
-delimiter= Delimiter style for expression files, will also output files if saved in this same format
-
-ASSUMPTIONS:
-File length of each is the same and ordered the same (same genes in the same order)
-Files to parse are expected to be header-less and column[0] should be gene identifiers and column[1] should be expression values
-"""
-def catenate_files(directory, file_suffix='txt', save_file=None, delimiter='\t', drop_rows=0):
-
-    #Walk through raw data files within given directory
+    # Walk through raw data files within given directory
     if directory[:-1] != '/':
         directory = directory + '/'
 
     file_list = []
     for subdir, dirs, files in os.walk(directory):
         for f in files:
-            if f.endswith(file_suffix): #ignore hidden files and other uninterested files (particular for some submodules)
+            if f.endswith(file_suffix): # Ignore hidden files and other uninterested files (particular for some submodules)
                 file_list.append(f)
             else:
                 pass
 
-    #Sort files in alphabetical order (helps in formatting the count tables correctly)
+    # Sort files in alphabetical order (helps in formatting the count tables correctly)
     file_list = sorted(file_list)
 
-    #get gene list from the first, as well as length(#rows)
+    # Get gene list from the first, as well as length(#rows)
     with open(str(directory) + str(file_list[0])) as f:
         gene_names = pd.read_csv(f, header=None, usecols=[0], dtype=str, sep=delimiter)
         row_num = len(gene_names) - drop_rows
         if drop_rows > 0:
             gene_names = gene_names[:-drop_rows]
 
-    #populate dataframe with expression values
+    # Populate dataframe with expression values
     data = pd.DataFrame(index=range(row_num))
     data['gene_names'] = gene_names
 
@@ -338,7 +263,7 @@ def catenate_files(directory, file_suffix='txt', save_file=None, delimiter='\t',
             length = len(reader)
             data[x] = reader
 
-    #Remove gene_names label
+    # Remove gene_names label
     data = data.set_index('gene_names')
     del data.index.name
 
@@ -347,39 +272,31 @@ def catenate_files(directory, file_suffix='txt', save_file=None, delimiter='\t',
 
     return data
 
-"""
-DESCRIPTION: Collate HTseq counts files
+"""Collate HTseq counts files"""
+def count_table(
+    file_list,
+    gene_column=0, sample_column=1,
+    sep='\t', drop_rows=5):
 
-VARIABLES:
-file_list= List of files with the path names appended to each file to be collated into a single count table
-gene_column= Column location in all count files of gene names
-gene_column= Column location in all count files of samples
-sep= Separator of counts files
-
-ASSUMPTIONS:
-No headers are included in the count files
-"""
-def count_table(file_list, gene_column=0, sample_column=1, sep='\t', drop_rows=5):
-
-    #Read in first count file to get gene names
+    # Read in first count file to get gene names
     df = pd.read_csv(str(file_list[0]), sep=sep, comment='#', header=None)
     pos_starter = [gene_column,sample_column]
     colname = df.columns[pos_starter]
     df = df[colname]
 
-    #For the rest of the files in the file list, add the counts for that sample only
+    # For the rest of the files in the file list, add the counts for that sample only
     for f in file_list[1:]:
         df_pull = pd.read_csv(str(f), sep=sep, comment='#', header=None)
         df = pd.concat([df, df_pull[df_pull.columns[sample_column]]], axis=1)
         del df_pull
 
-    #Final formatting clean up of table
+    # Final formatting clean up of table
     df_counts = df.copy()
     del df
     df_counts = df_counts.set_index(0)
     del df_counts.index.name
 
-    #Remove path and file suffix from each file's name before adding as column names to table
+    # Remove path and file suffix from each file's name before adding as column names to table
     c = 0
     for x in file_list:
         file_list[c] = x[(x.rfind('/')+1):(x.find('.'))]

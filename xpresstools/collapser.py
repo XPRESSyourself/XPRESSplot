@@ -19,38 +19,22 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-"""
-IMPORT DEPENDENCIES
-"""
+"""IMPORT DEPENDENCIES"""
 import pandas as pd
 import numpy as np
 
-"""
-DESCRIPTION: Create dictionary of probes and their gene names for the microarray probe collapser
+"""Create dictionary of probes and their gene names for the microarray probe collapser"""
+def prep_collapser(
+    reference, gene_list=None, no_multimappers=True):
 
-VARIABLES:
-reference= Full path and file name for GPL reference file, accessed from NCBI (should be a .txt file)
-gene_list= Full path and file name to .csv file listing gene names to get probes for. Resulting function dictionary will only contain these genes and their probes (default: None)
-no_multimappers= Do not allow ambiguous probes in the probe-gene dictionary (default: True)
-
-USAGE:
-import xpresstools as xp
-gene_dict = xp.prep_collapser("~/Desktop/GPL570.txt")
-
-ASSUMPTIONS:
-If using gene_list option, file must be a .csv
-Assumes GPL .txt file from NCBI is tab delimited
-"""
-def prep_collapser(reference, gene_list=None, no_multimappers=True):
-
-    #Get probe/gene_name reference file and import into a dataframe
-    df = pd.read_csv(str(reference), sep="\t", low_memory=False, comment='#') #no index
+    # Get probe/gene_name reference file and import into a dataframe
+    df = pd.read_csv(str(reference), sep="\t", low_memory=False, comment='#') # No index
     df = df[['ID','Gene Symbol']]
     df = df.dropna()
 
-    #If a custom gene list is given so that only certain probes are looked at and collapsed downstream
-    #Take the gene list file, join genes for regex search
-    #Create dictionary for just the probes corresponding with the genes of interest
+    # If a custom gene list is given so that only certain probes are looked at and collapsed downstream
+    # Take the gene list file, join genes for regex search
+    # Create dictionary for just the probes corresponding with the genes of interest
     if gene_list != None:
         if type(gene_list) == list:
 
@@ -59,17 +43,14 @@ def prep_collapser(reference, gene_list=None, no_multimappers=True):
             search = '|'.join(gene_list)
             search = search.upper()
 
-            df = df[df['Gene Symbol'].str.contains(search)] #only df where probes of interest are
+            df = df[df['Gene Symbol'].str.contains(search)] # Only df where probes of interest are
             df_dict = df.set_index('ID')['Gene Symbol'].to_dict()
-    #Take full probe set and create dictionary
-    else:
+    else: # Take full probe set and create dictionary
         df_dict = df.set_index('ID')['Gene Symbol'].to_dict()
 
-    #If allowing for multimappers, return dictionary as is
-    if no_multimappers == False:
+    if no_multimappers == False: # If allowing for multimappers, return dictionary as is
         return df_dict
-    #Remove any probes that map to several genes
-    else:
+    else: # Remove any probes that map to several genes
         df_dict_mod = {}
         for key, value in df_dict.items():
             if '///' in value:
@@ -79,78 +60,51 @@ def prep_collapser(reference, gene_list=None, no_multimappers=True):
 
         return df_dict_mod
 
-"""
-DESCRIPTION: Collapse probes of microarray dataset using previously prepared probe collapser dictionary (see prep_collapser function))
+"""Collapse probes of microarray dataset using previously prepared probe collapser dictionary (see prep_collapser function))"""
+def run_collapser(
+    data, dict):
 
-METHODS: Works by taking all probe expression data of a particular gene and determines a mean expression value for each sample for the given gene
-
-VARIABLES:
-data= Dataframe of microarray probe data to be collapsed
-dict= Probe collapser dictionary created in the prep_collapser function
-
-USAGE:
-import xpresstools as xp
-df_collapsed = xp.probe_collapse(df, collapser_dict)
-
-ASSUMPTIONS:
-A probe collapser dictionary has been previously prepared using the prep_collapser function
-"""
-def run_collapser(data, dict):
-
-    #This appears to fix the SettingwithCopyWarning error
+    # This appears to fix the SettingwithCopyWarning error
     data_c = data.copy()
 
-    #Get list of probes to find in df
+    # Get list of probes to find in df
     dict_list = list(dict.keys())
 
-    #only keep df rows where probes of interest are
-    #(in cases where only looking at certain genes, default: all genes)
-    #column 'name' header for probes in these files
+    # Only keep df rows where probes of interest are (in cases where only looking at certain genes, default: all genes)
+    # Column 'name' header for probes in these files
     try:
         data_c = data_c[data_c['name'].isin(dict_list)]
     except:
         data_c['name'] = data_c.index
         data_c = data_c[data_c['name'].isin(dict_list)]
 
-    #Map gene names in place of probes
-    #Will set off SettingwithCopyWarning -- should be fine as we are replacing values in same column and it appears to change as expected
+    # Map gene names in place of probes
+    # Will set off SettingwithCopyWarning -- should be fine as we are replacing values in same column and it appears to change as expected
     data_c['name'] = data_c['name'].map(dict)
 
-    #Set gene names as indices (allows for multiple indices with same name)
-    #Needed to remove strings from df to allow for next step
+    # Set gene names as indices (allows for multiple indices with same name)
+    # Needed to remove strings from df to allow for next step
     data_c = data_c.set_index('name', drop=True)
 
-    #force data to float
+    # Force data to float
     data_numeric = data_c.apply(pd.to_numeric)
-    #Reset indices to its own column to allow for sorting in next step
+
+    # Reset indices to its own column to allow for sorting in next step
     data_numeric['name_sort'] =  data_numeric.index
 
-    #groupby index (gene name) and collapse, taking the mean of rows with same name in 'name_sort'
-    #Sets name_sort column names (post-collapse) as indices
+    # groupby index (gene name) and collapse, taking the mean of rows with same name in 'name_sort'
+    # Sets name_sort column names (post-collapse) as indices
     data_collapsed = data_numeric.groupby('name_sort').mean()
 
-    #Remove double header for indices
+    # Remove double header for indices
     del data_collapsed.index.name
 
     return data_collapsed
 
-"""
-DESCRIPTION: Ties prep_collapser and probe_collapse functions together
-
-VARIABLES:
-data= Dataframe of microarray probe data to be collapsed
-reference= Full path and file name for GPL reference file, accessed from NCBI (should be a .txt file)
-gene_list= Full path and file name to .csv file listing gene names to get probes for. Resulting function dictionary will only contain these genes and their probes (default: None)
-no_multimappers= Do not allow ambiguous probes in the probe-gene dictionary (default: True)
-
-USAGE:
-import xpresstools as xp
-df_collapsed = xp.auto_collapse(df, "~/Desktop/GPL570.csv")
-
-ASSUMPTIONS:
-See assumptions for prep_collapser and probe_collapse functions
-"""
-def probe_collapse(data, reference, gene_list=None, no_multimappers=True):
+"""Ties prep_collapser and probe_collapse functions together"""
+def probe_collapse(
+    data, reference,
+    gene_list=None, no_multimappers=True):
 
     dict = prep_collapser(reference, gene_list=gene_list, no_multimappers=no_multimappers)
     data_collapsed = run_collapser(data, dict)

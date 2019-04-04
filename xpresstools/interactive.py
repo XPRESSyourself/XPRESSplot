@@ -19,22 +19,20 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-"""
-IMPORT DEPENDENCIES
-"""
+"""IMPORT DEPENDENCIES"""
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 
-"""
-DESCRIPTION: Create 3D scatterplot for PCA with plotly
-"""
-def interactive_3D(df_pca, size, palette, plotly_login, save_fig):
+"""Create 3D scatterplot for PCA with plotly"""
+def interactive_3D(
+    df_pca, size, palette,
+    plotly_login, save_fig):
 
     plotly.tools.set_credentials_file(username=str(plotly_login[0]), api_key=str(plotly_login[1]))
 
     df_pca.columns = ['PCa', 'PCb', 'PCc', 'label']
-    unique_labels = df_pca['label'].unique() #Gather unique labels
+    unique_labels = df_pca['label'].unique() # Gather unique labels
 
     pca0 = df_pca.loc[df_pca['label'] == unique_labels[0]]
     pca1 = df_pca.loc[df_pca['label'] == unique_labels[1]]
@@ -105,19 +103,17 @@ def interactive_3D(df_pca, size, palette, plotly_login, save_fig):
     else:
         py.iplot(fig, filename='3d_pca')
 
-"""
-DESCRIPTION: Create interactive scatter plot that displays relevant sample/gene name and coordinates
-
-VARIABLES:
-data= MICARtools formatted expression matrix
-"""
-def interactive_scatter(data, info, x, y, plotly_login, palette, highlight='sample', save_fig=None):
+"""Create interactive scatter plot that displays relevant sample/gene name and coordinates"""
+def interactive_scatter(
+    data, info, x, y,
+    plotly_login, palette,
+    highlight='sample', save_fig=None):
 
     plotly.tools.set_credentials_file(username=plotly_login[0], api_key=plotly_login[1])
     data_c = data.copy()
 
     if highlight == 'sample':
-        #Add labels if not there
+        # Add labels if not there
         if 'label' not in data_c.index:
             labels = pd.Series(info[1].values,index=info[0]).to_dict()
             data_c.loc['label'] = data_c.columns.map(labels.get)

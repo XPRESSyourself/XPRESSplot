@@ -19,35 +19,31 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-"""
-IMPORT DEPENDENCIES
-"""
+"""IMPORT DEPENDENCIES"""
 import pandas as pd
+from functools import partial
+from multiprocessing import cpu_count, Pool
+
 import numpy as np
 import scipy.stats as stats
+
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
-from functools import partial
-from multiprocessing import cpu_count, Pool
 
-"""
-DESCRIPTION: Default data prep for all analysis functions
-"""
+"""Default data prep for all analysis functions"""
 def analysis_prep(data):
+
     data_c = data.copy()
     data_c = data_c.dropna(axis=0)
+
     return data_c
 
-"""
-DESCRIPTION: Axis-agnostic list-reader from dataframe
-VARIABLES:
-USAGE:
-ASSUMPTIONS:
-"""
-def custom_list(file, delimiter=','):
+"""Axis-agnostic list-reader from dataframe"""
+def custom_list(
+    file, delimiter=','):
 
     gene_df = pd.read_csv(str(file), sep=delimiter, index_col=False, header=None)
     genes = gene_df.values.tolist()
@@ -55,10 +51,9 @@ def custom_list(file, delimiter=','):
 
     return gene_list
 
-"""
-DESCRIPTION: Reset plotting object to avoid bleed through
-"""
-def reset_plot(whitegrid, ax=False):
+"""Reset plotting object to avoid bleed through"""
+def reset_plot(
+    whitegrid, ax=False):
 
     if ax == True:
         del ax
@@ -71,14 +66,13 @@ def reset_plot(whitegrid, ax=False):
     else:
         sns.set_style("darkgrid")
 
-"""
-DESCRIPTION: Return the subsetted dataframe using a gene list
-"""
-def data_subset(data, gene_list):
+"""Return the subsetted dataframe using a gene list"""
+def data_subset(
+    data, gene_list):
 
     data_c = data.copy()
 
-    #Check file formats
+    # Check file formats
     if type(gene_list) is list:
         data_sub = data_c.reindex(labels=gene_list, axis=0)
     elif type(gene_list) is str:
@@ -90,10 +84,9 @@ def data_subset(data, gene_list):
 
     return data_sub
 
-"""
-DESCRIPTION: Prepare a color map from palette dictionary
-"""
-def prep_palette(info, palette):
+"""Prepare a color map from palette dictionary"""
+def prep_palette(
+    info, palette):
 
     if type(palette) is dict:
         info = info.T
@@ -102,23 +95,23 @@ def prep_palette(info, palette):
         info = info.rename({1: 'samples'})
         labels = info.iloc[0]
         color_map = labels.map(palette)
-        return color_map
-    else:
-        print('Error: a dictionary was not provided as palette')
-        return
 
-"""
-DESCRIPTION: Add labels to dataframe for each sample
-"""
-def label(data, info):
+        return color_map
+
+    else:
+        return print('Error: a dictionary was not provided as palette')
+
+"""Add labels to dataframe for each sample"""
+def label(
+    data, info):
 
     data_c = data.copy()
 
-    #Prep data_scaled by adding labels from info
+    # Prep data_scaled by adding labels from info
     labels = pd.Series(info[1].values,index=info[0]).to_dict()
     data_c.loc['label'] = data_c.columns.map(labels.get)
 
-    #Output collapsed dataframe
+    # Output collapsed dataframe
     newIndex = ['label'] + [ind for ind in data_c.index if ind != 'label']
     data_c = data_c.reindex(index=newIndex)
     data_c = data_c.T.set_index('label', drop=True)
@@ -126,9 +119,7 @@ def label(data, info):
 
     return data_c
 
-"""
-DESCRIPTION: Unstack dataframe for use with some seaborns functions
-"""
+"""Unstack dataframe for use with some seaborns functions"""
 def unstack_data(data):
 
     data_c = data.copy()
@@ -137,9 +128,7 @@ def unstack_data(data):
 
     return data_unstacked
 
-"""
-DESCRIPTION: Convert gene in dataframe to array
-"""
+"""Convert gene in dataframe to array"""
 def get_array(data, gene):
 
     data_c = data.copy()
@@ -150,9 +139,9 @@ def get_array(data, gene):
 
     return gene
 
-"""
-"""
-def make_linreg(data, gene1, gene2):
+"""Calculate linreg values for two genes (rows) of dataframe"""
+def make_linreg(
+    data, gene1, gene2):
 
     data_c = data.copy()
     gene_a = get_array(data_c, gene1)
@@ -166,9 +155,9 @@ def make_linreg(data, gene1, gene2):
 
     return x, y, r_value, title
 
-"""
-"""
-def add_x_threshold(threshold, threshold_color, ax):
+"""Add X-axis threshold lines to plot"""
+def add_x_threshold(
+    threshold, threshold_color, ax):
 
     for x in threshold:
         if type(x) is int or type(x) is float:
@@ -176,7 +165,9 @@ def add_x_threshold(threshold, threshold_color, ax):
         else:
             print('Invalid X threshold provided')
 
-def add_y_threshold(threshold, threshold_color, ax):
+"""Add Y-axis threshold lines to plot"""
+def add_y_threshold(
+    threshold, threshold_color, ax):
 
     for x in threshold:
         if type(x) is int or type(x) is float:
@@ -184,10 +175,9 @@ def add_y_threshold(threshold, threshold_color, ax):
         else:
             print('Invalid Y threshold provided')
 
-"""
-Initial variable checks
-"""
-def init_pca(principle_components, _3d_pca, plotly_login):
+"""Initial variable checks"""
+def init_pca(
+    principle_components, _3d_pca, plotly_login):
 
     if len(principle_components) != 2 and _3d_pca == False:
         print('Incompatible options provided for principle_components and _3d_pca')
@@ -216,18 +206,24 @@ def init_pca(principle_components, _3d_pca, plotly_login):
 
     return principle_components
 
-"""
-DESCRIPTION: Generate scree plot for principle components
-"""
-def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, save_scree, grid, whitegrid):
+"""Generate scree plot for principle components"""
+def make_scree(
+    pca, n_components,
+    save_fig, dpi, bbox_inches,
+    scree_only, save_scree,
+    grid, whitegrid):
 
     vari = 'Explained variation per principal component: {}'.format(np.round(pca.explained_variance_ratio_, decimals=4)*100)
     scree = np.round(pca.explained_variance_ratio_, decimals=4)*100
 
-    #Plot scree
+    # Plot scree
     sing_vals = np.arange(n_components) + 1
 
-    ax = sns.lineplot(x=sing_vals, y=scree, color="red")
+    ax = sns.lineplot(
+            x = sing_vals,
+            y = scree,
+            color = "red")
+
     ax.set(xlabel='Principal Component', ylabel='Proportion of Variance Explained', title='Scree Plot')
 
     if save_scree == True:
@@ -239,44 +235,62 @@ def make_scree(pca, n_components, save_fig, dpi, bbox_inches, scree_only, save_s
     if grid == False:
         ax.grid(False)
 
-    #Remove scree from memory to prevent plot bleeding
+    # Remove scree from memory to prevent plot bleeding
     reset_plot(whitegrid, ax=True)
 
     return scree
 
-"""
-DESCRIPTION: Add confidence intervals to scatterplot
+"""Add confidence intervals to scatterplot
 NOTE: This code is adapted from Jaime (https://stackoverflow.com/a/20127387/9571488) and Ben (https://stackoverflow.com/a/25022642/9571488) on Stack Overflow
 """
-def set_confidence(df_pca, pca_plot, unique_labels, palette, ci):
+def set_confidence(
+    df_pca, pca_plot,
+    unique_labels, palette, ci):
 
     for x in unique_labels:
-        #slice df into label specific datasets
+        # Slice df into label specific datasets
         df_slice = df_pca[df_pca['label'] == x]
 
-        #make numpy array from label-specific dfs
+        # Make numpy array from label-specific dfs
         x_slice = df_slice.PCa.values
         y_slice = df_slice.PCb.values
 
-        #pca maths
+        # Confidence interval math
         cov = np.cov(x_slice, y_slice)
         lambda_, v = np.linalg.eig(cov)
-        theta = np.degrees(np.arctan2(*v[:,0][::-1]))
+        theta = np.degrees(np.arctan2(*v[:, 0][::-1]))
         lambda_ = np.sqrt(lambda_)
 
-        #plot
-        pca_plot.add_patch(patches.Ellipse(xy=(np.mean(x_slice), np.mean(y_slice)),
-                          width=lambda_[0]*ci*2, height=lambda_[1]*ci*2,
-                          angle=theta,
-                          alpha=0.3, facecolor=palette[x], edgecolor='black', linewidth=1, linestyle='solid')
-                          )
+        # Plot
+        pca_plot.add_patch(
+            patches.Ellipse(
+                xy = (np.mean(x_slice), np.mean(y_slice)),
+                width = lambda_[0] * ci * 2,
+                height = lambda_[1] * ci * 2,
+                angle = theta,
+                alpha = 0.3,
+                facecolor = palette[x],
+                edgecolor = 'black',
+                linewidth = 1,
+                linestyle = 'solid'
+                )
+            )
 
-"""
-DESCRIPTION: 2D Non-interactive PCA scatterplot
-"""
-def pca2(df_pca, unique_labels, palette, principle_components, scree, order_legend, save_fig, dpi, bbox_inches, ci, grid, title, size, highlight_color, highlight_names):
+"""2D Non-interactive PCA scatterplot"""
+def pca2(
+    df_pca, unique_labels, palette,
+    principle_components, scree, order_legend,
+    save_fig, dpi, bbox_inches,
+    ci, grid, title, s
+    ize, highlight_color, highlight_names):
 
-    ax = sns.scatterplot(df_pca.PCa, df_pca.PCb, hue=df_pca['label'], palette=palette, s=size)
+    ax = sns.scatterplot(
+            df_pca.PCa,
+            df_pca.PCb,
+            hue = df_pca['label'],
+            palette = palette,
+            s = size)
+
     set_confidence(df_pca, ax, unique_labels, palette, ci)
 
     # Put the legend out of the figure
@@ -289,16 +303,17 @@ def pca2(df_pca, unique_labels, palette, principle_components, scree, order_lege
         plt.grid(False)
 
     if save_fig != None:
-        #Save plot
+        # Save plot
         plt.title(str(title))
         plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
 
     plt.show()
 
-"""
-DESCRIPTION: 3D Non-interactive PCA scatterplot
-"""
-def pca3(df_pca, palette, save_fig, dpi, bbox_inches, size, order_legend):
+"""3D Non-interactive PCA scatterplot"""
+def pca3(
+    df_pca, palette,
+    save_fig, dpi, bbox_inches,
+    size, order_legend):
 
     fig = plt.figure()
     ax = Axes3D(fig)
@@ -308,10 +323,9 @@ def pca3(df_pca, palette, save_fig, dpi, bbox_inches, size, order_legend):
         pc_list.remove('label')
 
     df_pca.columns = ['PCa', 'PCb', 'PCc', 'label']
-    unique_labels = df_pca['label'].unique() #Gather unique labels
+    unique_labels = df_pca['label'].unique() # Gather unique labels
 
-    #Convert color tuples to arrays
-
+    # Convert color tuples to arrays
     for x in unique_labels:
         pca0 = df_pca.loc[df_pca['label'] == str(x)]
         x0 = pca0.PCa.values
@@ -325,13 +339,12 @@ def pca3(df_pca, palette, save_fig, dpi, bbox_inches, size, order_legend):
 
     plt.show()
 
-"""
-DESCRIPTION: Parallelize function on a chunk of a dataframe
-"""
-def parallelize(func, *args):
+"""Parallelize function on a chunk of a dataframe"""
+def parallelize(
+    func, *args):
 
-    cores = cpu_count() #Number of CPU cores on your system
-    partitions = cpu_count() #Define as many partitions as you want
+    cores = cpu_count() # Number of CPU cores on your system
+    partitions = cpu_count() # Define as many partitions as you want
 
     data_split = np.array_split(args[0], partitions)
     pool = Pool(cores)
@@ -352,26 +365,27 @@ def parallelize(func, *args):
 
     return data
 
-"""
-DESCRIPTION
-"""
-def calculate_fc(data, label_comp, label_base):
+"""Calculate log2 fold changes between two group names"""
+def calculate_fc(
+    data, label_comp, label_base):
 
     # Average every by cell line
-    data['log$_2$(Fold Change)'] = np.log2((data.filter(regex=str(label_comp)).mean(axis=1)) / \
-                                      (data.filter(regex=str(label_base)).mean(axis=1)))
-    data['-log$_1$$_0$(P-Value)'] = ''
+    data['log$_2$(Fold Change)'] = np.log2(
+                                    (data.filter(regex=str(label_comp)).mean(axis=1)) \
+                                    / (data.filter(regex=str(label_base)).mean(axis=1))
+                                    )
 
     return data
 
-"""
-DESCRIPTION
-"""
-def calculate_p(data, label_comp, label_base):
+"""Calculate p values between two group names"""
+def calculate_p(
+    data, label_comp, label_base):
 
     drop_index = []
 
-    # Calculate p-value using 1-way ANOVA with replicates and append to df_oxsm_volc
+    data['-log$_1$$_0$(P-Value)'] = '' # Initialize column to store p-values
+
+    # Calculate p-value using T-test for two independent groups
     for row in data.iterrows():
         index, row_data = row
         comp_row = data.loc[index].filter(regex=str(label_comp)).values.tolist()
@@ -380,7 +394,7 @@ def calculate_p(data, label_comp, label_base):
         if len(comp_row) < 2 or len(base_row) < 2:
             raise Exception('Calculating a P-value requires replicates for each sample type')
 
-        # Append p_value to df_oxsm_volc
+        # Append p_value to dataframe
         try:
             statistic, p_value = stats.ttest_ind(comp_row, base_row)
             data.loc[index,'-log$_1$$_0$(P-Value)'] = float(-1 * (np.log10(p_value)))
@@ -391,25 +405,22 @@ def calculate_p(data, label_comp, label_base):
 
     return data
 
-"""
-DESCRIPTION
-"""
-def count_threshold_util(data, minimum, maximum):
-
-    data = data.T
+"""Remove genes from dataframe not meeting count criteria"""
+def count_threshold_util(
+    data,
+    minimum=None, maximum=None):
 
     if minimum != None:
-        data = data.loc[data.min(axis=1) > minimum]
-        data = data.T
+        data = data[data.min(axis=0) > minimum]
+
         return data
 
     if maximum != None:
-        data = data.loc[data.min(axis=1) > minimum]
-        data = data.T
-        return data 
+        data = data[data.max(axis=0) > maximum]
 
-"""
-"""
+        return data
+
+"""Format threshold as list"""
 def make_threshold_list(threshold):
 
     if threshold != None and type(threshold) != list:
@@ -417,24 +428,28 @@ def make_threshold_list(threshold):
 
     return threshold
 
-"""
-
-"""
-def output_threshold(data_c, x_threshold, y_threshold, save_threshold_hits, save_threshold_hits_delimiter):
+"""Output matrix of genes meeting threshold criteria"""
+def output_threshold(
+    data_c, x_threshold, y_threshold,
+    save_threshold_hits, save_threshold_hits_delimiter):
 
     x_threshold = make_threshold_list(x_threshold)
     y_threshold = make_threshold_list(y_threshold)
 
     if len(x_threshold) == 2 and len(y_threshold) == 1:
+
         data_c = data_c.rename(columns = {'log$_2$(Fold Change)':'log2 Fold Change', '-log$_1$$_0$(P-Value)':'-log10 P-Value'})
         df_c = data_c[['log2 Fold Change', '-log10 P-Value']].copy()
-        df_up = df_c.loc[(df_c['log2 Fold Change'] > max(x_threshold)) & (df_c['-log10 P-Value'] > y_threshold[0])] #get upregulated hits
-        df_down = df_c.loc[(df_c['log2 Fold Change'] < min(x_threshold)) & (df_c['-log10 P-Value'] > y_threshold[0])] #get downregulated hits
-        thresh_hits = df_up.append(df_down) #append hits tables
+
+        # Get up- and down-regulated hits
+        df_up = df_c.loc[(df_c['log2 Fold Change'] > max(x_threshold)) & (df_c['-log10 P-Value'] > y_threshold[0])]
+        df_down = df_c.loc[(df_c['log2 Fold Change'] < min(x_threshold)) & (df_c['-log10 P-Value'] > y_threshold[0])]
+
+        # Append hits tables and output
+        thresh_hits = df_up.append(df_down)
         thresh_hits.to_csv(str(save_threshold_hits), sep=save_threshold_hits_delimiter)
 
-"""
-"""
+"""Generate legend based on plotted values"""
 def make_legend(ax, order_legend, highlight_color, highlight_names):
 
     handles, labels = ax.get_legend_handles_labels()
@@ -442,12 +457,27 @@ def make_legend(ax, order_legend, highlight_color, highlight_names):
     if len(labels) > 1:
         if order_legend != None:
             if type(order_legend) is list:
-                plt.legend([handles[idx] for idx in order_legend],[labels[idx] for idx in order_legend], bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                plt.legend(
+                        [handles[idx] for idx in order_legend],
+                        [labels[idx] for idx in order_legend],
+                        bbox_to_anchor = (1.05, 1),
+                        loc = 2,
+                        borderaxespad = 0.0)
             else:
-                plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                plt.legend(
+                        handles,
+                        labels,
+                        bbox_to_anchor = (1.05, 1),
+                        loc = 2,
+                        borderaxespad = 0.0)
                 print('order_legend datatype is invalid -- plotting samples in default order...')
         else:
-            plt.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+            plt.legend(
+                    handles,
+                    labels,
+                    bbox_to_anchor = (1.05, 1),
+                    loc = 2,
+                    borderaxespad = 0.0)
 
     elif len(labels) == 0:
         if highlight_names != None and type(highlight_names) is list:
@@ -455,24 +485,34 @@ def make_legend(ax, order_legend, highlight_color, highlight_names):
                 highlight_color = [highlight_color]
 
             if len(highlight_names) == len(highlight_color):
-                #Make a custom legend using the provided info
-                #Adapted from https://stackoverflow.com/a/47749903
-                f = lambda m,c: plt.plot([],[],marker='o', color=c, ls="none")[0]
+                # Make a custom legend using the provided info
+                # Adapted from https://stackoverflow.com/a/47749903
+                f = lambda m,c: plt.plot(
+                                        [], [],
+                                        marker = 'o',
+                                        color = c,
+                                        ls = 'none')[0]
                 handles = [f("s", highlight_color[i]) for i in range(len(highlight_color))]
-                plt.legend(handles, highlight_names, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+                plt.legend(
+                        handles,
+                        highlight_names,
+                        bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
             else:
                 raise Exception('Highlight colors and names lists are not of equal size')
         else:
-            pass #raise Exception('Highlight names is not a list')
+            pass
 
     else:
-        pass #ax.get_legend().remove()
+        pass
 
     return ax
 
-"""
-"""
-def highlight_markers(data, x, y, highlight_points, highlight_color, highlight_names, alpha_highlights, ax):
+"""Highlight specific points on scatter plot"""
+def highlight_markers(
+    data, x, y,
+    highlight_points, highlight_color,
+    highlight_names, alpha_highlights,
+    ax):
 
     if all(isinstance(z, list) for z in highlight_points):
         p = 0
@@ -480,13 +520,27 @@ def highlight_markers(data, x, y, highlight_points, highlight_color, highlight_n
             data_sub = data_subset(data, highlight_points[p]).T
             data_genes = data_sub.dropna(axis=1)
             if type(alpha_highlights) is list:
-                ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color[p]), alpha=alpha_highlights[p])
+                ax = sns.scatterplot(
+                        x = data_genes.loc[str(x)],
+                        y = data_genes.loc[str(y)],
+                        color = str(highlight_color[p]),
+                        alpha = alpha_highlights[p])
             else:
-                ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color[p]), alpha=alpha_highlights)
+                ax = sns.scatterplot(
+                        x = data_genes.loc[str(x)],
+                        y = data_genes.loc[str(y)],
+                        color = str(highlight_color[p]),
+                        alpha = alpha_highlights)
+
             p += 1
+
     else:
         data_sub = data_subset(data, highlight_points).T
         data_genes = data_sub.dropna(axis=1)
-        ax = sns.scatterplot(x=data_genes.loc[str(x)], y=data_genes.loc[str(y)], color=str(highlight_color), alpha=alpha_highlights)
+        ax = sns.scatterplot(
+                x = data_genes.loc[str(x)],
+                y = data_genes.loc[str(y)],
+                color = str(highlight_color),
+                alpha = alpha_highlights)
 
     return ax

@@ -19,36 +19,26 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-"""
-IMPORT DEPENDENCIES
-"""
+"""IMPORT DEPENDENCIES"""
 import csv
 import pandas as pd
-from .utils import check_directories
-from .utils_truncator import execute_truncator, parallelize_truncator
 pd.options.mode.chained_assignment = None
 
-"""
-DESCRIPTION: Convert row names (genes) of dataframe using GTF as reference for new name
+"""IMPORT INTERNAL DEPENDENCIES"""
+from .utils import check_directories
+from .utils_truncator import execute_truncator, parallelize_truncator
 
-RETURNS: Return the renamed dataframe
+"""Convert row names (genes) of dataframe using GTF as reference for new name"""
+def convert_names_gtf(
+    data, gtf,
+    orig_name_label='gene_id \"', orig_name_location=0,
+    new_name_label='gene_name \"', new_name_location=2,
+    refill=None, sep='\t'):
 
-VARIABLES:
-data= Dataframe to convert rows names
-gtf= Path and name of gtf reference file
-orig_name_label= Label of original name (usually a \"gene_id \"')
-orig_name_location= Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)
-new_name_label= Label of original name (usually \"gene_name \")
-new_name_location= Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)
-refill= In some cases, where common gene names are unavailable, the dataframe will fill the gene name with the improper field of the GTF. In this case, specify this improper string and these values will be replaced with the original name
-sep= GTF delimiter (usually tab-delimited)
-"""
-def convert_names_gtf(data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=2, refill=None, sep='\t'):
-
-    #Import reference GTF
+    # Import reference GTF
     gtf = pd.read_csv(str(gtf),sep=sep,comment='#', low_memory=False, header=None)
 
-    #Parse out old and new names from GTF
+    # Parse out old and new names from GTF
     gtf_genes = gtf.loc[gtf[2] == 'gene']
     gtf_genes['original'] = gtf[8].str.split(';').str[orig_name_location]
     gtf_genes['new'] = gtf[8].str.split(';').str[new_name_location]
@@ -56,7 +46,7 @@ def convert_names_gtf(data, gtf, orig_name_label='gene_id \"', orig_name_locatio
     gtf_genes['new'] = gtf_genes['new'].map(lambda x: x.lstrip(str(new_name_label)).rstrip('\"').rstrip(' '))
     gtf_genes = gtf_genes[['original','new']].copy()
 
-    #Create dictionary
+    # Create dictionary
     if refill != None:
         gene_dict = {}
         for index, row in gtf_genes.iterrows():
@@ -67,7 +57,7 @@ def convert_names_gtf(data, gtf, orig_name_label='gene_id \"', orig_name_locatio
     else:
         gene_dict = pd.Series(gtf_genes['new'].values,index=gtf_genes['original']).to_dict()
 
-    #Replace old gene names/ids with new
+    # Replace old gene names/ids with new
     data_names = data.copy()
     data_names['new'] = data_names.index.to_series().map(gene_dict).fillna(data_names.index.to_series())
     data_names = data_names.set_index('new')
