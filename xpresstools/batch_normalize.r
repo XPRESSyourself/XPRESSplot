@@ -38,4 +38,4 @@ modcombat = model.matrix(~1, data=info)
 
 # Perform combat normalization on known batch parameter
 combat_data = ComBat(dat=data_m, batch=batch, mod=modcombat, par.prior=TRUE, prior.plots=FALSE)
-write.table(as.data.frame(combat_data),file=args[3],sep='\t',col.names=T,row.names=T)
+write.table(as.data.frame(combat_data), file=args[3], sep='\t', col.names=T, row.names=T)

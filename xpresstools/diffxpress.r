@@ -28,4 +28,4 @@ res <- results(dds)
 resOrdered <- res[order(res$padj),]
 
 # Write output to new file
-write.table(as.data.frame(resOrdered),file=args[3],sep='\t',col.names=T,row.names=T)
+write.table(as.data.frame(resOrdered), file=args[3], sep='\t', col.names=T, row.names=T)

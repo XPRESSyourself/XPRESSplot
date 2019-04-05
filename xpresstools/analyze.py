@@ -63,8 +63,8 @@ def diff_xpress(
 
     # Run deseq2 in R
     os.system('rscript' \
-        + ' ' + str(__path__) + '/diffxpress.r ' \
-        + str(input_file) \
+        + ' ' + str(__path__) + '/diffxpress.r' \
+        + ' ' + str(input_file) \
         + ' ' + str(sample_file) \
         + ' ' + str(output_file) \
         + ' ' + str(equation))

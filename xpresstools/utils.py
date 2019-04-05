@@ -19,17 +19,12 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-"""
-IMPORT DEPENDENCIES
-"""
+"""IMPORT DEPENDENCIES"""
 
-"""
-DESCRIPTION: Pass in a directory as string to check for proper formatting formatting
-"""
-#Check directory formatting
+"""Pass in a directory as string to check for proper formatting formatting"""
 def check_directories(directory):
 
-    #Check input directory name is formatted correctly and fix if necessary
+    # Check input directory name is formatted correctly and fix if necessary
     if directory.endswith('/'):
         pass
     else:
