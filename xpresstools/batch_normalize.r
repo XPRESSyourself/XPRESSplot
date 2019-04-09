@@ -12,7 +12,6 @@ BiocManager::install("limma", version = "3.8")
 source("http://bioconductor.org/biocLite.R")
 biocLite("pamr")
 
-# Initialize workspace
 library(sva)
 library(bladderbatch)
 library(pamr)

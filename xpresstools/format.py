@@ -26,7 +26,6 @@ pd.options.mode.chained_assignment = None
 
 """IMPORT INTERNAL DEPENDENCIES"""
 from .utils import check_directories
-from .utils_truncator import execute_truncator, parallelize_truncator
 
 """Convert row names (genes) of dataframe using GTF as reference for new name"""
 def convert_names_gtf(
