@@ -26,15 +26,9 @@ pd.options.mode.chained_assignment = None
 from multiprocessing import cpu_count, Pool
 from functools import partial
 
-import numpy as np
-
-"""IMPORT INTERNAL DEPENDENCIES"""
-from .utils import check_directories
-
 """Parse  GTF dataframe for longest transcript per gene record and keep only those transcript records"""
 def longest_transcripts(
-    gtf,
-    output=None):
+    gtf):
 
     long_transcripts = []
 
@@ -82,31 +76,14 @@ def longest_transcripts(
     gtf_longest = pd.concat(long_transcripts)
     gtf_longest = gtf_longest.reset_index(drop=True)
 
-    if output != None:
-        gtf_longest.to_csv(
-            str(output),
-            sep = '\t',
-            header = None,
-            index = False,
-            quoting = csv.QUOTE_NONE)
-
     return gtf_longest
 
 """Only keep GTF records that are annotated as protein_coding"""
 def protein_gtf(
-    gtf,
-    output=None):
+    gtf):
 
     # Take only records that are annotated as 'protein coding'
     gtf_coding = gtf[gtf.iloc[:, 8].str.contains('protein_coding') == True]
-
-    if output != None:
-        gtf_coding.to_csv(
-            str(output),
-            sep = '\t',
-            header = None,
-            index = False,
-            quoting = csv.QUOTE_NONE)
 
     return gtf_coding
 
@@ -431,8 +408,7 @@ def minus_5prime(
 def truncate_gtf(
     gtf,
     _5prime=45,
-    _3prime=15,
-    output=None):
+    _3prime=15):
 
     # Initialize
     gtf_c = gtf.copy() # Make copy in order to edit dataframe
@@ -454,16 +430,8 @@ def truncate_gtf(
 
     gtf_c = gtf_c.drop(gtf_c.index[bad_exons])
 
-    if output != None:
-        gtf_c.to_csv(
-            str(output),
-            sep = '\t',
-            header = None,
-            index = False,
-            quoting = csv.QUOTE_NONE)
-
     return gtf_c
-    
+
 
 """Parallelization scheme for truncation via chunking dataframe and parallel processing truncation on chunks"""
 """
@@ -471,80 +439,138 @@ Need to chunk by genes and then split out to main truncation function
 
 """
 def parallelize_gtf_scan(
-    func, *args):
+    func,
+    *args):
 
+    # Get chunking params
     cores = cpu_count() # Number of CPU cores on your system
-
-    # Split dataframe into chunks for processing by number of cores
-    data_split = np.array_split(args[0], cores)
     pool = Pool(cores)
 
-    func = partial(execute_truncator, truncate_amount=args[1])
-    data = pd.concat(pool.map(func, data_split))
+    start = 0 # Get first start coordinate for chunk
+    batch = round(len(args[0].index) / cores) # Approx. number of samples in a chunk
+
+    chunks = [] # Initialize chunk storage
+
+    # Get chunking indices
+    for y in range(cores):
+
+        end = start + batch # Set tentative end
+
+        if end > len(args[0].index) - 1: # If end of dataframe, end there
+            end = len(args[0].index) - 1
+
+        else: # To to tentative end and search until next gene record
+            gtf_remainder = args[0].iloc[end:]
+
+            gene_id_original = gtf_remainder.at[end, 8][(gtf_remainder.at[end, 8].find('gene_id \"') + 9):].split('\";')[0]
+            gene_id_next = gene_id_original
+            n = 0
+
+            while gene_id_next == gene_id_original:
+
+                if end + n + 1 > len(args[0].index) - 1:
+                    break
+                else:
+                    n += 1
+                    gene_id_next = gtf_remainder.at[end + n, 8][(gtf_remainder.at[end + n, 8].find('gene_id \"') + 9):].split('\";')[0]
+
+
+        # Parse out current gene record
+        chunks.append(args[0].loc[start:end + n])
+
+        start = end + n + 1 # End coordinate for last chunk to start with next
+
+    print('Dataframe split into ' + str(len(chunks)) + ' chunks for parallelization')
+
+    # Execute function on dataframe chunks
+    if len(args) > 1:
+        func = partial(
+                func,
+                _5prime = args[1],
+                _3prime = args[2])
+    else:
+        pass
+    gtf = pd.concat(pool.map(func, chunks))
 
     pool.close()
     pool.join()
 
-    return data
+    return gtf
 
 """Run all GTF-editing functions"""
 def edit_gtf(
-    gtf,
+    gtf, # Dataframe of file path and name to GTF reference
     longest_transcript=True,
     protein_coding=True,
     truncate_reference=True,
     _5prime=45, # If no 5' truncation desired, set to 0
     _3prime=15, # If no 3' truncation desired, set to 0
-    output=True): # True will output all intermediates
+    output=True): # True will output all intermediates, not possible if inputting a GTF as pandas dataframe
 
     # Import GTF reference file
     if isinstance(gtf, pd.DataFrame):
-        if len(gtf.columns) == 9:
+        output = False # Turn off intermediates output
+
+        if len(gtf.columns) == 9: # Check some basics on dataframe format
             pass
         else:
             raise Exception('Error: A GTF-formatted dataframe was not provided')
     elif str(gtf).endswith('.gtf'):
+        file_name = gtf[:-4] # Get rid of GTF extension for now
         gtf = pd.read_csv(str(gtf), sep='\t', header=None, comment='#', low_memory=False)
     else:
         raise Exception('Error: A GTF-formatted file was not provided')
 
-    file_name = gtf_file[:-4] # Get rid of GTF extension for now
-
     # Run GTF modifications
     # Parse each gene record for longest transcript
     if longest_transcript == True:
-        file_name = file_name + '_longestTranscripts'
-        if output == False:
-            output_name = None
-        else:
-            output_name = file_name
-        gtf = longest_transcripts(
-                gtf,
-                output = str(output_name) + '.gtf')
+        print('Parsing record for longest isoform')
+
+        gtf = parallelize_gtf_scan(
+                longest_transcripts,
+                gtf)
+
+        if output == True:
+            file_name = str(file_name) + '_longestTranscripts'
+            gtf.to_csv(
+                str(file_name) + '.gtf',
+                sep = '\t',
+                header = None,
+                index = False,
+                quoting = csv.QUOTE_NONE)
 
     # Get only protein coding annotated records
     if protein_coding == True:
-        file_name = file_name + '_proteinCoding'
-        if output == False:
-            output_name = None
-        else:
-            output_name = file_name
+        print('Parsing record for protein coding genes')
         gtf = protein_gtf(
-                gtf,
-                output = str(output_name) + '.gtf')
+                gtf)
+
+        if output == True:
+            file_name = str(file_name) + '_proteinCoding'
+            gtf.to_csv(
+                str(file_name) + '.gtf',
+                sep = '\t',
+                header = None,
+                index = False,
+                quoting = csv.QUOTE_NONE)
 
     # Truncate by unique transcript
     # If file has not been parsed for longest transcript per gene, will truncate each isoform
     if truncate_reference == True:
-        file_name = file_name + '_truncated'
-        if output == False:
-            output_name = None
-        else:
-            output_name = file_name
-        gtf = truncate_gtf(
+        print('Truncating transcript records')
+        gtf = parallelize_gtf_scan(
+                truncate_gtf,
                 gtf,
-                _5prime = _5prime,
-                _3prime = _3prime,
-                output = str(output_name) + '.gtf')
+                _5prime,
+                _3prime)
+
+        if output == True:
+            file_name = str(file_name) + '_truncated'
+            gtf.to_csv(
+                str(file_name) + '.gtf',
+                sep = '\t',
+                header = None,
+                index = False,
+                quoting = csv.QUOTE_NONE)
 
     return gtf
