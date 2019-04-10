@@ -108,10 +108,10 @@ def scan_forward(
         if (index + n) <= (len(gtf.index) - 1): # Make sure next record won't run out of bounds
             item = gtf.at[index + n, 2]
         else:
-            break
+            return gtf, bad_exons
 
         if item == str(stop_string): # Make sure didn't run into next transcript
-            break
+            return gtf, bad_exons
 
         # Sanity check that we are at an exon record
         if gtf.at[index + n, 2] == str(search_string) \
@@ -240,7 +240,7 @@ def scan_backward(
         if (index + n) <= (len(gtf.index) - 1): # Make sure next selection not out of bounds
             item = gtf.at[index + n, 2]
         else:
-            break
+            return gtf, bad_exons
 
         if item == str(stop_string) \
         or (index + n) == (len(gtf.index) - 1): # Check next selection
@@ -291,7 +291,10 @@ def scan_backward(
                     if (index + n + y) > 0: # Check that step back will be valid
                         item = gtf.at[index + n + y, 2]
                     else:
-                        break
+                        return gtf, bad_exons
+
+                    if item == str(stop_string): # Make sure didn't run back into last transcript
+                        return gtf, bad_exons
 
                     # Sanity check that we are at an exon record
                     if gtf.at[index + n + y, 2] == str(search_string) \
@@ -412,6 +415,7 @@ def truncate_gtf(
 
     # Initialize
     gtf_c = gtf.copy() # Make copy in order to edit dataframe
+
     bad_exons = [] # Make list of indicies with bad exons (too short)
 
     for index, row in gtf.iterrows():
@@ -426,76 +430,11 @@ def truncate_gtf(
             gtf_c, bad_exons = scan_backward(gtf_c, index, bad_exons, 'exon', 'transcript', 'exon_number \"', _5prime, _3prime)
 
     # Drop exons that are completely truncated
-    print(str(len(bad_exons)) + ' exons records removed for being too short.')
+    print(str(len(bad_exons)) + ' exons records removed from reference chunk for being too short.')
 
     gtf_c = gtf_c.drop(gtf_c.index[bad_exons])
 
     return gtf_c
-
-
-"""Parallelization scheme for truncation via chunking dataframe and parallel processing truncation on chunks"""
-"""
-Need to chunk by genes and then split out to main truncation function
-
-"""
-def parallelize_gtf_scan(
-    func,
-    *args):
-
-    # Get chunking params
-    cores = cpu_count() # Number of CPU cores on your system
-    pool = Pool(cores)
-
-    start = 0 # Get first start coordinate for chunk
-    batch = round(len(args[0].index) / cores) # Approx. number of samples in a chunk
-
-    chunks = [] # Initialize chunk storage
-
-    # Get chunking indices
-    for y in range(cores):
-
-        end = start + batch # Set tentative end
-
-        if end > len(args[0].index) - 1: # If end of dataframe, end there
-            end = len(args[0].index) - 1
-
-        else: # To to tentative end and search until next gene record
-            gtf_remainder = args[0].iloc[end:]
-
-            gene_id_original = gtf_remainder.at[end, 8][(gtf_remainder.at[end, 8].find('gene_id \"') + 9):].split('\";')[0]
-            gene_id_next = gene_id_original
-            n = 0
-
-            while gene_id_next == gene_id_original:
-
-                if end + n + 1 > len(args[0].index) - 1:
-                    break
-                else:
-                    n += 1
-                    gene_id_next = gtf_remainder.at[end + n, 8][(gtf_remainder.at[end + n, 8].find('gene_id \"') + 9):].split('\";')[0]
-
-
-        # Parse out current gene record
-        chunks.append(args[0].loc[start:end + n])
-
-        start = end + n + 1 # End coordinate for last chunk to start with next
-
-    print('Dataframe split into ' + str(len(chunks)) + ' chunks for parallelization')
-
-    # Execute function on dataframe chunks
-    if len(args) > 1:
-        func = partial(
-                func,
-                _5prime = args[1],
-                _3prime = args[2])
-    else:
-        pass
-    gtf = pd.concat(pool.map(func, chunks))
-
-    pool.close()
-    pool.join()
-
-    return gtf
 
 """Run all GTF-editing functions"""
 def edit_gtf(
@@ -515,23 +454,61 @@ def edit_gtf(
             pass
         else:
             raise Exception('Error: A GTF-formatted dataframe was not provided')
-    elif str(gtf).endswith('.gtf'):
+
+    if str(gtf).endswith('.gtf'):
         file_name = gtf[:-4] # Get rid of GTF extension for now
         gtf = pd.read_csv(str(gtf), sep='\t', header=None, comment='#', low_memory=False)
     else:
         raise Exception('Error: A GTF-formatted file was not provided')
 
+    # Get chunking params
+    cores = cpu_count() # Number of CPU cores on your system
+    start = 0 # Get first start coordinate for chunk
+    batch = round(len(gtf.index) / cores) # Approx. number of samples in a chunk
+
+    # Get chunking indices
+    chunks = [] # Initialize chunk storage
+    for y in range(cores):
+
+        end = start + batch # Set tentative end
+
+        if end > len(gtf.index) - 1: # If end of dataframe, end there
+            end = len(gtf.index) - 1
+
+        else: # To to tentative end and search until next gene record
+            gtf_remainder = gtf.iloc[end:]
+
+            gene_id_original = gtf_remainder.at[end, 8][(gtf_remainder.at[end, 8].find('gene_id \"') + 9):].split('\";')[0]
+            gene_id_next = gene_id_original
+            n = 0
+
+            while gene_id_next == gene_id_original:
+
+                if end + n + 1 > len(gtf.index) - 1:
+                    break
+                else:
+                    n += 1
+                    gene_id_next = gtf_remainder.at[end + n, 8][(gtf_remainder.at[end + n, 8].find('gene_id \"') + 9):].split('\";')[0]
+
+        # Parse out current gene record
+        chunks.append(gtf.loc[start:end + n])
+        start = end + n + 1 # End coordinate for last chunk to start with next
+
+    print('Dataframe split into ' + str(len(chunks)) + ' chunks for parallelization')
+
     # Run GTF modifications
     # Parse each gene record for longest transcript
     if longest_transcript == True:
         print('Parsing record for longest isoform')
+        pool = Pool(cores)
+        chunks = pool.map(longest_transcripts, chunks)
 
-        gtf = parallelize_gtf_scan(
-                longest_transcripts,
-                gtf)
+        pool.close()
+        pool.join()
 
         if output == True:
             file_name = str(file_name) + '_longestTranscripts'
+            gtf = pd.concat(chunks)
             gtf.to_csv(
                 str(file_name) + '.gtf',
                 sep = '\t',
@@ -542,11 +519,15 @@ def edit_gtf(
     # Get only protein coding annotated records
     if protein_coding == True:
         print('Parsing record for protein coding genes')
-        gtf = protein_gtf(
-                gtf)
+        pool = Pool(cores)
+        chunks = pool.map(protein_gtf, chunks)
+
+        pool.close()
+        pool.join()
 
         if output == True:
             file_name = str(file_name) + '_proteinCoding'
+            gtf = pd.concat(chunks)
             gtf.to_csv(
                 str(file_name) + '.gtf',
                 sep = '\t',
@@ -558,14 +539,20 @@ def edit_gtf(
     # If file has not been parsed for longest transcript per gene, will truncate each isoform
     if truncate_reference == True:
         print('Truncating transcript records')
-        gtf = parallelize_gtf_scan(
+        pool = Pool(cores)
+
+        func = partial(
                 truncate_gtf,
-                gtf,
-                _5prime,
-                _3prime)
+                _5prime = _5prime,
+                _3prime = _3prime)
+        chunks = pool.map(func, chunks)
+
+        pool.close()
+        pool.join()
 
         if output == True:
             file_name = str(file_name) + '_truncated'
+            gtf = pd.concat(chunks)
             gtf.to_csv(
                 str(file_name) + '.gtf',
                 sep = '\t',
@@ -573,4 +560,7 @@ def edit_gtf(
                 index = False,
                 quoting = csv.QUOTE_NONE)
 
+    # Merge final GTF from chunks and return
+    # Need to resort indices after chunks?
+    gtf = pd.concat(chunks)
     return gtf
