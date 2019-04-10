@@ -227,17 +227,30 @@ def gene_overview(
 
 """Create scatterplot comparing gene expression of two genes across samples"""
 def scatter(
-    data, info, x, y,
+    data,
+    info,
+    x,
+    y,
     palette=None,
     add_linreg=False,
-    order_legend=None, title=None,
-    alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,
+    order_legend=None,
+    title=None,
+    alpha=1,
+    highlight_points=None,
+    highlight_color='DarkRed',
+    highlight_names=None,
     alpha_highlights=1,
     size=30,
-    y_threshold=None, x_threshold=None, threshold_color='b',
+    y_threshold=None,
+    x_threshold=None,
+    threshold_color='b',
     label_points=None,
-    grid=False, whitegrid=False, figsize=(10,10)
-    save_fig=None, dpi=600, bbox_inches='tight'):
+    grid=False,
+    whitegrid=False,
+    figsize=(10,10),
+    save_fig=None,
+    dpi=600,
+    bbox_inches='tight'):
 
     reset_plot(whitegrid)
     plt.figure(figsize=figsize)

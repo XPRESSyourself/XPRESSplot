@@ -278,11 +278,21 @@ def set_confidence(
 
 """2D Non-interactive PCA scatterplot"""
 def pca2(
-    df_pca, unique_labels, palette,
-    principle_components, scree, order_legend,
-    save_fig, dpi, bbox_inches,
-    ci, grid, title, s
-    ize, highlight_color, highlight_names):
+    df_pca,
+    unique_labels,
+    palette,
+    principle_components,
+    scree,
+    order_legend,
+    save_fig,
+    dpi,
+    bbox_inches,
+    ci,
+    grid,
+    title,
+    size,
+    highlight_color,
+    highlight_names):
 
     ax = sns.scatterplot(
             df_pca.PCa,
