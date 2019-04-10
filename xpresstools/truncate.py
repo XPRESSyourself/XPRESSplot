@@ -84,6 +84,7 @@ def protein_gtf(
 
     # Take only records that are annotated as 'protein coding'
     gtf_coding = gtf[gtf.iloc[:, 8].str.contains('protein_coding') == True]
+    gtf_coding = gtf_coding.reset_index(drop=True)
 
     return gtf_coding
 
@@ -444,7 +445,8 @@ def edit_gtf(
     truncate_reference=True,
     _5prime=45, # If no 5' truncation desired, set to 0
     _3prime=15, # If no 3' truncation desired, set to 0
-    output=True): # True will output all intermediates, not possible if inputting a GTF as pandas dataframe
+    output=True, # True will output all intermediates, not possible if inputting a GTF as pandas dataframe
+    cpu_threshold=None): # Give int for core threshold if desired
 
     # Import GTF reference file
     if isinstance(gtf, pd.DataFrame):
@@ -463,6 +465,11 @@ def edit_gtf(
 
     # Get chunking params
     cores = cpu_count() # Number of CPU cores on your system
+    if cpu_threshold == None or cpu_threshold >= cores:
+        pass
+    else:
+        cores = int(cpu_threshold)
+        
     start = 0 # Get first start coordinate for chunk
     batch = round(len(gtf.index) / cores) # Approx. number of samples in a chunk
 
