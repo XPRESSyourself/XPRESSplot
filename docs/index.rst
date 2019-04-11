@@ -27,7 +27,6 @@ Table of contents
    content/getting-data
    content/normalize
    content/analysis
-   content/reference-building
 
 =======
 License
