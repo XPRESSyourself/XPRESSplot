@@ -28,11 +28,15 @@ pd.options.mode.chained_assignment = None
 from .utils import check_directories
 
 """Convert row names (genes) of dataframe using GTF as reference for new name"""
-def convert_names_gtf(
-    data, gtf,
-    orig_name_label='gene_id \"', orig_name_location=0,
-    new_name_label='gene_name \"', new_name_location=2,
-    refill=None, sep='\t'):
+def convert_names(
+    data,
+    gtf,
+    orig_name_label='gene_id \"',
+    orig_name_location=0,
+    new_name_label='gene_name \"',
+    new_name_location=2,
+    refill=None,
+    sep='\t'):
 
     # Import reference GTF
     gtf = pd.read_csv(str(gtf),sep=sep,comment='#', low_memory=False, header=None)
