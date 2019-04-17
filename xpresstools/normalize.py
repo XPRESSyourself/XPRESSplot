@@ -63,6 +63,7 @@ def gene_length_dictionary(
     length_df = gtf_genes[['gene_name','length']].copy()
     length_df = length_df.set_index('gene_name')
     del length_df.index.name
+    length_df = length_df[~length_df.index.duplicated()]
     length_df.length = length_df.length / 1e3
 
     return length_df
