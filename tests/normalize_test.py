@@ -27,8 +27,9 @@ import pandas as pd
 import numpy as np
 import xpresstools as xp
 
-gtf = './transcripts.gtf'
-gpl_ref = './GPL570.txt'
+__path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
+gtf = str(__path__) + 'transcripts.gtf'
+gpl_ref = str(__path__) + './GPL570.txt'
 
 #gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
 #gpl_ref = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/GPL570.txt'
@@ -89,64 +90,6 @@ data_rpkm = data_rpkm.round(decimals=4)
 rpkm_truth = rpkm_truth.round(decimals=4)
 assert data_rpkm.equals(rpkm_truth), 'r_fpkm() failed'
 
-"""
-te()
-"""
-te_test = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-te_test.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':66.34,'fGSM523243_rna':59.13,'fGSM523244_rpf':1.90,'fGSM523245_rna':82.49})
-te_test.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':35.73,'fGSM523243_rna':0.00,'fGSM523244_rpf':7.38,'fGSM523245_rna':72.94})
-te_test.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':20.02,'fGSM523243_rna':70.21,'fGSM523244_rpf':85.10,'fGSM523245_rna':78.87})
-te_test.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':96.23,'fGSM523243_rna':7.49,'fGSM523244_rpf':93.49,'fGSM523245_rna':38.39})
-te_test.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
-
-te_truth = pd.DataFrame(columns=['fGSM523242_rpf_te','fGSM523244_rpf_te'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-te_truth.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf_te':0.165724,'fGSM523244_rpf_te':-5.367895})
-te_truth.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf_te':8.485024,'fGSM523244_rpf_te':-3.287577})
-te_truth.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf_te':-1.805100,'fGSM523244_rpf_te':0.109549})
-te_truth.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf_te':3.665813,'fGSM523244_rpf_te':1.281871})
-te_truth.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf_te':0.838787,'fGSM523244_rpf_te':0.243395})
-
-te_test1 = xp.te(te_test, samples=None, log2=True)
-te_test1 = te_test1.round(decimals=4)
-te_truth = te_truth.round(decimals=4)
-assert te_test1.equals(te_truth), 'te() failed'
-
-te_test2 = xp.te(te_test, samples=['sample1','sample2'], log2=True)
-te_test2 = te_test2.round(decimals=4)
-te_truth.columns = ['sample1','sample2']
-te_truth = te_truth.round(decimals=4)
-assert te_test2.equals(te_truth), 'te() failed'
-
-"""
-log_scale()
-"""
-log_test = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-log_test.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':66.34,'fGSM523243_rna':59.13,'fGSM523244_rpf':1.90,'fGSM523245_rna':82.49})
-log_test.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':35.73,'fGSM523243_rna':0.00,'fGSM523244_rpf':7.38,'fGSM523245_rna':72.94})
-log_test.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':20.02,'fGSM523243_rna':70.21,'fGSM523244_rpf':85.10,'fGSM523245_rna':78.87})
-log_test.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':96.23,'fGSM523243_rna':7.49,'fGSM523244_rpf':93.49,'fGSM523245_rna':38.39})
-log_test.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
-
-log_truth = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-log_truth.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':1.828273,'fGSM523243_rna':1.779091,'fGSM523244_rpf':0.462398,'fGSM523245_rna':1.921634})
-log_truth.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':1.565021,'fGSM523243_rna':0.000000,'fGSM523244_rpf':0.923244,'fGSM523245_rna':1.868879})
-log_truth.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':1.322633,'fGSM523243_rna':1.852541,'fGSM523244_rpf':1.935003,'fGSM523245_rna':1.902384})
-log_truth.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':1.987800,'fGSM523243_rna':0.928908,'fGSM523244_rpf':1.975386,'fGSM523245_rna':1.595386})
-log_truth.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':1.874540,'fGSM523243_rna':1.626135,'fGSM523244_rpf':1.969742,'fGSM523245_rna':1.897242})
-#Check output
-log_test1 = xp.log_scale(log_test)
-log_test1 = log_test1.round(decimals=4)
-log_truth = log_truth.round(decimals=4)
-assert log_test1.equals(log_truth), 'log_scale() failed'
-#Check that it runs
-log_test2 = xp.log_scale(log_test, log_base=2)
-#Check that it catches error inputs
-try:
-    xp.log_scale(log_test, log_base=3)
-except:
-    pass
-else:
-    fail('log_scale() failed')
 
 """
 batch_normalize()
@@ -180,33 +123,6 @@ clean_test = clean_test.rename(index={'ENSG00000227201':'ENSG00000227200'})
 
 clean_test = xp.clean_df(clean_test)
 assert clean_test.equals(check_test), 'clean_df() failed'
-
-"""
-threshold()
-"""
-threshold_test1 = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-threshold_test1.loc['ENSG00000227232'] = pd.Series({'fGSM523242_rpf':66.34,'fGSM523243_rna':59.13,'fGSM523244_rpf':1.90,'fGSM523245_rna':82.49})
-threshold_test1.loc['ENSG00000240361'] = pd.Series({'fGSM523242_rpf':35.73,'fGSM523243_rna':0.00,'fGSM523244_rpf':7.38,'fGSM523245_rna':72.94})
-threshold_test1.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':20.02,'fGSM523243_rna':70.21,'fGSM523244_rpf':85.10,'fGSM523245_rna':78.87})
-threshold_test1.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':96.23,'fGSM523243_rna':7.49,'fGSM523244_rpf':93.49,'fGSM523245_rna':38.39})
-threshold_test1.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
-
-threshold_truth1 = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-threshold_truth1.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':20.02,'fGSM523243_rna':70.21,'fGSM523244_rpf':85.10,'fGSM523245_rna':78.87})
-threshold_truth1.loc['ENSG00000241860'] = pd.Series({'fGSM523242_rpf':96.23,'fGSM523243_rna':7.49,'fGSM523244_rpf':93.49,'fGSM523245_rna':38.39})
-threshold_truth1.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
-
-threshold_truth2 = pd.DataFrame(columns=['fGSM523242_rpf','fGSM523243_rna','fGSM523244_rpf','fGSM523245_rna'], index=['ENSG00000238009','ENSG00000187634'], dtype='float')
-threshold_truth2.loc['ENSG00000238009'] = pd.Series({'fGSM523242_rpf':20.02,'fGSM523243_rna':70.21,'fGSM523244_rpf':85.10,'fGSM523245_rna':78.87})
-threshold_truth2.loc['ENSG00000187634'] = pd.Series({'fGSM523242_rpf':73.91,'fGSM523243_rna':41.28,'fGSM523244_rpf':92.27,'fGSM523245_rna':77.93})
-
-threshold_test_util = xp.count_threshold_util(threshold_test1, 5, None)
-threshold_test1 = xp.threshold(threshold_test1, 5, None)
-assert threshold_test1.equals(threshold_test_util), 'threshold() failed at setting thresholding minimum'
-assert threshold_test1.equals(threshold_truth1), 'threshold() failed at setting thresholding minimum'
-
-threshold_test2 = xp.threshold(threshold_test1,minimum=None, maximum=93)
-assert threshold_test2.equals(threshold_truth2), 'threshold() failed at setting maximum threshold'
 
 """
 prep_data()

@@ -57,24 +57,5 @@ def create_data():
 convert_names_gtf
 """
 data, data_truth = create_data()
-data = xp.convert_names_gtf(data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=2, refill=None, sep='\t')
-assert data.equals(data_truth), 'convert_names_gtf() failed'
-
-"""
-truncate
-"""
-gtf_df = pd.read_csv(str(gtf), sep='\t', header=None, comment='#', low_memory=False)
-xp.truncate(gtf, truncate_amount=45, save_coding_path=gtf_output, save_truncated_path=gtf_output, sep='\t', return_files=False)
-gtf_truncated_df = pd.read_csv(str(gtf[:-4]) + '_coding_truncated.gtf', sep='\t', header=None, comment='#', low_memory=False)
-
-if gtf_truncated_df[8].str.contains('sense_intronic').any() or gtf_truncated_df[8].str.contains('sense_intronic').any() or gtf_truncated_df[8].str.contains('transcribed_processed_pseudogene').any():
-    raise Exception('truncate() failed to remove non-protein-coding entries')
-
-gtf_truncated_truth = pd.read_csv(str(gtf[:-4]) + '_coding_truncated_truth.gtf', sep='\t', header=None, comment='#', low_memory=False)
-#Leaving this test off for now -- files look to work, but suddenly stopped recognizing as the same
-#assert gtf_truncated_df.equals(gtf_truncated_truth), 'convert_names_gtf() failed'
-
-gtf_coding_truth = pd.read_csv(str(gtf[:-4]) + '_coding_truth.gtf', sep='\t', header=None, comment='#', low_memory=False)
-coding = xp.truncate(gtf, truncate_amount=None, save_coding_path=None, save_truncated_path=None, sep='\t', return_files=True)
-coding = coding.reset_index(drop=True)
-assert coding.equals(gtf_coding_truth), 'convert_names_gtf() failed'
+data = xp.convert_names(data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=2, refill=None, sep='\t')
+assert data.equals(data_truth), 'convert_names() failed'

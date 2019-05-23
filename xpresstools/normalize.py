@@ -136,61 +136,6 @@ def r_fpkm(
 
     return data_rpkm
 
-"""Perform log2(TE) normalization on ribosome profiling values"""
-def te(
-        data,
-        samples=None,
-        log2=True):
-
-    data_c = data.copy()
-    data_c += 1
-
-    # Perform translation efficiency calculations
-    y = 0
-    z = 1
-
-    if samples == None:
-        samples = []
-        for x in range(int(len(data_c.columns)/2)):
-            name = str(data_c.columns[y]) + '_te'
-            samples.append(name)
-            data_c[name] = data_c[data_c.columns[y]]/data_c[data_c.columns[z]]
-
-            # Move counters for next set of samples
-            y = y + 2
-            z = z + 2
-
-    else:
-        for x in samples:
-            data_c[x] = data_c[data_c.columns[y]]/data_c[data_c.columns[z]]
-
-            # Move counters for next set of samples
-            y = y + 2
-            z = z + 2
-
-    # Get TE_normalized columns
-    df_te = data_c[samples]
-
-    # Perform log2 scaling of data
-    if log2 == True:
-        df_logte = np.log2(df_te)
-
-    return df_logte
-
-"""Log-scale a sample-normalized dataframe"""
-def log_scale(
-        data,
-        log_base=10):
-
-    if log_base == 10:
-        data_log = np.log10(data + 1)
-    elif log_base == 2:
-        data_log = np.log2(data + 1)
-    else:
-        raise Exception('Invalid log_base option provided')
-
-    return data_log
-
 """Normalize out batch effects from RNAseq data"""
 def batch_normalize(
         input_file,
