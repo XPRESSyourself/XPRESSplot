@@ -39,10 +39,10 @@ __path__, xpresstools_arguments = os.path.split(__file__)
 
 """Create gene dictionary"""
 def gene_length_dictionary(
-        gtf,
-        gene_name_prefix='gene_id \"',
-        gene_name_location=0,
-        sep='\t'):
+    gtf,
+    gene_name_prefix='gene_id \"',
+    gene_name_location=0,
+    sep='\t'):
 
     # Process gtf data for gene_name and gene_length
     gtf = pd.read_csv(
@@ -69,8 +69,8 @@ def gene_length_dictionary(
 
 """Perform gene kilobase normalization"""
 def rpk(
-        data,
-        length_df):
+    data,
+    length_df):
 
     data_c = data.copy()
 
@@ -85,7 +85,7 @@ def rpk(
 
 """Perform reads per million sample normalization on RNAseq data"""
 def rpm(
-        data):
+    data):
 
     data_c = data.copy()
     data_rpm = data_c / \
@@ -95,11 +95,11 @@ def rpm(
 
 """Perform transcripts per million normalization on RNAseq data"""
 def tpm(
-        data,
-        gtf,
-        gene_name_prefix='gene_id \"',
-        gene_name_location=0,
-        sep='\t'):
+    data,
+    gtf,
+    gene_name_prefix='gene_id \"',
+    gene_name_location=0,
+    sep='\t'):
 
     length_df = gene_length_dictionary(
         gtf,
@@ -116,11 +116,11 @@ def tpm(
 
 """Perform reads/fragments per kilobase million sample normalization on RNAseq data"""
 def r_fpkm(
-        data,
-        gtf,
-        gene_name_prefix='gene_id \"',
-        gene_name_location=0,
-        sep='\t'):
+    data,
+    gtf,
+    gene_name_prefix='gene_id \"',
+    gene_name_location=0,
+    sep='\t'):
 
     length_df = gene_length_dictionary(
         gtf,
@@ -137,8 +137,8 @@ def r_fpkm(
 
 """Normalize out batch effects from RNAseq data"""
 def batch_normalize(
-        input_file,
-        batch_file):
+    input_file,
+    batch_file):
 
     # Get output file name
     if input_file.endswith('.txt') or input_file.endswith('.tsv'):
@@ -155,7 +155,7 @@ def batch_normalize(
 
 """Check sample means and medians"""
 def check_samples(
-        data):
+    data):
 
     wid = len(list(data))
     ax = data.boxplot(
@@ -166,8 +166,8 @@ def check_samples(
 
 """Cleans axis of NULL values"""
 def clean_df(
-        data,
-        axis=0):
+    data,
+    axis=0):
 
     data = data.dropna(axis=axis)
     data = data[~data.index.duplicated(keep=False)]
@@ -176,9 +176,9 @@ def clean_df(
 
 """Remove genes from analysis where sequence coverage does not meet minimum"""
 def threshold(
-        data,
-        minimum=None,
-        maximum=None):
+    data,
+    minimum=None,
+    maximum=None):
 
     data_c = data.copy()
     data_c = parallelize(
@@ -191,10 +191,10 @@ def threshold(
 
 """Prepare dataframes for analysis plotting functions found within analyze.py"""
 def prep_data(
-        data,
-        info,
-        gene_scale=True,
-        print_means=False):
+    data,
+    info,
+    gene_scale=True,
+    print_means=False):
 
     # Convert data to float and drop bad values
     data_c = data.copy()

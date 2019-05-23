@@ -33,7 +33,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
 
 """Default data prep for all analysis functions"""
-def analysis_prep(data):
+def analysis_prep(
+    data):
 
     data_c = data.copy()
     data_c = data_c.dropna(axis=0)

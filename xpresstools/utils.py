@@ -22,7 +22,8 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """IMPORT DEPENDENCIES"""
 
 """Pass in a directory as string to check for proper formatting formatting"""
-def check_directories(directory):
+def check_directories(
+    directory):
 
     # Check input directory name is formatted correctly and fix if necessary
     if directory.endswith('/'):
