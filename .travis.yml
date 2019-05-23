@@ -1,29 +1,33 @@
 language: python
+
 python:
 - 2.7
 - 3.5
 - 3.6
 - 3.7
+
 dist: xenial
+
 before_install:
 - echo -e "machine github.com\n  login $GITHUB_TOKEN" > ~/.netrc
 - git lfs pull
+
 install:
 - pip install -r requirements.txt
 - pip install codecov
 - pip install .
 - python setup.py install
+
 script:
-- cd tests/
-- coverage run fetch_test.py
-- coverage run format_test.py
-- coverage run normalize_test.py
-- coverage run analyze_test.py
-- coverage run utils_test.py
-- bash <(curl -s https://codecov.io/bash) -cF python
-- cd ../
+- coverage run tests/fetch_test.py
+- coverage run tests/format_test.py
+- coverage run tests/normalize_test.py
+- coverage run tests/analyze_test.py
+- coverage run tests/utils_test.py
+
 after_success:
 - codecov
+
 deploy:
   provider: pypi
   user: j-berg

@@ -273,7 +273,7 @@ def catenate_files(
 
     return data
 
-"""Collate HTseq counts files"""
+"""Collate counts files"""
 def count_table(
     file_list,
     gene_column=0, sample_column=1,
