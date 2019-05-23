@@ -18,16 +18,15 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 """IMPORT DEPENDENCIES"""
 import os
 import sys
 import pandas as pd
-
 import numpy as np
 from scipy.stats import linregress
 from sklearn.decomposition import PCA
-
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
