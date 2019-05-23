@@ -24,11 +24,6 @@ from __future__ import print_function
 import os
 import sys
 import pandas as pd
-<<<<<<< HEAD
-=======
-from __future__ import print_function
-
->>>>>>> 945f5ea6d95a41b7656fa2b3b565b4ac53bea241
 import numpy as np
 from sklearn import preprocessing
 import matplotlib
