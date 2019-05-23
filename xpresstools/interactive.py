@@ -21,7 +21,6 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 from __future__ import print_function
 
 """IMPORT DEPENDENCIES"""
-from __future__ import print_function
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go

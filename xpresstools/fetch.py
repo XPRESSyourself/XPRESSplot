@@ -24,7 +24,6 @@ from __future__ import print_function
 import os
 import sys
 import re
-from __future__ import print_function
 import pandas as pd
 import GEOparse
 

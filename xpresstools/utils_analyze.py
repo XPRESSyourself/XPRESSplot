@@ -21,14 +21,11 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 from __future__ import print_function
 
 """IMPORT DEPENDENCIES"""
-from __future__ import print_function
 import pandas as pd
 from functools import partial
 from multiprocessing import cpu_count, Pool
-
 import numpy as np
 import scipy.stats as stats
-
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches

@@ -27,8 +27,9 @@ import pandas as pd
 import numpy as np
 import xpresstools as xp
 
-gtf = './transcripts.gtf'
-gtf_output = './'
+__path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
+gtf = str(__path__) + 'transcripts.gtf'
+gtf_output = str(__path__)
 
 #gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
 #gtf_output = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/'
