@@ -1,7 +1,7 @@
 """
-XPRESStools
+XPRESSplot
 A toolkit for navigating and analyzing gene expression datasets
-alias: xpresstools
+alias: xpressplot
 
 Copyright (C) 2019  Jordan A. Berg
 jordan <dot> berg <at> biochem <dot> utah <dot> edu
@@ -35,7 +35,7 @@ from .utils_analyze import parallelize, count_threshold_util
 
 """INITIALIZATION PARAMETERS"""
 # Retrieve path for scripts used in this pipeline, appended to argument dictionary for every function
-__path__, xpresstools_arguments = os.path.split(__file__)
+__path__, xpressplot_arguments = os.path.split(__file__)
 
 """Create gene dictionary"""
 def gene_length_dictionary(

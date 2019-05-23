@@ -1,7 +1,7 @@
 """
-XPRESStools
+XPRESSplot
 A toolkit for navigating and analyzing gene expression datasets
-alias: xpresstools
+alias: xpressplot
 
 Copyright (C) 2019  Jordan A. Berg
 jordan <dot> berg <at> biochem <dot> utah <dot> edu
@@ -19,16 +19,14 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-"""IMPORT DEPENDENCIES"""
+from .fetch import *
+from .format import *
+from .normalize import *
+from .collapser import *
+from .analyze import *
+from .utils_analyze import *
+from .collapser import *
+from .interactive import *
+from .utils import *
 
-"""Pass in a directory as string to check for proper formatting formatting"""
-def check_directories(
-    directory):
-
-    # Check input directory name is formatted correctly and fix if necessary
-    if directory.endswith('/'):
-        pass
-    else:
-        directory += '/'
-
-    return directory
+__version__ = '0.0.4-beta'

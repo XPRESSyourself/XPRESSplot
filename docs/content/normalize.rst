@@ -5,7 +5,7 @@ Normalization and Quality Control
 =======================
 RPM (Reads per Million)
 =======================
-| **xpresstools.rpm ( data )**
+| **xpressplot.rpm ( data )**
 |
 | Purpose:
 | Perform reads per million sample normalization on RNAseq data
@@ -46,7 +46,7 @@ RPM (Reads per Million)
 ==============================================
 R/FPKM (Reads/Fragments per Kilobase Million)
 ==============================================
-| **xpresstools.r_fpkm ( data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='\t' )**
+| **xpressplot.r_fpkm ( data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='\t' )**
 |
 | Purpose:
 | Perform reads/fragments per kilobase million sample normalization on RNAseq data
@@ -94,7 +94,7 @@ R/FPKM (Reads/Fragments per Kilobase Million)
 ===========================
 TE (Translation Efficiency)
 ===========================
-| **xpresstools.te ( data, samples=None, log2=True )**
+| **xpressplot.te ( data, samples=None, log2=True )**
 |
 | Purpose:
 | Transform paired ribosome footprint and RNA samples to translation efficiency measures
@@ -145,13 +145,13 @@ TE (Translation Efficiency)
 ===========================
 Log Transformation
 ===========================
-| **xpresstools.log_scale ( data, log_base=10 )**
+| **xpressplot.log_scale ( data, log_base=10 )**
 |
 | Purpose:
 | Log-scale a sample-normalized dataframe
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |
 | Parameters:
 | **data**: Input dataframe with counts values
@@ -184,13 +184,13 @@ Log Transformation
 =====================
 Batch Normalize
 =====================
-| **xpresstools.batch_normalize ( input_file, batch_file )**
+| **xpressplot.batch_normalize ( input_file, batch_file )**
 |
 | Purpose:
 | Control for batch effects between datasets
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired
+|   - Requires a properly formatted dataframe for xpressplot usage where samples are normalized previously if desired
 |   - Requires a properly formatted dataframe complying to SVA COMBAT info file (see example below)
 |   - R is installed on your machine and is in your $PATH
 |   - All input files are tab-delimited (with .txt or .tsv suffix)
@@ -224,13 +224,13 @@ Batch Normalize
 ====================
 Clean Data
 ====================
-| **xpresstools.clean_df ( data, axis=0 )**
+| **xpressplot.clean_df ( data, axis=0 )**
 |
 | Purpose:
 | Cleans NULL values from axis and clears duplicate indices
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |
 | Parameters:
 | **data**: Input dataframe file with values (can be normalized or unnormalized)
@@ -259,13 +259,13 @@ Clean Data
 ========================
 Set Gene Threshold
 ========================
-| **xpresstools.threshold ( data, minimum=None, maximum=None )**
+| **xpressplot.threshold ( data, minimum=None, maximum=None )**
 |
 | Purpose:
 | Cleans gene axis (assumed to by rows) of genes containing values below or above user-determined thresholds
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |
 | Parameters:
 | **data**: Input dataframe file with values (can be normalized or unnormalized)
@@ -295,20 +295,20 @@ Set Gene Threshold
   ENSG00000187634 73.91   41.28   92.27   77.93
 
 ================================
-Prepare XPRESStools Dataset
+Prepare xpressplot Dataset
 ================================
-| **xpresstools.prep_data ( data, info, gene_scale=True, print_means=False )**
+| **xpressplot.prep_data ( data, info, gene_scale=True, print_means=False )**
 |
 | Purpose:
 | Prepare dataframe for downstream analyses
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage (genes as rows, samples as columns)
-|   - Requires properly formatted XPRESStools metadata dataframe
+|   - Requires a properly formatted dataframe for xpressplot usage (genes as rows, samples as columns)
+|   - Requires properly formatted xpressplot metadata dataframe
 |
 | Parameters:
-| **data**: XPRESStools formatted dataframe of expression values
-| **info**: XPRESStools formatted sample info dataframe
+| **data**: xpressplot formatted dataframe of expression values
+| **info**: xpressplot formatted sample info dataframe
 | **gene_scale**: Scale genes (rows) of data
 | **print_means**: Print means for each sample verification
 |
@@ -319,13 +319,13 @@ Prepare XPRESStools Dataset
 =====================================
 Check Sample Expression Distributions
 =====================================
-| **xpresstools.check_samples ( data )**
+| **xpressplot.check_samples ( data )**
 |
 | Purpose:
 | Visualize gene expression distributions on a sample-by-sample basis
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |
 | Parameters:
 | **data**: Input dataframe file with values (can be normalized or unnormalized)
@@ -347,13 +347,13 @@ Check Sample Expression Distributions
 ==============================
 Microarray Probe Collapse
 ==============================
-| **xpresstools.probe_collapse ( data, reference, gene_list=None, no_multimappers=True )**
+| **xpressplot.probe_collapse ( data, reference, gene_list=None, no_multimappers=True )**
 |
 | Purpose:
 | Remove multimapping probes and collapse probes mapping to the same gene by averaging the values for those probes per sample
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |   - Assumes GPL .txt file from NCBI is tab delimited
 |
 | Parameters:

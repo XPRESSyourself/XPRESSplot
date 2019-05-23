@@ -1,7 +1,7 @@
 """
-XPRESStools
+XPRESSplot
 A toolkit for navigating and analyzing gene expression datasets
-alias: xpresstools
+alias: xpressplot
 
 Copyright (C) 2019  Jordan A. Berg
 jordan <dot> berg <at> biochem <dot> utah <dot> edu
@@ -25,7 +25,7 @@ IMPORT DEPENDENCIES AND DATASETS
 import os, sys
 import pandas as pd
 import numpy as np
-import xpresstools as xp
+import xpressplot as xp
 
 geo = 'GSE20916'
 data_small_file = './small_test.csv'

@@ -1,7 +1,7 @@
 """
-XPRESStools
+XPRESSplot
 A toolkit for navigating and analyzing gene expression datasets
-alias: xpresstools
+alias: xpressplot
 
 Copyright (C) 2019  Jordan A. Berg
 jordan <dot> berg <at> biochem <dot> utah <dot> edu
@@ -22,15 +22,15 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 IMPORT DEPENDENCIES AND DATASETS
 """
-import xpresstools as xp
+import xpressplot as xp
 
 """
 utils.py tests
 """
 #check_directories()
-dir1 = '/Users/scripts/XPRESSyourself/XPRESStools/tests/'
-dir2 = '/Users/scripts/XPRESSyourself/XPRESStools/tests'
-truth_dir = '/Users/scripts/XPRESSyourself/XPRESStools/tests/'
+dir1 = '/Users/scripts/XPRESSyourself/XPRESSplot/tests/'
+dir2 = '/Users/scripts/XPRESSyourself/XPRESSplot/tests'
+truth_dir = '/Users/scripts/XPRESSyourself/XPRESSplot/tests/'
 
 dir1 = xp.check_directories(dir1)
 dir2 = xp.check_directories(dir2)

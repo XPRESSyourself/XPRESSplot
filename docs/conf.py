@@ -20,7 +20,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'XPRESStools'
+project = 'XPRESSplot'
 copyright = '2019, Jordan A. Berg'
 author = 'Jordan A. Berg'
 
@@ -125,7 +125,7 @@ html_show_sphinx = False
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'xpresstools-docs'
+htmlhelp_basename = 'xpressplot-docs'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -152,7 +152,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'xpresstools.tex', 'xpresstools Documentation',
+    (master_doc, 'xpressplot.tex', 'xpressplot Documentation',
      'Jordan A. Berg', 'manual'),
 ]
 
@@ -162,7 +162,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'xpresstools', 'xpresstools Documentation',
+    (master_doc, 'xpressplot', 'xpressplot Documentation',
      [author], 1)
 ]
 
@@ -173,8 +173,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'xpresstools', 'xpresstools Documentation',
-     author, 'xpresstools', 'One line description of project.',
+    (master_doc, 'xpressplot', 'xpressplot Documentation',
+     author, 'xpressplot', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -1,7 +1,7 @@
 """
-XPRESStools
+XPRESSplot
 A toolkit for navigating and analyzing gene expression datasets
-alias: xpresstools
+alias: xpressplot
 
 Copyright (C) 2019  Jordan A. Berg
 jordan <dot> berg <at> biochem <dot> utah <dot> edu
@@ -25,14 +25,14 @@ IMPORT DEPENDENCIES AND DATASETS
 import os, sys
 import pandas as pd
 import numpy as np
-import xpresstools as xp
+import xpressplot as xp
 
 __path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
 gtf = str(__path__) + 'transcripts.gtf'
 gpl_ref = str(__path__) + './GPL570.txt'
 
-#gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/transcripts.gtf'
-#gpl_ref = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/GPL570.txt'
+#gtf = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/transcripts.gtf'
+#gpl_ref = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/GPL570.txt'
 
 """
 Make test data_set

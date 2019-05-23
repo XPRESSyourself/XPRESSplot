@@ -1,7 +1,7 @@
 """
-XPRESStools
+XPRESSplot
 A toolkit for navigating and analyzing gene expression datasets
-alias: xpresstools
+alias: xpressplot
 
 Copyright (C) 2019  Jordan A. Berg
 jordan <dot> berg <at> biochem <dot> utah <dot> edu
@@ -24,23 +24,23 @@ from setuptools import setup
 import re
 
 """Get version"""
-with open('xpresstools/__init__.py', 'r') as fd:
+with open('xpressplot/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
 """Setup arguments"""
 setup(
-    name = 'XPRESStools',
+    name = 'XPRESSplot',
     version = version,
     description = 'A toolkit for navigating and analyzing gene expression datasets',
     long_description = open('README.md').read(),
     long_description_content_type='text/markdown',
     author = 'Jordan Berg',
     author_email = 'jordan.berg@biochem.utah.edu',
-    url = 'https://github.com/XPRESSyourself/XPRESStools',
-    packages = ['xpresstools'],
+    url = 'https://github.com/XPRESSyourself/XPRESSplot',
+    packages = ['xpressplot'],
     exclude= ['tests','docs'],
-    package_dir = {'xpresstools': 'xpresstools'},
+    package_dir = {'xpressplot': 'xpressplot'},
     license = 'GPL-3.0',
     zip_safe = False,
     install_requires=[

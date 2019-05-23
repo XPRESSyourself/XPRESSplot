@@ -1,7 +1,7 @@
 ####################
 Analysis
 ####################
-|The following commands rely heavily on the matplotlib (DOI:10.5281/zenodo.2577644) and seaborn (DOI:10.5281/zenodo.883859) libraries, but have been modified in many cases for ease of plotting given the formatting of XPRESStools datasets.
+|The following commands rely heavily on the matplotlib (DOI:10.5281/zenodo.2577644) and seaborn (DOI:10.5281/zenodo.883859) libraries, but have been modified in many cases for ease of plotting given the formatting of xpressplot datasets.
 
 ==============================
 Formatting Notes
@@ -24,13 +24,13 @@ Sample Color Palette
 =================================
 Differential Expression Analysis
 =================================
-| **xpresstools.diff_xpress ( input_file, sample_file, equation )**
+| **xpressplot.diff_xpress ( input_file, sample_file, equation )**
 |
 | Purpose:
 | Perform differential expression analysis on dataset using DESeq2
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired
+|   - Requires a properly formatted dataframe for xpressplot usage where samples are normalized previously if desired
 |   - Requires a properly formatted dataframe complying to DESeq2 info file (see example below)
 |   - R is installed on your machine and is in your $PATH
 |   - All input files are tab-delimited (with .txt or .tsv suffix)
@@ -123,17 +123,17 @@ Differential Expression Analysis
 ===============================
 Single-gene Analysis
 ===============================
-| **xpresstools.gene_overview ( data, info, gene_name, palette, order=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.gene_overview ( data, info, gene_name, palette, order=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create a boxplot with overlaid swarmplot for each experiment group for a particular gene
 |
 | Assumptions:
-|   - Dataframe and metadata are properly formatted for use with XPRESStools
+|   - Dataframe and metadata are properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe (Required)
-| **info**: XPRESStools formatted sample info dataframe (Required)
+| **data**: xpressplot-formatted dataframe (Required)
+| **info**: xpressplot formatted sample info dataframe (Required)
 | **gene_name**: Name of gene to plot (Required)
 | **palette**: Dictionary of matplotlib compatible colors for samples (Required)
 | **order**: List of experiment groups in order to plot (Default: None)
@@ -165,17 +165,17 @@ Single-gene Analysis
 ===============================
 Multi-gene Analysis
 ===============================
-| **xpresstools.multigene_overview ( data, info, palette=None, gene_list=None, order=None, scale=None, title=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.multigene_overview ( data, info, palette=None, gene_list=None, order=None, scale=None, title=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create violin plots of a subset of gene expressions or total gene expression by experiment group
 |
 | Assumptions:
-|   - Dataframe and metadata are properly formatted for use with XPRESStools
+|   - Dataframe and metadata are properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe (Required)
-| **info**: XPRESStools formatted sample info dataframe (Required)
+| **data**: xpressplot-formatted dataframe (Required)
+| **info**: xpressplot formatted sample info dataframe (Required)
 | **palette**: Dictionary of matplotlib compatible colors for samples (Default: None)
 | **gene_list**: List of genes to plot (default: None; plots total gene expression for experiment group)
 | **order**: List of experiment groups in order to plot (Default: None)
@@ -210,19 +210,19 @@ Multi-gene Analysis
 ===============================
 Heatmap
 ===============================
-| **xpresstools.heatmap ( data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, col_cluster=True, row_cluster=False, metric='euclidean', method='centroid', font_scale=0.8, cmap=jakes_cmap, center=0, xticklabels=True, yticklabels=True, linewidths=0, linecolor='#DCDCDC', cbar_kws=None, figsize=(16,6.5), save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.heatmap ( data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, col_cluster=True, row_cluster=False, metric='euclidean', method='centroid', font_scale=0.8, cmap=jakes_cmap, center=0, xticklabels=True, yticklabels=True, linewidths=0, linecolor='#DCDCDC', cbar_kws=None, figsize=(16,6.5), save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create clustered heatmaps for gene expression dataframe
 |
 | Assumptions:
-|   - Dataframe and metadata are properly formatted for use with XPRESStools
+|   - Dataframe and metadata are properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe (Required)
-| **info**: XPRESStools formatted sample info dataframe (Required)
+| **data**: xpressplot-formatted dataframe (Required)
+| **info**: xpressplot formatted sample info dataframe (Required)
 | **sample_palette**: Dictionary of matplotlib compatible colors for samples (Default: None)
-| **gene_info**: XPRESStools formatted metadata matrix for genes (column0) and gene groups (column1)
+| **gene_info**: xpressplot formatted metadata matrix for genes (column0) and gene groups (column1)
 | **gene_palette**: Dictionary of labels and colors for plotting, or valid seaborns clustermap col_colors option
 | **gene_list**: List of genes to plot (default: None; plots total gene expression for experiment group)
 | **col_cluster**: Cluster columns/samples (default: True)
@@ -275,17 +275,17 @@ Heatmap
 ===============================
 Scatterplot
 ===============================
-| **xpresstools.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create scatterplot with the option to include a linear least-squares regression fit of the data
 |
 | Assumptions:
-|   - Dataframe and metadata are properly formatted for use with XPRESStools
+|   - Dataframe and metadata are properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe (Required)
-| **info**: XPRESStools formatted sample info dataframe (Required)
+| **data**: xpressplot-formatted dataframe (Required)
+| **info**: xpressplot formatted sample info dataframe (Required)
 | **x**: X-axis gene or other metric (Required)
 | **y**: Y-axis gene or other metric (Required)
 | **palette**: Dictionary of matplotlib compatible colors for samples (Default: None)
@@ -339,17 +339,17 @@ Scatterplot
 ===============================
 Volcano Plot
 ===============================
-| **xpresstools.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create scatterplot with the option to include a linear least-squares regression fit of the data
 |
 | Assumptions:
-|   - Dataframe and metadata are properly formatted for use with XPRESStools
+|   - Dataframe and metadata are properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe, sample normalized (Required)
-| **info**: XPRESStools formatted sample info dataframe (Required)
+| **data**: xpressplot-formatted dataframe, sample normalized (Required)
+| **info**: xpressplot formatted sample info dataframe (Required)
 | **label_comp**: Experiment group name to act as comparison group (Required)
 | **label_base**: Experiment group name to act as base group (Required)
 | **order_legend**: List of experiment groups in order to display on legend (Default: None)
@@ -406,16 +406,16 @@ Volcano Plot
 ===============================
 Linear Regression
 ===============================
-| **xpresstools.linreg ( data, gene_name, save_file, delimiter=',' )**
+| **xpressplot.linreg ( data, gene_name, save_file, delimiter=',' )**
 |
 | Purpose:
 | Calculate r, r^2 values, and p-values for every gene against target gene for given dataset
 |
 | Assumptions:
-|   - Dataframe is properly formatted for use with XPRESStools
+|   - Dataframe is properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe, sample normalized (Required)
+| **data**: xpressplot-formatted dataframe, sample normalized (Required)
 | **gene_name**: Target gene name to run genome-wide comparisons against
 | **save_file**: Full file path, name, and extension for file output (default: None)
 | **delimiter**: Field separator for output file (default: ',')
@@ -430,17 +430,17 @@ Linear Regression
 ===============================
 Jointplot
 ===============================
-| **xpresstools.jointplot ( data, info, x, y, kind='reg', palette=None, order=None, title_pad=0, title_pos='right', grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.jointplot ( data, info, x, y, kind='reg', palette=None, order=None, title_pad=0, title_pos='right', grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create linear regression scatterplot that displays r value, confidence, and density distributions for axes
 |
 | Assumptions:
-|   - Dataframe and metadata are properly formatted for use with XPRESStools
+|   - Dataframe and metadata are properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe (Required)
-| **info**: XPRESStools formatted sample info dataframe (Required)
+| **data**: xpressplot-formatted dataframe (Required)
+| **info**: xpressplot formatted sample info dataframe (Required)
 | **x**: X-axis gene or other metric (Required)
 | **y**: Y-axis gene or other metric (Required)
 | **kind**: Type of plot to create from the seaborns jointplot function (default: 'reg'; linear regression)
@@ -485,17 +485,17 @@ Jointplot
 ===============================
 PCA (2-D, 3-D, Interactive)
 ===============================
-| **xpresstools.pca ( data, info, palette, grouping='samples', gene_list=None, gene_labels=False, _3d_pca=False, principle_components=[1,2], n_components=10, ci=2, scree_only=False, save_scree=False, size=30, order_legend=None, title=None, fig_size=(10,10), grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight', return_pca=False, plotly_login=None )**
+| **xpressplot.pca ( data, info, palette, grouping='samples', gene_list=None, gene_labels=False, _3d_pca=False, principle_components=[1,2], n_components=10, ci=2, scree_only=False, save_scree=False, size=30, order_legend=None, title=None, fig_size=(10,10), grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches='tight', return_pca=False, plotly_login=None )**
 |
 | Purpose:
 | Plot a 2-D PCA with confidence intervals or a 3-D PCA with no confidence intervals
 |
 | Assumptions:
-|   - Dataframe and metadata are properly formatted for use with XPRESStools
+|   - Dataframe and metadata are properly formatted for use with xpressplot
 |
 | Parameters:
-| **data**: XPRESStools-formatted dataframe, sample normalized (Required)
-| **info**: XPRESStools formatted sample info dataframe (Required)
+| **data**: xpressplot-formatted dataframe, sample normalized (Required)
+| **info**: xpressplot formatted sample info dataframe (Required)
 | **palette**: Dictionary of matplotlib compatible colors for samples (Default: None)
 | **grouping**: What axis of the data to perform the analysis (default: 'samples' or columns; other options: 'genes', not yet implemented)
 | **gene_list**: List of genes to perform PCA across

@@ -1,7 +1,7 @@
 """
-XPRESStools
+XPRESSplot
 A toolkit for navigating and analyzing gene expression datasets
-alias: xpresstools
+alias: xpressplot
 
 Copyright (C) 2019  Jordan A. Berg
 jordan <dot> berg <at> biochem <dot> utah <dot> edu
@@ -23,7 +23,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 IMPORT DEPENDENCIES AND DATASETS
 """
 import pandas as pd
-import xpresstools as xp
+import xpressplot as xp
 import numpy as np
 
 data_loc = './large_test.csv'
@@ -35,12 +35,12 @@ probe_loc = './GPL570.txt'
 
 """
 %matplotlib inline
-data_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/large_test.csv'
-meta_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/sample_info_test.csv'
-save_threshold = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/threshold.csv'
-linreg_file = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/linreg_results.csv'
-pca_file = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/pca_test.pdf'
-probe_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESStools/tests/GPL570.txt'
+data_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/large_test.csv'
+meta_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/sample_info_test.csv'
+save_threshold = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/threshold.csv'
+linreg_file = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/linreg_results.csv'
+pca_file = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/pca_test.pdf'
+probe_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/GPL570.txt'
 """
 
 """

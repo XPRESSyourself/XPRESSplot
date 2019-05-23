@@ -1,22 +1,22 @@
-# ![XPRESStools](https://raw.githubusercontent.com/XPRESSyourself/XPRESStools/master/docs/content/xpresstools.png)
+# ![XPRESSplot](https://raw.githubusercontent.com/XPRESSyourself/XPRESSplot/master/docs/content/xpressplot.png)
 
 
 ### A toolkit for navigating and analyzing gene expression datasets
 
-[![Build Status](https://travis-ci.org/XPRESSyourself/XPRESStools.svg?branch=master)](https://travis-ci.org/XPRESSyourself/XPRESStools)
-[![codecov.io](https://codecov.io/gh/XPRESSyourself/XPRESStools/XPRESStools.svg?branch=master)](https://codecov.io/gh/XPRESSyourself/XPRESStools)
-[![Documentation Status](https://readthedocs.org/projects/xpresstools/badge/?version=latest)](https://xpresstools.readthedocs.io/en/latest/?badge=latest)
-[![PyPi Status](https://img.shields.io/pypi/v/XPRESStools.svg)](https://pypi.org/project/XPRESStools/)
+[![Build Status](https://travis-ci.org/XPRESSyourself/XPRESSplot.svg?branch=master)](https://travis-ci.org/XPRESSyourself/XPRESSplot)
+[![codecov.io](https://codecov.io/gh/XPRESSyourself/XPRESSplot/XPRESSplot.svg?branch=master)](https://codecov.io/gh/XPRESSyourself/XPRESSplot)
+[![Documentation Status](https://readthedocs.org/projects/xpressplot/badge/?version=latest)](https://xpressplot.readthedocs.io/en/latest/?badge=latest)
+[![PyPi Status](https://img.shields.io/pypi/v/XPRESSplot.svg)](https://pypi.org/project/XPRESSplot/)
 [![DOI](https://zenodo.org/badge/170940002.svg)](https://zenodo.org/badge/latestdoi/170940002)
 
-##### Find documentation [here](https://xpresstools.readthedocs.io/en/latest/)
+##### Find documentation [here](https://xpressplot.readthedocs.io/en/latest/)
 
 -----
 
 ### Development Notes:
-<b><i>XPRESStools is still in beta production</i></b>  
+<b><i>XPRESSplot is still in beta production</i></b>  
 Interactive scatter plotting functions are not currently tested    
-XPRESStools supports Python 2.7 and >=3.5   
+XPRESSplot supports Python 2.7 and >=3.5   
 
 ### Citation:    
 ```
@@ -25,7 +25,7 @@ Berg, JA (2019). XPRESSyourself suite: Gene expression processing and analysis m
 
 ### Installation:   
 ```
-pip install xpresstools
+pip install xpressplot
 ```
 
 ### Other Requirements:
@@ -41,20 +41,20 @@ pip install xpresstools
 - If using the interactive notebook provided, Jupyter needs to be [installed](https://jupyter.org/install) if not already
 
 ### QuickStart:   
-Download the repository and modify the [interactive Jupyter notebook](https://github.com/XPRESSyourself/XPRESStools/blob/master/example_notebook.ipynb) to get started quick!   
+Download the repository and modify the [interactive Jupyter notebook](https://github.com/XPRESSyourself/XPRESSplot/blob/master/example_notebook.ipynb) to get started quick!   
 Read the instructions as you navigate through the code blocks for a guide on how to use the example code   
 Code blocks are run by selecting the block and pressing Shift + Enter   
-See [documentation](https://xpresstools.readthedocs.io/en/latest/) for more detailed instructions   
+See [documentation](https://xpressplot.readthedocs.io/en/latest/) for more detailed instructions   
 
 ### Important Notes:    
-* If working with XPRESStools within an interactive notebook (i.e. Jupyter Notebook, Atom Hydrogen, etc), you must include the following line of code after importing XPRESStools
+* If working with XPRESSplot within an interactive notebook (i.e. Jupyter Notebook, Atom Hydrogen, etc), you must include the following line of code after importing XPRESSplot
 
 ```
-import XPRESStools as xp
+import XPRESSplot as xp
 %matplotlib inline
 ```
 
-* Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see [documentation](https://xpresstools.readthedocs.io/en/latest/content/general-usage.html) for help)    
+* Assumes all dataframes are columns=samples and rows=genes (except in certain cases, see [documentation](https://xpressplot.readthedocs.io/en/latest/content/general-usage.html) for help)    
 
 ```
 >>> geo.head()
