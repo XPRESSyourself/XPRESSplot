@@ -23,6 +23,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 import sys
 import re
+from __future__ import print_function
 import pandas as pd
 import GEOparse
 
