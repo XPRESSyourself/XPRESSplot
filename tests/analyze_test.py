@@ -26,12 +26,15 @@ import pandas as pd
 import xpressplot as xp
 import numpy as np
 
-data_loc = './large_test.csv'
-meta_loc = './sample_info_test.csv'
-save_threshold = '.threshold.csv'
-linreg_file = './linreg_results.csv'
-pca_file = './pca_test.pdf'
-probe_loc = './GPL570.txt'
+import os
+__path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
+
+data_loc = str(__path__ ) + 'large_test.csv'
+meta_loc = str(__path__ ) + 'sample_info_test.csv'
+save_threshold = str(__path__ ) + 'threshold.csv'
+linreg_file = str(__path__ ) + 'linreg_results.csv'
+pca_file = str(__path__ ) + 'pca_test.pdf'
+probe_loc = str(__path__ ) + 'GPL570.txt'
 
 """
 %matplotlib inline
