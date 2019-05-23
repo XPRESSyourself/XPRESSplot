@@ -33,7 +33,7 @@ __path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
 geo = 'GSE20916'
 data_small_file = str(__path__ ) + 'small_test.csv'
 metadata_file = str(__path__ ) + 'sample_info_test.csv'
-count_dir = str(__path__ ) + '
+count_dir = str(__path__ )
 
 data_small = pd.read_csv(data_small_file, index_col=0)
 metadata = pd.read_csv(metadata_file, header=None)
