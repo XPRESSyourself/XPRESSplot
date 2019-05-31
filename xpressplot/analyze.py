@@ -42,32 +42,6 @@ from .interactive import *
 #Retrieve path for scripts used in this pipeline, appended to argument dictionary for every function
 __path__, xpressplot_arguments = os.path.split(__file__)
 
-"""Run Differential Expression analysis using DESeq2"""
-def diff_xpress(
-    input_file, sample_file, equation):
-
-    # Get output file name
-    if input_file.endswith('.txt') or input_file.endswith('.tsv'):
-        output_file = str(input_file[:-4]) + '_diffx.tsv'
-    else:
-        raise Exception('Unrecognized input_file delimiter type. Files must be tab-delimited')
-
-    if sample_file.endswith('.txt') or sample_file.endswith('.tsv'):
-        pass
-    else:
-        raise Exception('Unrecognized sample_file delimiter type. Files must be tab-delimited')
-
-    if equation.startswith('~'):
-        raise Exception('Tilde should not be included in design formula, script will automatically add this syntax.')
-
-    # Run deseq2 in R
-    os.system('rscript' \
-        + ' ' + str(__path__) + '/diffxpress.r' \
-        + ' ' + str(input_file) \
-        + ' ' + str(sample_file) \
-        + ' ' + str(output_file) \
-        + ' ' + str(equation))
-
 """Plots heatmap for prep_data formatted data"""
 def heatmap(
     data, info,

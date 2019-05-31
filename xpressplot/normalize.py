@@ -89,7 +89,7 @@ def rpm(
 
     data_c = data.copy()
     data_rpm = data_c / \
-                (data_c.sum() / 1e6)
+        (data_c.sum() / 1e6)
 
     return data_rpm
 
