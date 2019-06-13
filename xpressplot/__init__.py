@@ -29,4 +29,4 @@ from .collapser import *
 from .interactive import *
 from .utils import *
 
-__version__ = '0.0.4-beta'
+__version__ = '0.0.5-beta'
