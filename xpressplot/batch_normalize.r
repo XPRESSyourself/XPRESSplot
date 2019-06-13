@@ -3,14 +3,28 @@
 # Control batch effects for prep, chips, etc
 
 # Install dependencies
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install("sva", version = "3.8")
-BiocManager::install("bladderbatch", version = "3.8")
-BiocManager::install("limma", version = "3.8")
+if (!requireNamespace("BiocManager", quietly = TRUE)) {install.packages("BiocManager", repos = "http://cran.us.r-project.org")}
 
-source("http://bioconductor.org/biocLite.R")
-biocLite("pamr")
+if ("sva" %in% rownames(installed.packages()) == FALSE) {
+  BiocManager::install("sva",dependencies=TRUE)
+} else {
+  print("sva package already installed")
+}
+if ("bladderbatch" %in% rownames(installed.packages()) == FALSE) {
+  BiocManager::install("bladderbatch",dependencies=TRUE)
+} else {
+  print("bladderbatch package already installed")
+}
+if ("limma" %in% rownames(installed.packages()) == FALSE) {
+  BiocManager::install("limma",dependencies=TRUE)
+} else {
+  print("limma package already installed")
+}
+if ("pamr" %in% rownames(installed.packages()) == FALSE) {
+  source("http://bioconductor.org/biocLite.R"); biocLite("pamr",dependencies=TRUE)
+} else {
+  print("pamr package already installed")
+}
 
 library(sva)
 library(bladderbatch)
