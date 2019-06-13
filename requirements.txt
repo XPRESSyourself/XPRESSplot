@@ -1,9 +1,0 @@
-pandas
-numpy
-scipy
-seaborn
-plotly
-matplotlib
-scikit-learn
-GEOparse
-git-lfs

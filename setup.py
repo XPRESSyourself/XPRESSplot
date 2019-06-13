@@ -39,21 +39,10 @@ setup(
     author_email = 'jordan.berg@biochem.utah.edu',
     url = 'https://github.com/XPRESSyourself/XPRESSplot',
     packages = ['xpressplot'],
-    exclude= ['tests','docs'],
+    exclude= ['tests','docs','recipes'],
     package_dir = {'xpressplot': 'xpressplot'},
     license = 'GPL-3.0',
     zip_safe = False,
-    install_requires=[
-          'pandas',
-          'numpy',
-          'scipy',
-          'seaborn',
-          'plotly',
-          'matplotlib<3.0.0,>=2.1.1',
-          'sklearn',
-          'GEOparse',
-          'git-lfs'
-      ],
 
     classifiers=[
         'Development Status :: 4 - Beta',

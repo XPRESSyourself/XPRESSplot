@@ -25,7 +25,6 @@ import os
 import sys
 import re
 import pandas as pd
-import GEOparse
 
 """IMPORT INTERNAL DEPENDENCIES"""
 from .normalize import clean_df
@@ -52,6 +51,8 @@ def get_df(
     return data
 
 """Get GEO dataframe and metadata"""
+"""DEPRECATED
+import GEOparse
 def get_geo(
     geo_id,
     output_info=False, output_path="./"):
@@ -97,6 +98,8 @@ def get_geo(
     metadata[1] = metadata[1].apply(lambda x: x[0:(re.search("\d", x).start()) - 1])
 
     return data, metadata
+"""
+
 
 """Get user file with pertinent sample information"""
 def get_info(
