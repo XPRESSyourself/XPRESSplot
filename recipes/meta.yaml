@@ -6,8 +6,9 @@ source:
   fn: XPRESSplot-v0.0.5b0.tar.gz
   url: https://github.com/XPRESSyourself/XPRESSplot/archive/XPRESSplot-v0.0.5b0.tar.gz
 
+
 build:
-  number: 0
+  number: 1
 
 requirements:
   host:
@@ -24,3 +25,8 @@ requirements:
     - matplotlib
     - multiqc
     - scikit-learn
+
+about:
+  home: https://github.com/XPRESSyourself/XPRESSplot
+  license: GPL-3.0
+  summary: 'A toolkit for navigating and analyzing gene expression datasets.'
