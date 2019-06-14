@@ -20,10 +20,10 @@ install:
 script:
 - curl -L https://sourceforge.net/projects/xpressplot/files/GPL570.txt/download -o tests/GPL570.txt
 - coverage run tests/fetch_test.py
-- coverage run tests/format_test.py
-- coverage run tests/normalize_test.py
-- coverage run tests/analyze_test.py
-- coverage run tests/utils_test.py
+- coverage run -a tests/format_test.py
+- coverage run -a tests/normalize_test.py
+- coverage run -a tests/analyze_test.py
+- coverage run -a tests/utils_test.py
 
 after_success:
 - codecov
