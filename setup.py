@@ -28,6 +28,9 @@ with open('xpressplot/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
 """Setup arguments"""
 setup(
     name = 'XPRESSplot',
@@ -43,6 +46,8 @@ setup(
     package_dir = {'xpressplot': 'xpressplot'},
     license = 'GPL-3.0',
     zip_safe = False,
+
+    install_requires = requirements,
 
     classifiers=[
         'Development Status :: 4 - Beta',
