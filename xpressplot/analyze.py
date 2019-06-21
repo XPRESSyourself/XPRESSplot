@@ -385,18 +385,32 @@ def linreg(
 
 """Plot volcano plot for dataframe, can highlight subset of genes"""
 def volcano(
-    data, info, label_comp, label_base,
-    order_legend=None, title=None,
-    alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,
+    data,
+    info,
+    label_comp,
+    label_base,
+    order_legend=None,
+    title=None,
+    alpha=1,
+    highlight_points=None,
+    highlight_color='DarkRed',
+    highlight_names=None,
     alpha_highlights=1,
     size=30,
-    y_threshold=None, x_threshold=None, threshold_color='b',
-    save_threshold_hits=None, save_threshold_hits_delimiter=',',
+    y_threshold=None,
+    x_threshold=None,
+    threshold_color='b',
+    save_threshold_hits=None,
+    save_threshold_hits_delimiter=',',
     label_points=None,
-    grid=False, whitegrid=False, figsize=(10,10),
+    grid=False,
+    whitegrid=False,
+    figsize=(10,10),
     return_data=False,
     plotly_login=False,
-    save_fig=None, dpi=600, bbox_inches='tight'):
+    save_fig=None,
+    dpi=600,
+    bbox_inches='tight'):
 
     reset_plot(whitegrid)
 
