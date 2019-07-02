@@ -28,7 +28,6 @@ import numpy as np
 from scipy.stats import linregress
 from sklearn.decomposition import PCA
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(font='arial')

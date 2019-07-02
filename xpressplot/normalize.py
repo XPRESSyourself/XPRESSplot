@@ -27,7 +27,6 @@ import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 """IMPORT INTERNAL DEPENDENCIES"""
