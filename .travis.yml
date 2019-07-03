@@ -1,15 +1,9 @@
 language: python
-
-env:
-  - PYTHON=2.7 BACKEND=agg
-  - PYTHON=2.7 BACKEND=agg
-  - PYTHON=2.7 BACKEND=qtagg
-  - PYTHON=3.5 BACKEND=agg
-  - PYTHON=3.6 BACKEND=agg
-  - PYTHON=3.7 BACKEND=agg
-  - PYTHON=3.7 BACKEND=qtagg
-  - PYTHON=3.7 BACKEND=agg
-
+python:
+  - 2.7
+  - 3.5
+  - 3.6
+  - 3.7
 dist: xenial
 
 before_install:
@@ -23,12 +17,7 @@ install:
 
 # Code for MATPLOTLIB backend from Seaborn (https://github.com/mwaskom/seaborn)
 before_script:
-  - cp tests/mpl_${BACKEND} matplotlibrc
-  - if [ $BACKEND == "qtagg" ]; then
-    export DISPLAY=:99.0;
-    sh -e /etc/init.d/xvfb start;
-    sleep 3;
-    fi
+  - cp tests/mpl_agg matplotlibrc
 
 script:
 - curl -L https://sourceforge.net/projects/xpressplot/files/GPL570.txt/download -o tests/GPL570.txt
