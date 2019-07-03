@@ -237,16 +237,51 @@ Scatterplot
 .. image:: scatter3.png
   :width: 550px
 
+
+===============================
+RNA Volcano Plot
+===============================
+| **xpressplot.rna_volcano ( file, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, interactive=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+|
+| Purpose:
+| Create volcano plot with non-normally distributed data (RNA-seq). See :data:`Volcano Plot` for examples.
+|
+| Assumptions:
+|   - file is a DESeq2-output table
+|   - Note: Many of the options will be non-functional when using interactive mode
+|
+| **file**: Path and file name to DESeq2-output table
+| **order_legend**: List of experiment groups in order to display on legend (Default: None)
+| **title**: Plot title (default: None)
+| **alpha**: Opacity percentage for scatter plot
+| **highlight_points**: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)
+| **highlight_color**: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)
+| **highlight_names**: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color). Must use if highlighting points.
+| **alpha_highlights**: Opacity percentage for highlighted elements of scatter plot
+| **size**: Marker size
+| **y_threshold**: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted
+| **x_threshold**: Include a x-axis threshold dotted line (default: None). If a list is provided, each will be plotted
+| **threshold_color**: Threshold line color (default: 'b'; black)
+| **label_points**: A dictionary where keys are labels and values are a two-element list as [x-coordinate, y-coordinate]
+| **grid**: Set to True to add gridlines (default: False)
+| **whitegrid**: Set to True to create white background in figure (default: Grey-scale)
+| **figsize**: Set figure size dimensions
+| **interactive**: Set as True to create interactive scatter plot (if using this option and saving the output, be sure to include a :data:`.html` suffix in the file name)
+| **save_fig**: Full file path, name, and extension for file output (default: None)
+| **dpi**: Set DPI for figure output (default: 600)
+| **bbox_inches**: Matplotlib bbox_inches argument (default: 'tight'; useful for saving images and preventing text cut-off)
+
 ===============================
 Volcano Plot
 ===============================
-| **xpressplot.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', save_threshold_hits=None, save_threshold_hits_delimiter=',', label_points=None, grid=False, whitegrid=False, return_data=False, figsize=(10,10), interactive=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
-| Create scatterplot with the option to include a linear least-squares regression fit of the data
+| Create volcano plot with normally distributed data
 |
 | Assumptions:
 |   - Dataframe and metadata are properly formatted for use with xpressplot
+|   - Note: Many of the options will be non-functional when using interactive mode
 |
 | Parameters:
 | **data**: xpressplot-formatted dataframe, sample normalized (Required)
@@ -258,7 +293,7 @@ Volcano Plot
 | **alpha**: Opacity percentage for scatter plot
 | **highlight_points**: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)
 | **highlight_color**: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)
-| **highlight_names**: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color)
+| **highlight_names**: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color). Must use if highlighting points.
 | **alpha_highlights**: Opacity percentage for highlighted elements of scatter plot
 | **size**: Marker size
 | **y_threshold**: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted
@@ -270,7 +305,8 @@ Volcano Plot
 | **grid**: Set to True to add gridlines (default: False)
 | **whitegrid**: Set to True to create white background in figure (default: Grey-scale)
 | **return_data**: Set as True to return dataframe with log2 Fold Changes and -log10 P-values added
-| **plotly_login**: Include plotly login username and password to create an interactive plot, ex: ['username','password']
+| **figsize**: Set figure size dimensions
+| **interactive**: Set as True to create interactive scatter plot (if using this option and saving the output, be sure to include a :data:`.html` suffix in the file name)
 | **save_fig**: Full file path, name, and extension for file output (default: None)
 | **dpi**: Set DPI for figure output (default: 600)
 | **bbox_inches**: Matplotlib bbox_inches argument (default: 'tight'; useful for saving images and preventing text cut-off)
