@@ -28,4 +28,4 @@ from .utils_analyze import *
 from .collapser import *
 from .utils import *
 
-__version__ = '0.0.7-beta'
+__version__ = '0.0.8-beta'

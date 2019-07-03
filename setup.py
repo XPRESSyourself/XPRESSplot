@@ -31,9 +31,6 @@ with open(str(__path__) + 'xpressplot/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
-with open(str(__path__) + 'requirements.txt') as f:
-    requirements = f.read().splitlines()
-
 """Setup arguments"""
 setup(
     name = 'XPRESSplot',
@@ -50,7 +47,17 @@ setup(
     license = 'GPL-3.0',
     zip_safe = False,
 
-    install_requires = requirements,
+    install_requires = [
+        'pandas',
+        'numpy',
+        'scipy',
+        'scikit-learn',
+        'matplotlib<3.0.0,>=2.1.1',
+        'seaborn',
+        'plotly',
+        'plotly_express'
+
+    ],
 
     classifiers=[
         'Development Status :: 4 - Beta',
