@@ -26,7 +26,6 @@ from .collapser import *
 from .analyze import *
 from .utils_analyze import *
 from .collapser import *
-from .interactive import *
 from .utils import *
 
 __version__ = '0.0.5-beta'

@@ -32,10 +32,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(font='arial')
 jakes_cmap = sns.diverging_palette(212, 61, s=99, l=77, sep=1, n=16, center='dark') #Custom aesthetics
+import plotly
+import plotly.offline as py
+import plotly_express as px
 
 """IMPORT INTERNAL DEPENDENCIES"""
 from .utils_analyze import *
-from .interactive import *
 
 """INITIALIZATION PARAMETERS"""
 #Retrieve path for scripts used in this pipeline, appended to argument dictionary for every function
@@ -382,6 +384,135 @@ def linreg(
     # Save linear modeling metrics to .csv
     df_lm_interest.to_csv(str(save_file), sep=delimiter)
 
+"""
+Provide DESeq2 output
+@param data: DESeq2 table
+@param highlight_names: list of gene names to highlight
+@param label_points: list of gene names to label
+
+"""
+fold_change = 'log2FoldChange'
+fdr = 'padj'
+highlight_position = 6
+
+def rna_volcano(
+    file,
+    title=None,
+    order_legend=None,
+    alpha=1,
+    highlight_points=None,
+    highlight_color='DarkRed',
+    highlight_names=None,
+    alpha_highlights=1,
+    size=30,
+    y_threshold=None,
+    x_threshold=None,
+    threshold_color='b',
+    label_points=False,
+    grid=False,
+    whitegrid=False,
+    figsize=(10,10),
+    interactive=False,
+    save_fig=None,
+    dpi=600,
+    bbox_inches='tight'):
+
+    reset_plot(whitegrid)
+
+    data = pd.read_csv(
+        str(file),
+        sep = '\t',
+        index_col=0)
+
+    data = data.fillna(1)
+    data[fdr] = np.log10(data[fdr]) * -1
+
+    # Plot all genes
+    if interactive == False:
+        data = data.rename(columns = {fold_change:'log$_2$(Fold Change)', fdr:'-log$_1$$_0$(FDR)'})
+        plt.figure(figsize=figsize)
+        ax = sns.scatterplot(
+            data['log$_2$(Fold Change)'],
+            data['-log$_1$$_0$(FDR)'],
+            linewidth=0,
+            palette = highlight_color,
+            alpha = alpha,
+            s = size,
+            color = 'black')
+
+        # Plot thresholds
+        y_threshold = make_threshold_list(y_threshold)
+        if type(y_threshold) != list and y_threshold != None or type(y_threshold) == list and any(x is None for x in y_threshold) == False:
+            add_y_threshold(y_threshold, threshold_color, ax)
+
+        x_threshold = make_threshold_list(x_threshold)
+        if type(x_threshold) != list and x_threshold != None or type(x_threshold) == list and any(x is None for x in x_threshold) == False:
+            add_x_threshold(x_threshold, threshold_color, ax)
+
+        # Plot selected genes if user-specified
+        if highlight_points != None:
+            ax = highlight_markers(data, 'log$_2$(Fold Change)', '-log$_1$$_0$(FDR)', highlight_points, highlight_color, highlight_names, alpha_highlights, ax)
+
+        # Label points
+        if label_points != None:
+            if type(label_points) != list:
+                label_points = [label_points]
+            data_label = data.loc[label_points]
+            for index, row in data_label.iterrows():
+                ax.text(row[1] + 0.2, row[5] - 0.3, str(index), horizontalalignment='left', size='large', color='black', weight='semibold')
+
+        # Put the legend out of the figure
+        ax = make_legend(ax, order_legend, highlight_color, highlight_names)
+
+        plt.xlabel('log$_2$(Fold Change)')
+        plt.ylabel('-log$_1$$_0$(FDR)')
+
+        if title != None:
+            plt.title(str(title))
+
+        if grid == False:
+            plt.grid(False)
+
+        if save_fig != None:
+            plt.savefig(str(save_fig), dpi=dpi, bbox_inches=bbox_inches)
+
+        plt.show()
+
+    else:
+        # Get genes column
+        data['genes'] = data.index.tolist()
+
+        # Make labels
+        data['label'] = 'All'
+        if all(isinstance(z, list) for z in highlight_points):
+            p = 0
+            for h in highlight_points:
+                data.loc[h, 'label'] = highlight_names[p]
+                p += 1
+
+        else:
+            data.loc[highlight_points, 'label'] = highlight_names[0]
+
+        sc = px.scatter(
+            data,
+            x=fold_change,
+            y=fdr,
+            color='label',
+            hover_name='genes',
+            log_x=False,
+            log_y=False,
+            opacity=alpha,
+            width=1400,
+            height=1000,
+            title=str(title))
+
+        if save_fig != None:
+            py.offline.plot(sc, filename=str(save_fig))
+
+
+
+
+
 """Plot volcano plot for dataframe, can highlight subset of genes"""
 def volcano(
     data,
@@ -406,7 +537,7 @@ def volcano(
     whitegrid=False,
     figsize=(10,10),
     return_data=False,
-    plotly_login=False,
+    interactive=False,
     save_fig=None,
     dpi=600,
     bbox_inches='tight'):
@@ -432,7 +563,7 @@ def volcano(
     data_c = parallelize(calculate_p, data_c, label_comp, label_base)
 
     # Plot all genes
-    if plotly_login == False:
+    if interactive == False:
         scatter(
             data_c,
             info_c,
@@ -460,16 +591,35 @@ def volcano(
             figsize = figsize)
 
     else:
-        data_c = data_c.rename(columns = {'log$_2$(Fold Change)':'log2 Fold Change', '-log$_1$$_0$(P-Value)':'-log10 P-Value'})
-        interactive_scatter(
+        # Get genes column
+        data_c['genes'] = data_c.index.tolist()
+
+        # Make labels
+        data_c['label'] = 'All'
+        if all(isinstance(z, list) for z in highlight_points):
+            p = 0
+            for h in highlight_points:
+                data_c.loc[h, 'label'] = highlight_names[p]
+                p += 1
+
+        else:
+            data_c.loc[highlight_points, 'label'] = highlight_names
+
+        sc = px.scatter(
             data_c,
-            info_c,
-            x = 'log2 Fold Change',
-            y = '-log10 P-Value',
-            plotly_login = plotly_login,
-            file_name = save_fig,
-            highlight = 'sample',
-            palette = None)
+            x = 'log$_2$(Fold Change)',
+            y = '-log$_1$$_0$(P-Value)',
+            color='label',
+            hover_name='genes',
+            log_x=False,
+            log_y=False,
+            opacity=alpha,
+            width=1400,
+            height=1000,
+            title=str(title))
+
+        if save_fig != None:
+            py.offline.plot(sc, filename=str(save_fig))
 
     # Output threshold hits outer bounds, specific to volcano plot
     if save_threshold_hits != None:
