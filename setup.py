@@ -22,13 +22,16 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """IMPORT DEPENDENCIES"""
 from setuptools import setup
 import re
+import os
+
+__path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
 
 """Get version"""
-with open('xpressplot/__init__.py', 'r') as fd:
+with open(str(__path__) + 'xpressplot/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
-with open('requirements.txt') as f:
+with open(str(__path__) + 'requirements.txt') as f:
     requirements = f.read().splitlines()
 
 """Setup arguments"""
