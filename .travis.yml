@@ -17,6 +17,15 @@ install:
 - pip install .
 - python setup.py install
 
+# Code for MATPLOTLIB backend from Seaborn (https://github.com/mwaskom/seaborn)
+before_script:
+  - cp tests/mpl_${BACKEND} matplotlibrc
+  - if [ $BACKEND == "qtagg" ]; then
+    export DISPLAY=:99.0;
+    sh -e /etc/init.d/xvfb start;
+    sleep 3;
+    fi
+
 script:
 - curl -L https://sourceforge.net/projects/xpressplot/files/GPL570.txt/download -o tests/GPL570.txt
 - coverage run tests/fetch_test.py
