@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+__version__ = '0.0.8-beta'
+
 from .fetch import *
 from .format import *
 from .normalize import *
@@ -27,5 +29,3 @@ from .analyze import *
 from .utils_analyze import *
 from .collapser import *
 from .utils import *
-
-__version__ = '0.0.8-beta'
