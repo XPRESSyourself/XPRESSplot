@@ -363,8 +363,6 @@ def parallelize(
         func = partial(calculate_fc, label_comp=args[1], label_base=args[2])
     elif func == calculate_p:
         func = partial(calculate_p, label_comp=args[1], label_base=args[2])
-    elif func == count_threshold_util:
-        func = partial(count_threshold_util, minimum=args[1], maximum=args[2])
     else:
         return
 
@@ -414,21 +412,6 @@ def calculate_p(
     data = data.drop(labels=drop_index, axis=0)
 
     return data
-
-"""Remove genes from dataframe not meeting count criteria"""
-def count_threshold_util(
-    data,
-    minimum=None, maximum=None):
-
-    if minimum != None:
-        data = data[data.min(axis=0) > minimum]
-
-        return data
-
-    if maximum != None:
-        data = data[data.max(axis=0) > maximum]
-
-        return data
 
 """Format threshold as list"""
 def make_threshold_list(threshold):

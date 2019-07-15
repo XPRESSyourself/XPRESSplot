@@ -76,19 +76,89 @@ rpm_truth = rpm_truth.round(decimals=4)
 assert data_rpm.equals(rpm_truth), 'rpm() failed'
 
 """
-r_fpkm()
+Other Normalization Tests
 """
-data_rpkm = create_data()
-data_rpkm = xp.r_fpkm(data_rpkm, gtf, gene_name_location=0)
-rpkm_truth = pd.DataFrame(columns=['fGSM523242','fGSM523243','fGSM523244','fGSM523245','fGSM523246'], index=['ENSG00000227232','ENSG00000240361','ENSG00000238009','ENSG00000241860','ENSG00000187634'], dtype='float')
-rpkm_truth.loc['ENSG00000227232'] = pd.Series({'fGSM523242':float(15006.343591), 'fGSM523243':float(21978.988087), 'fGSM523244':float(237.183325), 'fGSM523245':float(15581.645733), 'fGSM523246':float(15294.656659)})
-rpkm_truth.loc['ENSG00000240361'] = pd.Series({'fGSM523242':float(18516.363175), 'fGSM523243':float(0.000000), 'fGSM523244':float(3863.126130), 'fGSM523245':float(31833.813346), 'fGSM523246':float(1581.662834)})
-rpkm_truth.loc['ENSG00000238009'] = pd.Series({'fGSM523242':float(1552.298488), 'fGSM523243':float(8901.598676), 'fGSM523244':float(6882.042759), 'fGSM523245':float(5059.508906), 'fGSM523246':float(4176.803149)})
-rpkm_truth.loc['ENSG00000241860'] = pd.Series({'fGSM523242':float(10220.899184), 'fGSM523243':float(1221.070230), 'fGSM523244':float(10328.898793), 'fGSM523245':float(3381.193234), 'fGSM523246':float(13527.983509)})
-rpkm_truth.loc['ENSG00000187634'] = pd.Series({'fGSM523242':float(12188.260201), 'fGSM523243':float(11215.727404), 'fGSM523244':float(16023.592301), 'fGSM523245':float(10744.299486), 'fGSM523246':float(6489.159858)})
-data_rpkm = data_rpkm.round(decimals=4)
-rpkm_truth = rpkm_truth.round(decimals=4)
-assert data_rpkm.equals(rpkm_truth), 'r_fpkm() failed'
+from xpressplot.normalize import rpm, rpk
+
+# Covers all normalization methods
+# Edge cases covered:
+# - Row with 0s
+# - Column with 0s
+# - Missing gene in data
+# - Gene in dictionary not used by normalization method
+
+length_dict = {
+    'MPC2':2223, # -> 2.223
+    'SLC1A1':3698, # -> 3.698
+    'ATF4':2019 # -> 2.019
+}
+
+df = pd.DataFrame()
+df['sample1'] = [100000,222300,605700,0] # -> .928000
+df['sample2'] = [150000,444600,201900,0] # -> .796500
+df['sample3'] = [0,0,0,0] # -> 0
+df.index = ['FAKEGENE','MPC2','ATF4','SLC1A1']
+
+# Test RPK
+rpk_df = rpk(
+    df,
+    length_dict)
+
+rpk_truth = pd.DataFrame()
+rpk_truth['sample1'] = [100000.0,300000.0,0.0]
+rpk_truth['sample2'] = [200000.0,100000.0,0.0]
+rpk_truth['sample3'] = [0.0,0.0,0.0]
+rpk_truth.index = ['MPC2','ATF4','SLC1A1']
+rpk_df = rpk_df.round(decimals=4)
+rpk_truth = rpk_truth.round(decimals=4)
+
+assert rpk_df.loc[['MPC2','ATF4','SLC1A1']].equals(rpk_truth.loc[['MPC2','ATF4','SLC1A1']]), 'RPK failed'
+
+# Test RPM
+rpm_df = rpm(df)
+
+rpm_truth = pd.DataFrame()
+rpm_truth['sample1'] = [107758.620690,239547.413793,652693.965517,0.000000]
+rpm_truth['sample2'] = [188323.917137,558192.090395,253483.992467,0.000000]
+rpm_truth['sample3'] = [0.0,0.0,0.0,0.0]
+rpm_truth.index = ['FAKEGENE','MPC2','ATF4','SLC1A1']
+rpm_df = rpm_df.round(decimals=4)
+rpm_truth = rpm_truth.round(decimals=4)
+
+assert rpm_df.equals(rpm_truth), 'RPM failed'
+
+# Test RPKM/FPKM
+rpm_rpm = rpm(df)
+r_fpkm = rpk(
+    rpm_rpm,
+    length_dict)
+
+r_fpkm_truth = pd.DataFrame()
+r_fpkm_truth['sample1'] = [107758.6207,323275.8621,0.0000]
+r_fpkm_truth['sample2'] = [251098.5562,125549.2781,0.0000]
+r_fpkm_truth['sample3'] = [0.0,0.0,0.0]
+r_fpkm_truth.index = ['MPC2','ATF4','SLC1A1']
+r_fpkm = r_fpkm.round(decimals=4)
+r_fpkm_truth = r_fpkm_truth.round(decimals=4)
+
+assert r_fpkm.loc[['MPC2','ATF4','SLC1A1']].equals(r_fpkm_truth.loc[['MPC2','ATF4','SLC1A1']]), 'RPKM/FPKM failed'
+
+# Test TPM
+tpm_rpk = rpk(
+    df,
+    length_dict)
+tpm_df = rpm(tpm_rpk)
+
+tpm_truth = pd.DataFrame()
+tpm_truth['sample1'] = [250000.0,750000.0,0.0]
+tpm_truth['sample2'] = [666666.666667,333333.333333,0.0]
+tpm_truth['sample3'] = [0.0,0.0,0.0]
+tpm_truth.index = ['MPC2','ATF4','SLC1A1']
+tpm_df = tpm_df.round(decimals=4)
+tpm_truth = tpm_truth.round(decimals=4)
+
+assert tpm_df.loc[['MPC2','ATF4','SLC1A1']].equals(tpm_truth.loc[['MPC2','ATF4','SLC1A1']]), 'TPM failed'
+
 
 
 """

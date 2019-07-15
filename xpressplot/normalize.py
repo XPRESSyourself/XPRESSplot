@@ -29,56 +29,95 @@ from sklearn import preprocessing
 import matplotlib
 import matplotlib.pyplot as plt
 
-"""IMPORT INTERNAL DEPENDENCIES"""
-from .utils_analyze import parallelize, count_threshold_util
-
 """INITIALIZATION PARAMETERS"""
 # Retrieve path for scripts used in this pipeline, appended to argument dictionary for every function
 __path__, xpressplot_arguments = os.path.split(__file__)
+gtf_type_column = 2
+gtf_leftCoordinate_column = 3
+gtf_rightCoordinate_column = 4
+gtf_annotation_column = 8
+gtf_transcript_column = 9
+gtf_gene_id_column = 10
+gtf_gene_name_column = 11
+id_search = r'transcript_id \"(.*?)\"; '
+gene_id_search = r'gene_id \"(.*?)\"; '
+gene_name_search = r'gene_name \"(.*?)\"; '
 
 """Create gene dictionary"""
+# Provide Longest GTF to get longest canonical record
 def gene_length_dictionary(
     gtf,
-    gene_name_prefix='gene_id \"',
-    gene_name_location=0,
+    feature_type='exon', # or CDS
+    identifier='gene_name', # or gene_id or transcript_id
     sep='\t'):
+
+    if not str(gtf).endswith('.gtf'):
+        print(str(gtf) + ' does not appear to be a GTF file')
+
+    if not str(feature_type).lower() in ['cds', 'exon']:
+        print('Must provide CDS or exon as feature_type')
 
     # Process gtf data for gene_name and gene_length
     gtf = pd.read_csv(
         str(gtf),
-        sep = sep,
+        sep = '\t',
         header = None,
         comment = '#',
         low_memory = False)
 
-    # Parse out relevant information
-    gtf_genes = gtf.loc[gtf[2] == 'gene']
-    gtf_genes['gene_name'] = gtf[8].str.split(';').str[gene_name_location]
-    gtf_genes['gene_name'] = gtf_genes['gene_name'].map(lambda x: x.lstrip(gene_name_prefix).rstrip('\"').rstrip(' '))
-    gtf_genes['length'] = abs((gtf[4]) - (gtf[3]))
+    # Get relevant metadata
+    gtf = gtf[(gtf[gtf_type_column] == feature_type)]
+    gtf[gtf_transcript_column] = gtf[gtf_annotation_column].str.extract(id_search)
+    gtf[gtf_gene_id_column] = gtf[gtf_annotation_column].str.extract(gene_id_search)
+    gtf[gtf_gene_name_column] = gtf[gtf_annotation_column].str.extract(gene_name_search)
+    gtf['length'] = abs(gtf[gtf_rightCoordinate_column] - gtf[gtf_leftCoordinate_column]) + 1
 
-    # Create dictionary
-    length_df = gtf_genes[['gene_name','length']].copy()
-    length_df = length_df.set_index('gene_name')
-    del length_df.index.name
-    length_df = length_df[~length_df.index.duplicated()]
-    length_df.length = length_df.length / 1e3
+    # Return a transcript id mapping dictionary for isoform normalization
+    if identifier == 'transcript_id':
+        gtf = gtf[[gtf_transcript_column, 'length']]
+        gtf.columns = ['transcript', 'length']
+        gtf = gtf.dropna()
+        length_dict = pd.Series(gtf['length'].values,index=gtf['transcript']).to_dict()
+        return length_dict
 
-    return length_df
+    else:
+        if identifier == 'gene_id':
+            col = gtf_gene_id_column
+        else:
+            col = gtf_gene_name_column
+
+        gtf = gtf[[col, gtf_transcript_column, 'length']]
+        gtf.columns = ['gene', 'transcript', 'length']
+
+        # Make transcript gene mapping dictionary
+        ref = gtf[['transcript', 'gene']]
+        reference = pd.Series(ref['gene'].values,index=ref['transcript']).to_dict()
+
+        # Group by transcript ID and get feature length sum
+        records = gtf[['transcript', 'length']]
+        records = records.sort_values('transcript')
+        records = records.groupby('transcript').sum()
+        records = records.reset_index()
+
+        # Map exon space to each bam record based on its transcript ID
+        records['gene'] = records['transcript'].map(reference)
+
+        # Get longest transcript based on max exon or CDS space size along (not Ensembl canonical)
+        records = records.sort_values('gene')
+        records = records.groupby('gene').max()
+        records = records.reset_index()
+
+        length_dict = pd.Series(records['length'].values,index=records['gene']).to_dict()
+        return length_dict
 
 """Perform gene kilobase normalization"""
 def rpk(
     data,
-    length_df):
+    length_dict):
 
-    data_c = data.copy()
-
-    # Only accept genes in both length_df and data
-    length_df = length_df[length_df.index.isin(data_c.index.values.tolist())]
-
-    # Calculate
-    data_rpk = data_c.div(length_df.length, axis=0)
-    data_rpk = data_rpk.dropna(axis=0)
+    data_rpk = data.div(data.index.map(length_dict) / 1000, axis = 0)
+    data_rpk = data_rpk.loc[list(length_dict.keys())]
+    data_rpk = data_rpk.fillna(0)
 
     return data_rpk
 
@@ -86,53 +125,81 @@ def rpk(
 def rpm(
     data):
 
-    data_c = data.copy()
-    data_rpm = data_c / \
-        (data_c.sum() / 1e6)
+    data_rpm = data / \
+        (data.sum() / 1e6)
+    data_rpm = data_rpm.fillna(0)
 
     return data_rpm
-
-"""Perform transcripts per million normalization on RNAseq data"""
-def tpm(
-    data,
-    gtf,
-    gene_name_prefix='gene_id \"',
-    gene_name_location=0,
-    sep='\t'):
-
-    length_df = gene_length_dictionary(
-        gtf,
-        sep = sep,
-        gene_name_prefix = gene_name_prefix,
-        gene_name_location = gene_name_location)
-
-    data_rpk = rpk(
-        data,
-        length_df)
-    data_tpm = rpm(data_rpk)
-
-    return data_tpm
 
 """Perform reads/fragments per kilobase million sample normalization on RNAseq data"""
 def r_fpkm(
     data,
     gtf,
-    gene_name_prefix='gene_id \"',
-    gene_name_location=0,
+    feature_type='exon', # other option -> CDS
+    identifier='gene_name', # other options -> gene_id, transcript_id
     sep='\t'):
 
-    length_df = gene_length_dictionary(
+    length_dict = gene_length_dictionary(
         gtf,
-        sep = sep,
-        gene_name_prefix = gene_name_prefix,
-        gene_name_location = gene_name_location)
+        feature_type = feature_type,
+        identifier = identifier,
+        sep = sep)
 
     data_rpm = rpm(data)
     data_rpkm = rpk(
         data_rpm,
-        length_df)
+        length_dict)
 
     return data_rpkm
+
+def rpkm(
+    data,
+    gtf,
+    feature_type='exon', # other option -> CDS
+    identifier='gene_name', # other options -> gene_id, transcript_id
+    sep='\t'):
+
+    r_fpkm(
+        data,
+        gtf,
+        feature_type = feature_type,
+        identifier = identifier,
+        sep = sep)
+
+def fpkm(
+    data,
+    gtf,
+    feature_type='exon', # other option -> CDS
+    identifier='gene_name', # other options -> gene_id, transcript_id
+    sep='\t'):
+
+    r_fpkm(
+        data,
+        gtf,
+        feature_type = feature_type,
+        identifier = identifier,
+        sep = sep)
+
+"""Perform transcripts per million normalization on RNAseq data"""
+def tpm(
+    data,
+    gtf,
+    feature_type='exon', # other option -> CDS
+    identifier='gene_name', # other options -> gene_id, transcript_id
+    sep='\t'):
+
+    length_dict = gene_length_dictionary(
+        gtf,
+        feature_type = feature_type,
+        identifier = identifier,
+        sep = sep)
+
+    data_rpk = rpk(
+        data,
+        length_dict)
+    data_tpm = rpm(data_rpk)
+
+    return data_tpm
 
 """Normalize out batch effects from RNAseq data"""
 def batch_normalize(
@@ -179,14 +246,17 @@ def threshold(
     minimum=None,
     maximum=None):
 
-    data_c = data.copy()
-    data_c = parallelize(
-        count_threshold_util,
-        data_c,
-        minimum,
-        maximum)
+    if minimum != None:
+        data = data[data.min(axis=0) > minimum]
 
-    return data_c
+        return data
+
+    if maximum != None:
+        data = data[data.max(axis=0) > maximum]
+
+        return data
+
+    return data
 
 """Prepare dataframes for analysis plotting functions found within analyze.py"""
 def prep_data(
