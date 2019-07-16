@@ -57,7 +57,7 @@ def create_test():
 """
 Get dataframe
 """
-df = xp.get_df(data_small_file)
+df = xp.get_df(data_small_file, delimiter=',')
 assert df.equals(data_small), 'get_df() failed'
 
 """
