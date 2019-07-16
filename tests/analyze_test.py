@@ -28,6 +28,7 @@ import numpy as np
 
 import os
 __path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
+#__path__ = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/'
 
 data_loc = str(__path__ ) + 'large_test.csv'
 meta_loc = str(__path__ ) + 'sample_info_test.csv'
@@ -50,7 +51,7 @@ probe_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/GPL570.txt'
 Get test data
 """
 geo = xp.get_df(data_loc)
-meta = xp.get_info(meta_loc)
+meta = xp.get_info(meta_loc, delimiter=',')
 
 meta[1] = meta[1].str.capitalize() #Make sample types look nice
 meta = meta.replace('Normal_colon', 'Normal')
