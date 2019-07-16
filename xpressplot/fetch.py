@@ -33,7 +33,7 @@ from .utils import check_directories
 """Get dataframe from user file"""
 def get_df(
     file_name,
-    delimiter=",", low_memory=False, gene_axis='row'):
+    delimiter="\t", low_memory=False, gene_axis='row'):
 
     # Read in file
     data = pd.read_csv(str(file_name), sep=delimiter, index_col=0, header=0, low_memory=low_memory)

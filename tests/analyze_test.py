@@ -50,7 +50,7 @@ probe_loc = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/GPL570.txt'
 """
 Get test data
 """
-geo = xp.get_df(data_loc)
+geo = xp.get_df(data_loc, delimiter=',')
 meta = xp.get_info(meta_loc, delimiter=',')
 
 meta[1] = meta[1].str.capitalize() #Make sample types look nice
