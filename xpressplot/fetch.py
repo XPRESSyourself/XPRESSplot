@@ -104,7 +104,7 @@ def get_geo(
 """Get user file with pertinent sample information"""
 def get_info(
     file_name,
-    delimiter=",", axis="col",
+    delimiter="\t", axis="col",
     sample_ids=0, labels=1):
 
     # Read in file
