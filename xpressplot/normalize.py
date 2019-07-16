@@ -116,7 +116,11 @@ def rpk(
     length_dict):
 
     data_rpk = data.div(data.index.map(length_dict) / 1000, axis = 0)
-    data_rpk = data_rpk.loc[list(length_dict.keys())]
+
+    data_rpk['index'] = data_rpk.index
+    data_rpk = data_rpk.drop_duplicates(subset='index', keep='first')
+    data_rpk = data_rpk.reindex(list(length_dict.keys()), axis=0)
+    data_rpk = data_rpk.drop('index', axis=1)
     data_rpk = data_rpk.fillna(0)
 
     return data_rpk
