@@ -16,10 +16,10 @@
 ### Development Notes:     
 XPRESSplot supports Python 2.7 and >=3.5   
 
-### Citation:    
+### Citation:       
 ```
 Berg JA, et. al. (2019). XPRESSyourself: Enhancing and Automating the Ribosome
-Profiling and RNA-Seq Analysis Toolkit. https://github.com/XPRESSyourself. DOI: 10.5281/zenodo.2581692.
+Profiling and RNA-Seq Analysis Toolkit. bioRxiv 704320; doi: https://doi.org/10.1101/704320
 ```
 
 ### Installation:   
