@@ -22,7 +22,8 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 IMPORT DEPENDENCIES AND DATASETS
 """
-import os, sys
+import os
+import sys
 import pandas as pd
 import numpy as np
 import xpressplot as xp

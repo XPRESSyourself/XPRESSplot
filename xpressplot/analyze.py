@@ -45,16 +45,28 @@ __path__, xpressplot_arguments = os.path.split(__file__)
 
 """Plots heatmap for prep_data formatted data"""
 def heatmap(
-    data, info,
+    data,
+    info,
     sample_palette=None,
-    gene_info=None, gene_palette=None, gene_list=None,
-    col_cluster=True, row_cluster=False,
-    metric='euclidean', method='centroid',
-    font_scale=.8, cmap=jakes_cmap, center=0,
-    xticklabels=True, yticklabels=True,
-    linewidths=0, linecolor='#DCDCDC',
-    cbar_kws=None, figsize=(16,6.5),
-    save_fig=None, dpi=600, bbox_inches='tight'):
+    gene_info=None,
+    gene_palette=None,
+    gene_list=None,
+    col_cluster=True,
+    row_cluster=False,
+    metric='euclidean',
+    method='centroid',
+    font_scale=.8,
+    cmap=jakes_cmap,
+    center=0,
+    xticklabels=True,
+    yticklabels=True,
+    linewidths=0,
+    linecolor='#DCDCDC',
+    cbar_kws=None,
+    figsize=(16,6.5),
+    save_fig=None,
+    dpi=600,
+    bbox_inches='tight'):
 
     reset_plot(True)
     data_c = analysis_prep(data)
@@ -632,15 +644,27 @@ def volcano(
 
 """Plot a 2-D PCA with confidence intervals or a 3-D PCA with no confidence intervals"""
 def pca(
-    data, info, palette,
+    data,
+    info,
+    palette,
     grouping='samples',
-    gene_list=None, gene_labels=False,
-    _3d_pca=False, ci=2, size=30,
-    principle_components=[1,2], n_components=10,
-    scree_only=False, save_scree=False,
-    order_legend=None, title=None,
-    grid=False, whitegrid=False, figsize=(10,10),
-    save_fig=None, dpi=600, bbox_inches='tight',
+    gene_list=None,
+    gene_labels=False,
+    _3d_pca=False,
+    ci=2,
+    size=30,
+    principle_components=[1,2],
+    n_components=10,
+    scree_only=False,
+    save_scree=False,
+    order_legend=None,
+    title=None,
+    grid=False,
+    whitegrid=False,
+    figsize=(10,10),
+    save_fig=None,
+    dpi=600,
+    bbox_inches='tight',
     return_pca=False,
     plotly_login=None):
 

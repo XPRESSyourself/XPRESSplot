@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Analysis &mdash; XPRESStools 0.0.3-beta documentation</title>
+  <title>Analysis &mdash; XPRESSplot 0.2.0-beta documentation</title>
   
 
   
@@ -26,7 +26,8 @@
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -38,7 +39,6 @@
   <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Reference Building" href="reference-building.html" />
     <link rel="prev" title="Normalization and Quality Control" href="normalize.html" /> 
 </head>
 
@@ -53,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> XPRESStools
+            <a href="../index.html" class="icon icon-home"> XPRESSplot
           
 
           
@@ -87,7 +87,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESStools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESSplot</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Wait! I’ve never programmed before!</a></li>
@@ -100,18 +100,17 @@
 <li class="toctree-l3"><a class="reference internal" href="#sample-color-palette">Sample Color Palette</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#differential-expression-analysis">Differential Expression Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#single-gene-analysis">Single-gene Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#multi-gene-analysis">Multi-gene Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#heatmap">Heatmap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#scatterplot">Scatterplot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rna-volcano-plot">RNA Volcano Plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#volcano-plot">Volcano Plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#linear-regression">Linear Regression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#jointplot">Jointplot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pca-2-d-3-d-interactive">PCA (2-D, 3-D, Interactive)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reference-building.html">Reference Building</a></li>
 </ul>
 
             
@@ -126,7 +125,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">XPRESStools</a>
+          <a href="../index.html">XPRESSplot</a>
         
       </nav>
 
@@ -178,7 +177,7 @@
             
   <div class="section" id="analysis">
 <h1>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h1>
-<p><a href="#id1"><span class="problematic" id="id2">|</span></a>The following commands rely heavily on the matplotlib (DOI:10.5281/zenodo.2577644) and seaborn (DOI:10.5281/zenodo.883859) libraries, but have been modified in many cases for ease of plotting given the formatting of XPRESStools datasets.</p>
+<p><a href="#id1"><span class="problematic" id="id2">|</span></a>The following commands rely heavily on the matplotlib (DOI:10.5281/zenodo.2577644) and seaborn (DOI:10.5281/zenodo.883859) libraries, but have been modified in many cases for ease of plotting given the formatting of xpressplot datasets.</p>
 <div class="section" id="formatting-notes">
 <h2>Formatting Notes<a class="headerlink" href="#formatting-notes" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="sample-color-palette">
@@ -195,120 +194,22 @@
 </div>
 </div>
 </div>
-<div class="section" id="differential-expression-analysis">
-<h2>Differential Expression Analysis<a class="headerlink" href="#differential-expression-analysis" title="Permalink to this headline">¶</a></h2>
-<div class="line-block">
-<div class="line"><strong>xpresstools.diff_xpress ( input_file, sample_file, equation )</strong></div>
-<div class="line"><br /></div>
-<div class="line">Purpose:</div>
-<div class="line">Perform differential expression analysis on dataset using DESeq2</div>
-<div class="line"><br /></div>
-<div class="line">Assumptions:</div>
-<div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired</div>
-<div class="line">- Requires a properly formatted dataframe complying to DESeq2 info file (see example below)</div>
-<div class="line">- R is installed on your machine and is in your $PATH</div>
-<div class="line">- All input files are tab-delimited (with .txt or .tsv suffix)</div>
-<div class="line">- Design formula does not include the tilde (~) and there are no spaces</div>
-<div class="line">- Your base parameter in a given column in the sample_info file must be first alphabetically. If this is not the base, you can append letters to the beginning to force alphabetical order</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">Parameters:</div>
-<div class="line"><strong>input_file</strong>: Input dataframe file with values (must be positive-integer counts)</div>
-<div class="line"><strong>sample_file</strong>: Input dataframe containing sample effect information, column naming convention must be followed and <em>is</em> case-sensitive</div>
-<div class="line"><strong>equation</strong>: Output path and file name for batch normalized data</div>
-<div class="line"><br /></div>
-<div class="line">Examples:</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/expression_counts.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">data</span>
-                <span class="n">s1</span>  <span class="n">s2</span>  <span class="n">s3</span>  <span class="n">s4</span>  <span class="o">...</span>
-<span class="n">ENSG00000227232</span> <span class="mi">66</span>  <span class="mi">59</span>  <span class="mi">1</span>   <span class="mi">82</span>  <span class="o">...</span>
-<span class="n">ENSG00000240361</span> <span class="mi">35</span>  <span class="mi">0</span>   <span class="mi">7</span>   <span class="mi">72</span>  <span class="o">...</span>
-<span class="n">ENSG00000238009</span> <span class="mi">20</span>  <span class="mi">70</span>  <span class="mi">85</span>  <span class="mi">78</span>  <span class="o">...</span>
-<span class="n">ENSG00000241860</span> <span class="mi">96</span>  <span class="mi">7</span>   <span class="mi">93</span>  <span class="mi">38</span>  <span class="o">...</span>
-<span class="n">ENSG00000187634</span> <span class="mi">73</span>  <span class="mi">41</span>  <span class="mi">92</span>  <span class="mi">77</span>  <span class="o">...</span>
-<span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">batch</span>
-  <span class="n">Sample</span>  <span class="n">Replicate</span> <span class="n">Condition</span>
-<span class="mi">0</span> <span class="n">s1</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>
-<span class="mi">1</span> <span class="n">s2</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>
-<span class="mi">2</span> <span class="n">s3</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>
-<span class="mi">3</span> <span class="n">s4</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>
-<span class="mi">4</span> <span class="n">s5</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>
-<span class="mi">5</span> <span class="n">s6</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>
-<span class="mi">6</span> <span class="n">s7</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>
-<span class="mi">7</span> <span class="n">s8</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>
-<span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff_xpress</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">equation</span><span class="o">=</span><span class="s1">&#39;Condition&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line">If samples were processed separately in different batches, this information should be included in the sample information table</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/expression_counts.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">data</span>
-                <span class="n">s1</span>  <span class="n">s2</span>  <span class="n">s3</span>  <span class="n">s4</span>  <span class="o">...</span>
-<span class="n">ENSG00000227232</span> <span class="mi">66</span>  <span class="mi">59</span>  <span class="mi">1</span>   <span class="mi">82</span>  <span class="o">...</span>
-<span class="n">ENSG00000240361</span> <span class="mi">35</span>  <span class="mi">0</span>   <span class="mi">7</span>   <span class="mi">72</span>  <span class="o">...</span>
-<span class="n">ENSG00000238009</span> <span class="mi">20</span>  <span class="mi">70</span>  <span class="mi">85</span>  <span class="mi">78</span>  <span class="o">...</span>
-<span class="n">ENSG00000241860</span> <span class="mi">96</span>  <span class="mi">7</span>   <span class="mi">93</span>  <span class="mi">38</span>  <span class="o">...</span>
-<span class="n">ENSG00000187634</span> <span class="mi">73</span>  <span class="mi">41</span>  <span class="mi">92</span>  <span class="mi">77</span>  <span class="o">...</span>
-<span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">batch</span>
-  <span class="n">Sample</span>  <span class="n">Replicate</span> <span class="n">Condition</span> <span class="n">Batch</span>
-<span class="mi">0</span> <span class="n">s1</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
-<span class="mi">1</span> <span class="n">s2</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
-<span class="mi">2</span> <span class="n">s3</span>      <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
-<span class="mi">3</span> <span class="n">s4</span>      <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">batch1</span>
-<span class="mi">4</span> <span class="n">s5</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
-<span class="mi">5</span> <span class="n">s6</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
-<span class="mi">6</span> <span class="n">s7</span>      <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
-<span class="mi">7</span> <span class="n">s8</span>      <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">batch2</span>
-<span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff_xpress</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">equation</span><span class="o">=</span><span class="s1">&#39;Batch+Condition&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line">For ribosome profiling, you need to divide the footprint samples by their corresponding mRNA sample to account for translation efficiency</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/expression_counts.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">data</span>
-                <span class="n">s1_fp</span>   <span class="n">s1_rna</span>  <span class="n">s2_fp</span>   <span class="n">s2_rna</span>  <span class="o">...</span>
-<span class="n">ENSG00000227232</span> <span class="mi">66</span>      <span class="mi">59</span>      <span class="mi">1</span>       <span class="mi">82</span>      <span class="o">...</span>
-<span class="n">ENSG00000240361</span> <span class="mi">35</span>      <span class="mi">0</span>       <span class="mi">7</span>       <span class="mi">72</span>      <span class="o">...</span>
-<span class="n">ENSG00000238009</span> <span class="mi">20</span>      <span class="mi">70</span>      <span class="mi">85</span>      <span class="mi">78</span>      <span class="o">...</span>
-<span class="n">ENSG00000241860</span> <span class="mi">96</span>      <span class="mi">7</span>       <span class="mi">93</span>      <span class="mi">38</span>      <span class="o">...</span>
-<span class="n">ENSG00000187634</span> <span class="mi">73</span>      <span class="mi">41</span>      <span class="mi">92</span>      <span class="mi">77</span>      <span class="o">...</span>
-<span class="o">&gt;</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">batch</span>
-  <span class="n">Sample</span>  <span class="n">Replicate</span> <span class="n">Condition</span> <span class="n">Type</span>
-<span class="mi">0</span> <span class="n">s1_fp</span>   <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">RPF</span>
-<span class="mi">1</span> <span class="n">s1_rna</span>  <span class="n">rep1</span>      <span class="n">a_WT</span>      <span class="n">RNA</span>
-<span class="mi">2</span> <span class="n">s2_fp</span>   <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">RPF</span>
-<span class="mi">3</span> <span class="n">s2_rna</span>  <span class="n">rep2</span>      <span class="n">a_WT</span>      <span class="n">RNA</span>
-<span class="mi">4</span> <span class="n">s3_fp</span>   <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">RPF</span>
-<span class="mi">5</span> <span class="n">s3_rna</span>  <span class="n">rep1</span>      <span class="n">b_EXP</span>     <span class="n">RNA</span>
-<span class="mi">6</span> <span class="n">s4_fp</span>   <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">RPF</span>
-<span class="mi">7</span> <span class="n">s4_rna</span>  <span class="n">rep2</span>      <span class="n">b_EXP</span>     <span class="n">RNA</span>
-<span class="o">&gt;</span> <span class="n">xp</span><span class="o">.</span><span class="n">diff_xpress</span><span class="p">(</span><span class="s1">&#39;/path/to/expression.tsv&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/sample_info.tsv&#39;</span><span class="p">,</span> <span class="n">equation</span><span class="o">=</span><span class="s1">&#39;Type+Condition+Type:Condition&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="single-gene-analysis">
 <h2>Single-gene Analysis<a class="headerlink" href="#single-gene-analysis" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.gene_overview ( data, info, gene_name, palette, order=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpressplot.gene_overview ( data, info, gene_name, palette, order=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Create a boxplot with overlaid swarmplot for each experiment group for a particular gene</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line">- Dataframe and metadata are properly formatted for use with xpressplot</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe (Required)</div>
 <div class="line"><strong>gene_name</strong>: Name of gene to plot (Required)</div>
 <div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Required)</div>
 <div class="line"><strong>order</strong>: List of experiment groups in order to plot (Default: None)</div>
@@ -333,19 +234,19 @@
 <div class="section" id="multi-gene-analysis">
 <h2>Multi-gene Analysis<a class="headerlink" href="#multi-gene-analysis" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.multigene_overview ( data, info, palette=None, gene_list=None, order=None, scale=None, title=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpressplot.multigene_overview ( data, info, palette=None, gene_list=None, order=None, scale=None, title=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Create violin plots of a subset of gene expressions or total gene expression by experiment group</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line">- Dataframe and metadata are properly formatted for use with xpressplot</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe (Required)</div>
 <div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
 <div class="line"><strong>gene_list</strong>: List of genes to plot (default: None; plots total gene expression for experiment group)</div>
 <div class="line"><strong>order</strong>: List of experiment groups in order to plot (Default: None)</div>
@@ -373,21 +274,21 @@
 <div class="section" id="heatmap">
 <h2>Heatmap<a class="headerlink" href="#heatmap" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.heatmap ( data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, col_cluster=True, row_cluster=False, metric=’euclidean’, method=’centroid’, font_scale=0.8, cmap=jakes_cmap, center=0, xticklabels=True, yticklabels=True, linewidths=0, linecolor=’#DCDCDC’, cbar_kws=None, figsize=(16,6.5), save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpressplot.heatmap ( data, info, sample_palette=None, gene_info=None, gene_palette=None, gene_list=None, col_cluster=True, row_cluster=False, metric=’euclidean’, method=’centroid’, font_scale=0.8, cmap=jakes_cmap, center=0, xticklabels=True, yticklabels=True, linewidths=0, linecolor=’#DCDCDC’, cbar_kws=None, figsize=(16,6.5), save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Create clustered heatmaps for gene expression dataframe</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line">- Dataframe and metadata are properly formatted for use with xpressplot</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe (Required)</div>
 <div class="line"><strong>sample_palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
-<div class="line"><strong>gene_info</strong>: XPRESStools formatted metadata matrix for genes (column0) and gene groups (column1)</div>
+<div class="line"><strong>gene_info</strong>: xpressplot formatted metadata matrix for genes (column0) and gene groups (column1)</div>
 <div class="line"><strong>gene_palette</strong>: Dictionary of labels and colors for plotting, or valid seaborns clustermap col_colors option</div>
 <div class="line"><strong>gene_list</strong>: List of genes to plot (default: None; plots total gene expression for experiment group)</div>
 <div class="line"><strong>col_cluster</strong>: Cluster columns/samples (default: True)</div>
@@ -429,19 +330,19 @@
 <div class="section" id="scatterplot">
 <h2>Scatterplot<a class="headerlink" href="#scatterplot" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpressplot.scatter ( data, info, x, y, palette=None, add_linreg=False, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, highlight_names=None, alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, label_points=None, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Create scatterplot with the option to include a linear least-squares regression fit of the data</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line">- Dataframe and metadata are properly formatted for use with xpressplot</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe (Required)</div>
 <div class="line"><strong>x</strong>: X-axis gene or other metric (Required)</div>
 <div class="line"><strong>y</strong>: Y-axis gene or other metric (Required)</div>
 <div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
@@ -481,22 +382,59 @@
 </div>
 <a class="reference internal image-reference" href="../_images/scatter3.png"><img alt="../_images/scatter3.png" src="../_images/scatter3.png" style="width: 550px;" /></a>
 </div>
-<div class="section" id="volcano-plot">
-<h2>Volcano Plot<a class="headerlink" href="#volcano-plot" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="rna-volcano-plot">
+<h2>RNA Volcano Plot<a class="headerlink" href="#rna-volcano-plot" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, save_threshold_hits=None, save_threshold_hits_delimiter=’,’, label_points=None, grid=False, whitegrid=False, return_data=False, plotly_login=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpressplot.rna_volcano ( file, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, label_points=None, grid=False, whitegrid=False, interactive=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
-<div class="line">Create scatterplot with the option to include a linear least-squares regression fit of the data</div>
+<div class="line">Create volcano plot with non-normally distributed data (RNA-seq). See <code class="xref py py-data docutils literal notranslate"><span class="pre">Volcano</span> <span class="pre">Plot</span></code> for examples.</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line">- file is a DESeq2-output table</div>
+<div class="line">- Note: Many of the options will be non-functional when using interactive mode</div>
+<div class="line"><br /></div>
+</div>
+<div class="line"><strong>file</strong>: Path and file name to DESeq2-output table</div>
+<div class="line"><strong>order_legend</strong>: List of experiment groups in order to display on legend (Default: None)</div>
+<div class="line"><strong>title</strong>: Plot title (default: None)</div>
+<div class="line"><strong>alpha</strong>: Opacity percentage for scatter plot</div>
+<div class="line"><strong>highlight_points</strong>: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)</div>
+<div class="line"><strong>highlight_color</strong>: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
+<div class="line"><strong>highlight_names</strong>: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color). Must use if highlighting points.</div>
+<div class="line"><strong>alpha_highlights</strong>: Opacity percentage for highlighted elements of scatter plot</div>
+<div class="line"><strong>size</strong>: Marker size</div>
+<div class="line"><strong>y_threshold</strong>: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
+<div class="line"><strong>x_threshold</strong>: Include a x-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
+<div class="line"><strong>threshold_color</strong>: Threshold line color (default: ‘b’; black)</div>
+<div class="line"><strong>label_points</strong>: A dictionary where keys are labels and values are a two-element list as [x-coordinate, y-coordinate]</div>
+<div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
+<div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
+<div class="line"><strong>figsize</strong>: Set figure size dimensions</div>
+<div class="line"><strong>interactive</strong>: Set as True to create interactive scatter plot (if using this option and saving the output, be sure to include a <code class="xref py py-data docutils literal notranslate"><span class="pre">html</span></code> suffix in the file name)</div>
+<div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
+<div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
+<div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
+</div>
+</div>
+<div class="section" id="volcano-plot">
+<h2>Volcano Plot<a class="headerlink" href="#volcano-plot" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>xpressplot.volcano ( data, info, label_comp, label_base, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color=’DarkRed’, highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color=’b’, save_threshold_hits=None, save_threshold_hits_delimiter=’,’, label_points=None, grid=False, whitegrid=False, return_data=False, figsize=(10,10), interactive=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><br /></div>
+<div class="line">Purpose:</div>
+<div class="line">Create volcano plot with normally distributed data</div>
+<div class="line"><br /></div>
+<div class="line">Assumptions:</div>
+<div class="line-block">
+<div class="line">- Dataframe and metadata are properly formatted for use with xpressplot</div>
+<div class="line">- Note: Many of the options will be non-functional when using interactive mode</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe, sample normalized (Required)</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe, sample normalized (Required)</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe (Required)</div>
 <div class="line"><strong>label_comp</strong>: Experiment group name to act as comparison group (Required)</div>
 <div class="line"><strong>label_base</strong>: Experiment group name to act as base group (Required)</div>
 <div class="line"><strong>order_legend</strong>: List of experiment groups in order to display on legend (Default: None)</div>
@@ -504,7 +442,7 @@
 <div class="line"><strong>alpha</strong>: Opacity percentage for scatter plot</div>
 <div class="line"><strong>highlight_points</strong>: List of indices to highlight on scatterplot (if desired to plot multiple sets in different colors, lists of lists can be provided)</div>
 <div class="line"><strong>highlight_color</strong>: Color or ordered list of colors to plot highlighted points (if multiple lists are being highlighted, pass colors in same order as a list)</div>
-<div class="line"><strong>highlight_names</strong>: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color)</div>
+<div class="line"><strong>highlight_names</strong>: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color). Must use if highlighting points.</div>
 <div class="line"><strong>alpha_highlights</strong>: Opacity percentage for highlighted elements of scatter plot</div>
 <div class="line"><strong>size</strong>: Marker size</div>
 <div class="line"><strong>y_threshold</strong>: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted</div>
@@ -516,7 +454,8 @@
 <div class="line"><strong>grid</strong>: Set to True to add gridlines (default: False)</div>
 <div class="line"><strong>whitegrid</strong>: Set to True to create white background in figure (default: Grey-scale)</div>
 <div class="line"><strong>return_data</strong>: Set as True to return dataframe with log2 Fold Changes and -log10 P-values added</div>
-<div class="line"><strong>plotly_login</strong>: Include plotly login username and password to create an interactive plot, ex: [‘username’,’password’]</div>
+<div class="line"><strong>figsize</strong>: Set figure size dimensions</div>
+<div class="line"><strong>interactive</strong>: Set as True to create interactive scatter plot (if using this option and saving the output, be sure to include a <code class="xref py py-data docutils literal notranslate"><span class="pre">html</span></code> suffix in the file name)</div>
 <div class="line"><strong>save_fig</strong>: Full file path, name, and extension for file output (default: None)</div>
 <div class="line"><strong>dpi</strong>: Set DPI for figure output (default: 600)</div>
 <div class="line"><strong>bbox_inches</strong>: Matplotlib bbox_inches argument (default: ‘tight’; useful for saving images and preventing text cut-off)</div>
@@ -542,18 +481,18 @@
 <div class="section" id="linear-regression">
 <h2>Linear Regression<a class="headerlink" href="#linear-regression" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.linreg ( data, gene_name, save_file, delimiter=’,’ )</strong></div>
+<div class="line"><strong>xpressplot.linreg ( data, gene_name, save_file, delimiter=’,’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Calculate r, r^2 values, and p-values for every gene against target gene for given dataset</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe is properly formatted for use with XPRESStools</div>
+<div class="line">- Dataframe is properly formatted for use with xpressplot</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe, sample normalized (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe, sample normalized (Required)</div>
 <div class="line"><strong>gene_name</strong>: Target gene name to run genome-wide comparisons against</div>
 <div class="line"><strong>save_file</strong>: Full file path, name, and extension for file output (default: None)</div>
 <div class="line"><strong>delimiter</strong>: Field separator for output file (default: ‘,’)</div>
@@ -567,19 +506,19 @@
 <div class="section" id="jointplot">
 <h2>Jointplot<a class="headerlink" href="#jointplot" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.jointplot ( data, info, x, y, kind=’reg’, palette=None, order=None, title_pad=0, title_pos=’right’, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
+<div class="line"><strong>xpressplot.jointplot ( data, info, x, y, kind=’reg’, palette=None, order=None, title_pad=0, title_pos=’right’, grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Create linear regression scatterplot that displays r value, confidence, and density distributions for axes</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line">- Dataframe and metadata are properly formatted for use with xpressplot</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe (Required)</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe (Required)</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe (Required)</div>
 <div class="line"><strong>x</strong>: X-axis gene or other metric (Required)</div>
 <div class="line"><strong>y</strong>: Y-axis gene or other metric (Required)</div>
 <div class="line"><strong>kind</strong>: Type of plot to create from the seaborns jointplot function (default: ‘reg’; linear regression)</div>
@@ -613,19 +552,19 @@
 <div class="section" id="pca-2-d-3-d-interactive">
 <h2>PCA (2-D, 3-D, Interactive)<a class="headerlink" href="#pca-2-d-3-d-interactive" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.pca ( data, info, palette, grouping=’samples’, gene_list=None, gene_labels=False, _3d_pca=False, principle_components=[1,2], n_components=10, ci=2, scree_only=False, save_scree=False, size=30, order_legend=None, title=None, fig_size=(10,10), grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’, return_pca=False, plotly_login=None )</strong></div>
+<div class="line"><strong>xpressplot.pca ( data, info, palette, grouping=’samples’, gene_list=None, gene_labels=False, _3d_pca=False, principle_components=[1,2], n_components=10, ci=2, scree_only=False, save_scree=False, size=30, order_legend=None, title=None, fig_size=(10,10), grid=False, whitegrid=False, save_fig=None, dpi=600, bbox_inches=’tight’, return_pca=False, plotly_login=None )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Plot a 2-D PCA with confidence intervals or a 3-D PCA with no confidence intervals</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe and metadata are properly formatted for use with XPRESStools</div>
+<div class="line">- Dataframe and metadata are properly formatted for use with xpressplot</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools-formatted dataframe, sample normalized (Required)</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe (Required)</div>
+<div class="line"><strong>data</strong>: xpressplot-formatted dataframe, sample normalized (Required)</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe (Required)</div>
 <div class="line"><strong>palette</strong>: Dictionary of matplotlib compatible colors for samples (Default: None)</div>
 <div class="line"><strong>grouping</strong>: What axis of the data to perform the analysis (default: ‘samples’ or columns; other options: ‘genes’, not yet implemented)</div>
 <div class="line"><strong>gene_list</strong>: List of genes to perform PCA across</div>
@@ -679,8 +618,6 @@
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="reference-building.html" class="btn btn-neutral float-right" title="Reference Building" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="normalize.html" class="btn btn-neutral float-left" title="Normalization and Quality Control" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

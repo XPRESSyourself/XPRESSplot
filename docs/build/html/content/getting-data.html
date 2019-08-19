@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Retrieving Data &mdash; XPRESStools 0.0.3-beta documentation</title>
+  <title>Retrieving Data &mdash; XPRESSplot 0.2.0-beta documentation</title>
   
 
   
@@ -26,7 +26,8 @@
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -53,7 +54,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> XPRESStools
+            <a href="../index.html" class="icon icon-home"> XPRESSplot
           
 
           
@@ -87,7 +88,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESStools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESSplot</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Wait! I’ve never programmed before!</a></li>
@@ -113,7 +114,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="normalize.html">Normalization and Quality Control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference-building.html">Reference Building</a></li>
 </ul>
 
             
@@ -128,7 +128,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">XPRESStools</a>
+          <a href="../index.html">XPRESSplot</a>
         
       </nav>
 
@@ -183,7 +183,7 @@
 <div class="section" id="importing-data-from-file">
 <h2>Importing Data from File<a class="headerlink" href="#importing-data-from-file" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.get_df ( file_name, delimiter=’,’, low_memory=False, gene_axis=’row’ )</strong></div>
+<div class="line"><strong>xpressplot.get_df ( file_name, delimiter=’,’, low_memory=False, gene_axis=’row’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Get sequence dataframe from user-provided file.</div>
@@ -207,7 +207,7 @@
 <div class="line">Examples:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpresstools</span> <span class="kn">as</span> <span class="nn">xp</span>
+<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpressplot</span> <span class="kn">as</span> <span class="nn">xp</span>
 <span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">get_df</span><span class="p">(</span><span class="s1">&#39;/path/to/data.csv&#39;</span><span class="p">)</span>
 <span class="o">&gt;</span> <span class="n">data</span>
               <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
@@ -222,7 +222,7 @@
 <div class="section" id="importing-metadata-from-file">
 <h2>Importing metadata from file<a class="headerlink" href="#importing-metadata-from-file" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.get_info ( file_name, delimiter=”,”, axis=”col”, sample_ids=0, labels=1 )</strong></div>
+<div class="line"><strong>xpressplot.get_info ( file_name, delimiter=”,”, axis=”col”, sample_ids=0, labels=1 )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Get sample metadata from user-provided file</div>
@@ -244,7 +244,7 @@
 <div class="line">Examples:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpresstools</span> <span class="kn">as</span> <span class="nn">xp</span>
+<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpressplot</span> <span class="kn">as</span> <span class="nn">xp</span>
 <span class="o">&gt;</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s1">&#39;/path/to/metadata.csv&#39;</span><span class="p">)</span>
 <span class="o">&gt;</span> <span class="n">metadata</span>
     <span class="mi">0</span>         <span class="mi">1</span>
@@ -262,17 +262,17 @@
 <h3>RNAseq Datasets<a class="headerlink" href="#rnaseq-datasets" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
 <div class="line">A module will be added in the future to automate this conversion and import from GEO</div>
-<div class="line">Download the csv or tsv file provided in supplement and ensure formatted follows XPRESStools standards</div>
+<div class="line">Download the csv or tsv file provided in supplement and ensure formatted follows xpressplot standards</div>
 <div class="line">Sometimes the delimiter is formatted incorrectly. If so, a simple find/replace can be used to replace the incorrect delimiter with a t</div>
 <div class="line">Remove the gene name column header, but keep the trailing tab</div>
-<div class="line">Create a metadata file following XPRESStools standards</div>
+<div class="line">Create a metadata file following xpressplot standards</div>
 <div class="line">Import data</div>
 </div>
 </div>
 <div class="section" id="microarray-datasets">
 <h3>MicroArray Datasets<a class="headerlink" href="#microarray-datasets" title="Permalink to this headline">¶</a></h3>
 <div class="line-block">
-<div class="line"><strong>xpresstools.get_geo ( geo_id, output_info=False )</strong></div>
+<div class="line"><strong>xpressplot.get_geo ( geo_id, output_info=False )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Get sample data and metadata from a GEO database</div>
@@ -288,7 +288,7 @@
 <div class="line">Examples:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpresstools</span> <span class="kn">as</span> <span class="nn">xp</span>
+<span class="o">&gt;</span> <span class="kn">import</span> <span class="nn">xpressplot</span> <span class="kn">as</span> <span class="nn">xp</span>
 <span class="o">&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">get_geo</span><span class="p">(</span><span class="s1">&#39;GSE20916&#39;</span><span class="p">)</span>
 <span class="o">&gt;</span> <span class="n">data</span>
               <span class="n">GSM523242</span> <span class="n">GSM523243</span> <span class="n">GSM523244</span> <span class="n">GSM523245</span> <span class="o">...</span>
@@ -311,7 +311,7 @@
 <div class="section" id="catenate-raw-counts-files">
 <h2>Catenate Raw Counts Files<a class="headerlink" href="#catenate-raw-counts-files" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.catenate_files ( directory, file_suffix=’txt’, save_file=None, delimiter=’t’, drop_rows=0 )</strong></div>
+<div class="line"><strong>xpressplot.catenate_files ( directory, file_suffix=’txt’, save_file=None, delimiter=’t’, drop_rows=0 )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Compiles expression counts from multiple files into one table. For example, HTSeq-count outputs each alignment file’s counts as a separate count file. This module will collect all single count files and compile them into a single count table.</div>
@@ -348,7 +348,7 @@
 <div class="section" id="create-count-table-from-file-list">
 <h2>Create Count Table from File List<a class="headerlink" href="#create-count-table-from-file-list" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep=’t’, drop_rows=5 )</strong></div>
+<div class="line"><strong>xpressplot.count_table ( file_list, gene_column=0, sample_column=1, sep=’t’, drop_rows=5 )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Collate HTseq counts files (similar to catenate_files(), but input is a file list)</div>
@@ -373,7 +373,7 @@
 <div class="section" id="drop-samples">
 <h2>Drop Samples<a class="headerlink" href="#drop-samples" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.drop_samples ( data, ids )</strong></div>
+<div class="line"><strong>xpressplot.drop_samples ( data, ids )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Drop samples by sample IDs – pass in a list of names</div>
@@ -413,7 +413,7 @@
 <div class="section" id="drop-label">
 <h2>Drop label<a class="headerlink" href="#drop-label" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.drop_label ( data, info, label )</strong></div>
+<div class="line"><strong>xpressplot.drop_label ( data, info, label )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Drop samples by label group name</div>
@@ -455,7 +455,7 @@
 <div class="section" id="keep-labels">
 <h2>Keep labels<a class="headerlink" href="#keep-labels" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.keep_labels ( data, info, label_list=None )</strong></div>
+<div class="line"><strong>xpressplot.keep_labels ( data, info, label_list=None )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Keep samples by list of label names</div>
@@ -497,7 +497,7 @@
 <div class="section" id="rename-dataframe-column-names">
 <h2>Rename dataframe column names<a class="headerlink" href="#rename-dataframe-column-names" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.rename_cols ( data, converters )</strong></div>
+<div class="line"><strong>xpressplot.rename_cols ( data, converters )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Rename column names using dataframe</div>
@@ -537,7 +537,7 @@
 <div class="section" id="rename-genes-with-gtf">
 <h2>Rename genes with GTF<a class="headerlink" href="#rename-genes-with-gtf" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.convert_names_gtf ( data, gtf, orig_name_label=’gene_id “’, orig_name_location=0, new_name_label=’gene_name “’, new_name_location=1, refill=None, sep=’t’ )</strong></div>
+<div class="line"><strong>xpressplot.convert_names_gtf ( data, gtf, orig_name_label=’gene_id “’, orig_name_location=0, new_name_label=’gene_name “’, new_name_location=1, refill=None, sep=’t’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Convert row names (genes) of dataframe using GTF as reference for new name</div>
@@ -584,7 +584,7 @@
 <div class="section" id="rename-dataframe-row-names">
 <h2>Rename dataframe row names<a class="headerlink" href="#rename-dataframe-row-names" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.rename_rows ( data, converters, label=’index’ )</strong></div>
+<div class="line"><strong>xpressplot.rename_rows ( data, converters, label=’index’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Rename values in an index (row names) or a column</div>

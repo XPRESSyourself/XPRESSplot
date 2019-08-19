@@ -5,13 +5,13 @@ Normalization and Quality Control
 =======================
 RPM (Reads per Million)
 =======================
-| **xpresstools.rpm ( data )**
+| **xpressplot.rpm ( data )**
 |
 | Purpose:
 | Perform reads per million sample normalization on RNAseq data
 |
 | Formula:
-| :math:`RPM = \frac{\#\ number\ reads\ per\ gene\ x\ 1e6}{\#\ mapped\ reads\ per\ sample}`
+| :math:`RPM_{g} = \frac{1e6 \cdot r_{\textit{ge}}}{\sum_{g=1}^{n} r_{\textit{ge}}}`
 |
 | Assumptions:
 |   - Dataframe contains raw count data, where samples are along columns and genes across rows
@@ -44,27 +44,30 @@ RPM (Reads per Million)
   Gene5 251724.1379 231638.4181 330935.2518 221902.0173 134020.6186
 
 ==============================================
-R/FPKM (Reads/Fragments per Kilobase Million)
+R/FPKM (Reads/Fragments per Kilobase Million per Million Mapped Reads)
 ==============================================
-| **xpresstools.r_fpkm ( data, gtf, gene_name_prefix='gene_id \"', gene_name_location=0, sep='\t' )**
+| **xpressplot.r_fpkm ( data, gtf, feature_type='exon', identifier='gene_name', sep='\t' )**
 |
 | Purpose:
-| Perform reads/fragments per kilobase million sample normalization on RNAseq data
+| Perform reads/fragments per kilobase per million mapped reads sample normalization on RNAseq data
 |
 | Formulae:
-| :math:`RPKM = \frac{\#\ number\ reads\ per\ gene\ x\ 1e6\ x\ 1e3}{\#\ mapped\ reads\ per\ sample\ x\ gene\ length\ (bp)}`
+| :math:`RPKM_{g} = \frac{1e9 \cdot r_{\textit{ge}}}{(\sum_{g=1}^{n} r_{\textit{ge}}) \cdot \textit{l} _{\textit{ge}}}`
 |
-| :math:`FPKM = \frac{\#\ number\ fragments\ per\ gene\ x\ 1e6\ x\ 1e3}{\#\ mapped\ fragments\ per\ sample\ x\ gene\ length\ (bp)}`
+| :math:`FPKM_{g} = \frac{1e9 \cdot f_{\textit{ge}}}{(\sum_{g=1}^{n} f_{\textit{ge}}) \cdot \textit{l} _{\textit{ge}}}`
 |
 | Assumptions:
 |   - Dataframe contains raw count data, where samples are along columns and genes across rows
 |   - As FPKM was developed for paired-end sequencing, it accounts for two reads being able to map to one fragment. Therefore, input counts should have accounted for this is the counting step of sequence quantification. If specifying a paired-end alignment in XPRESSpipe, this will have been accounted for.
+|   - By default, this will take the longest transcript based on combined exon length. If you prefer to use the cumulative exon length of the Ensembl canonical transcript, you must first curate the GTF using :data:`xpresspipe modifyGTF -g transcripts.gtf -l`
+|   - If you performed isoform quantification and wish to length normalize each isoform, provide :data:`identifier='transcript_id'`
+|   - If you would like to normalize based on CDS length, provide :data:`feature_type='CDS'`
 |
 | Parameters:
 | **data**: Input dataframe with counts values
 | **gtf**: GTF reference file path and name
-| **gene_name_prefix**: Label of original name (usually \"gene_name \"), must match the gene naming type in the input dataframe
-| **gene_name_location**: Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)
+| **feature_type**: Label of feature to use in length normalization
+| **identifier**: Label for how to group genes/transcripts. If normalizing for a gene, use :data:`gene_name` or :data:`gene_id`. If performing length normalization for isoforms, provide :data:`transcript_id`
 | **sep**: GTF delimiter (usually tab-delimited)
 |
 | Returns:
@@ -91,106 +94,46 @@ R/FPKM (Reads/Fragments per Kilobase Million)
   Gene4 10220.8992  1221.0702   10328.8988  3381.1932   13527.9835
   Gene5 12188.2602  11215.7274  16023.5923  10744.2995  6489.1599
 
-===========================
-TE (Translation Efficiency)
-===========================
-| **xpresstools.te ( data, samples=None, log2=True )**
+
+
+==============================================
+TPM (Transcripts per Million)
+==============================================
+| **xpressplot.tpm ( data, gtf, feature_type='exon', identifier='gene_name', sep='\t' )**
 |
 | Purpose:
-| Transform paired ribosome footprint and RNA samples to translation efficiency measures
+| Perform transcripts per million sample normalization on RNAseq data
 |
-| Formulae:
-| :math:`log_2TE = log_2(\frac{RPF\ reads\ per\ gene}{total\ RNA\ reads\ per\ gene})`
+| Formula:
+| :math:`TPM_{g} = \frac{1e6 \cdot r_{\textit{ge}}}{(\sum_{g=1}^{n} (\frac{1e3 \cdot r_{\textit{ge}}}{l_{\textit{ge}}})) \cdot \textit{l} _{\textit{ge}}}`
 |
 | Assumptions:
-|   - Dataframe contains normalized count data, where samples are along columns and genes across rows (unless otherwise desired)
+|   - Dataframe contains raw count data, where samples are along columns and genes across rows
+|   - By default, this will take the longest transcript based on combined exon length. If you prefer to use the cumulative exon length of the Ensembl canonical transcript, you must first curate the GTF using :data:`xpresspipe modifyGTF -g transcripts.gtf -l`
+|   - If you performed isoform quantification and wish to length normalize each isoform, provide :data:`identifier='transcript_id'`
+|   - If you would like to normalize based on CDS length, provide :data:`feature_type='CDS'`
 |
 | Parameters:
 | **data**: Input dataframe with counts values
-| **samples**: GTF reference file path and name
-| **log2**: Label of original name (usually \"gene_name \"), must match the gene naming type in the input dataframe
+| **gtf**: GTF reference file path and name
+| **feature_type**: Label of feature to use in length normalization
+| **identifier**: Label for how to group genes/transcripts. If normalizing for a gene, use :data:`gene_name` or :data:`gene_id`. If performing length normalization for isoforms, provide :data:`transcript_id`
+| **sep**: GTF delimiter (usually tab-delimited)
 |
 | Returns:
-| **data_te**: Pandas dataframe TE transformed
-|
-| Examples:
+| **data_tpm**: Pandas dataframe with TPM-normalized
 
-.. ident with TABs
-.. code-block:: python
-
-  > data
-                  s1_rpf  s1_rna  s2_rpf  s2_rna
-  ENSG00000227232 66.34   59.13   1.90    82.49
-  ENSG00000240361 35.73   0.00    7.38    72.94
-  ENSG00000238009 20.02   70.21   85.10   78.87
-  ENSG00000241860 96.23   7.49    93.49   38.39
-  ENSG00000187634 73.91   41.28   92.27   77.93
-  > te_data = xp.te(data, samples=['sample1','sample2'])
-  > te_data
-                  sample1 sample2
-  ENSG00000227232 0.1657  -5.3679
-  ENSG00000240361 8.4850  -3.2876
-  ENSG00000238009 -1.8051 0.1095
-  ENSG00000241860 3.6658  1.2819
-  ENSG00000187634 0.8388  0.2434
-  > te_data = xp.te(data)
-  > te_data
-                  s1_rpf_te s2_rpf_te
-  ENSG00000227232 0.1657    -5.3679
-  ENSG00000240361 8.4850    -3.2876
-  ENSG00000238009 -1.8051   0.1095
-  ENSG00000241860 3.6658    1.2819
-  ENSG00000187634 0.8388    0.2434
-
-===========================
-Log Transformation
-===========================
-| **xpresstools.log_scale ( data, log_base=10 )**
-|
-| Purpose:
-| Log-scale a sample-normalized dataframe
-|
-| Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
-|
-| Parameters:
-| **data**: Input dataframe with counts values
-| **log_base**: Log base to use for transformation (default: 10; or 2)
-|
-| Returns:
-| **data_log**: Pandas dataframe log-scaled
-|
-| Examples:
-
-.. ident with TABs
-.. code-block:: python
-
-  > data
-                  s1_rpf  s1_rna  s2_rpf  s2_rna
-  ENSG00000227232 66.34   59.13   1.90    82.49
-  ENSG00000240361 35.73   0.00    7.38    72.94
-  ENSG00000238009 20.02   70.21   85.10   78.87
-  ENSG00000241860 96.23   7.49    93.49   38.39
-  ENSG00000187634 73.91   41.28   92.27   77.93
-  > log_data = xp.log_scale(data)
-  > log_data
-                  s1_rpf    s1_rna    s2_rpf    s2_rna
-  ENSG00000227232 1.822430  1.772542  0.301030  1.916927
-  ENSG00000240361 1.554247  -1.000000 0.873902  1.863561
-  ENSG00000238009 1.303628  1.847017  1.930440  1.897462
-  ENSG00000241860 1.983762  0.880242  1.971229  1.585348
-  ENSG00000187634 1.869290  1.616790  1.965531  1.892262
 
 =====================
 Batch Normalize
 =====================
-| **xpresstools.batch_normalize ( input_file, batch_file )**
+| **xpressplot.batch_normalize ( input_file, batch_file )**
 |
 | Purpose:
 | Control for batch effects between datasets
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired
+|   - Requires a properly formatted dataframe for xpressplot usage where samples are normalized previously if desired
 |   - Requires a properly formatted dataframe complying to SVA COMBAT info file (see example below)
 |   - R is installed on your machine and is in your $PATH
 |   - All input files are tab-delimited (with .txt or .tsv suffix)
@@ -224,13 +167,13 @@ Batch Normalize
 ====================
 Clean Data
 ====================
-| **xpresstools.clean_df ( data, axis=0 )**
+| **xpressplot.clean_df ( data, axis=0 )**
 |
 | Purpose:
 | Cleans NULL values from axis and clears duplicate indices
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |
 | Parameters:
 | **data**: Input dataframe file with values (can be normalized or unnormalized)
@@ -259,13 +202,13 @@ Clean Data
 ========================
 Set Gene Threshold
 ========================
-| **xpresstools.threshold ( data, minimum=None, maximum=None )**
+| **xpressplot.threshold ( data, minimum=None, maximum=None )**
 |
 | Purpose:
 | Cleans gene axis (assumed to by rows) of genes containing values below or above user-determined thresholds
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |
 | Parameters:
 | **data**: Input dataframe file with values (can be normalized or unnormalized)
@@ -295,20 +238,20 @@ Set Gene Threshold
   ENSG00000187634 73.91   41.28   92.27   77.93
 
 ================================
-Prepare XPRESStools Dataset
+Prepare xpressplot Dataset
 ================================
-| **xpresstools.prep_data ( data, info, gene_scale=True, print_means=False )**
+| **xpressplot.prep_data ( data, info, gene_scale=True, print_means=False )**
 |
 | Purpose:
 | Prepare dataframe for downstream analyses
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage (genes as rows, samples as columns)
-|   - Requires properly formatted XPRESStools metadata dataframe
+|   - Requires a properly formatted dataframe for xpressplot usage (genes as rows, samples as columns)
+|   - Requires properly formatted xpressplot metadata dataframe
 |
 | Parameters:
-| **data**: XPRESStools formatted dataframe of expression values
-| **info**: XPRESStools formatted sample info dataframe
+| **data**: xpressplot formatted dataframe of expression values
+| **info**: xpressplot formatted sample info dataframe
 | **gene_scale**: Scale genes (rows) of data
 | **print_means**: Print means for each sample verification
 |
@@ -319,13 +262,13 @@ Prepare XPRESStools Dataset
 =====================================
 Check Sample Expression Distributions
 =====================================
-| **xpresstools.check_samples ( data )**
+| **xpressplot.check_samples ( data )**
 |
 | Purpose:
 | Visualize gene expression distributions on a sample-by-sample basis
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |
 | Parameters:
 | **data**: Input dataframe file with values (can be normalized or unnormalized)
@@ -347,13 +290,13 @@ Check Sample Expression Distributions
 ==============================
 Microarray Probe Collapse
 ==============================
-| **xpresstools.probe_collapse ( data, reference, gene_list=None, no_multimappers=True )**
+| **xpressplot.probe_collapse ( data, reference, gene_list=None, no_multimappers=True )**
 |
 | Purpose:
 | Remove multimapping probes and collapse probes mapping to the same gene by averaging the values for those probes per sample
 |
 | Assumptions:
-|   - Requires a properly formatted dataframe for XPRESStools usage
+|   - Requires a properly formatted dataframe for xpressplot usage
 |   - Assumes GPL .txt file from NCBI is tab delimited
 |
 | Parameters:

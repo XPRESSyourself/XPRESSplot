@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Normalization and Quality Control &mdash; XPRESStools 0.0.3-beta documentation</title>
+  <title>Normalization and Quality Control &mdash; XPRESSplot 0.2.0-beta documentation</title>
   
 
   
@@ -26,7 +26,8 @@
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -53,7 +54,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> XPRESStools
+            <a href="../index.html" class="icon icon-home"> XPRESSplot
           
 
           
@@ -87,7 +88,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESStools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESSplot</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Wait! I’ve never programmed before!</a></li>
@@ -96,19 +97,17 @@
 <li class="toctree-l1"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Normalization and Quality Control</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rpm-reads-per-million">RPM (Reads per Million)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#r-fpkm-reads-fragments-per-kilobase-million">R/FPKM (Reads/Fragments per Kilobase Million)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#te-translation-efficiency">TE (Translation Efficiency)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#log-transformation">Log Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#r-fpkm-reads-fragments-per-kilobase-million-per-million-mapped-reads">R/FPKM (Reads/Fragments per Kilobase Million per Million Mapped Reads)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tpm-transcripts-per-million">TPM (Transcripts per Million)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batch-normalize">Batch Normalize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#clean-data">Clean Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#set-gene-threshold">Set Gene Threshold</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#prepare-xpresstools-dataset">Prepare XPRESStools Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-xpressplot-dataset">Prepare xpressplot Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#check-sample-expression-distributions">Check Sample Expression Distributions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#microarray-probe-collapse">Microarray Probe Collapse</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference-building.html">Reference Building</a></li>
 </ul>
 
             
@@ -123,7 +122,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">XPRESStools</a>
+          <a href="../index.html">XPRESSplot</a>
         
       </nav>
 
@@ -178,13 +177,13 @@
 <div class="section" id="rpm-reads-per-million">
 <h2>RPM (Reads per Million)<a class="headerlink" href="#rpm-reads-per-million" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.rpm ( data )</strong></div>
+<div class="line"><strong>xpressplot.rpm ( data )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Perform reads per million sample normalization on RNAseq data</div>
 <div class="line"><br /></div>
 <div class="line">Formula:</div>
-<div class="line"><span class="math notranslate nohighlight">\(RPM = \frac{\#\ number\ reads\ per\ gene\ x\ 1e6}{\#\ mapped\ reads\ per\ sample}\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(RPM_{g} = \frac{1e6 \cdot r_{\textit{ge}}}{\sum_{g=1}^{n} r_{\textit{ge}}}\)</span></div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
@@ -217,30 +216,33 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="r-fpkm-reads-fragments-per-kilobase-million">
-<h2>R/FPKM (Reads/Fragments per Kilobase Million)<a class="headerlink" href="#r-fpkm-reads-fragments-per-kilobase-million" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="r-fpkm-reads-fragments-per-kilobase-million-per-million-mapped-reads">
+<h2>R/FPKM (Reads/Fragments per Kilobase Million per Million Mapped Reads)<a class="headerlink" href="#r-fpkm-reads-fragments-per-kilobase-million-per-million-mapped-reads" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.r_fpkm ( data, gtf, gene_name_prefix=’gene_id “’, gene_name_location=0, sep=’t’ )</strong></div>
+<div class="line"><strong>xpressplot.r_fpkm ( data, gtf, feature_type=’exon’, identifier=’gene_name’, sep=’t’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
-<div class="line">Perform reads/fragments per kilobase million sample normalization on RNAseq data</div>
+<div class="line">Perform reads/fragments per kilobase per million mapped reads sample normalization on RNAseq data</div>
 <div class="line"><br /></div>
 <div class="line">Formulae:</div>
-<div class="line"><span class="math notranslate nohighlight">\(RPKM = \frac{\#\ number\ reads\ per\ gene\ x\ 1e6\ x\ 1e3}{\#\ mapped\ reads\ per\ sample\ x\ gene\ length\ (bp)}\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(RPKM_{g} = \frac{1e9 \cdot r_{\textit{ge}}}{(\sum_{g=1}^{n} r_{\textit{ge}}) \cdot \textit{l} _{\textit{ge}}}\)</span></div>
 <div class="line"><br /></div>
-<div class="line"><span class="math notranslate nohighlight">\(FPKM = \frac{\#\ number\ fragments\ per\ gene\ x\ 1e6\ x\ 1e3}{\#\ mapped\ fragments\ per\ sample\ x\ gene\ length\ (bp)}\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(FPKM_{g} = \frac{1e9 \cdot f_{\textit{ge}}}{(\sum_{g=1}^{n} f_{\textit{ge}}) \cdot \textit{l} _{\textit{ge}}}\)</span></div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
 <div class="line">- Dataframe contains raw count data, where samples are along columns and genes across rows</div>
 <div class="line">- As FPKM was developed for paired-end sequencing, it accounts for two reads being able to map to one fragment. Therefore, input counts should have accounted for this is the counting step of sequence quantification. If specifying a paired-end alignment in XPRESSpipe, this will have been accounted for.</div>
+<div class="line">- By default, this will take the longest transcript based on combined exon length. If you prefer to use the cumulative exon length of the Ensembl canonical transcript, you must first curate the GTF using <code class="xref py py-data docutils literal notranslate"><span class="pre">xpresspipe</span> <span class="pre">modifyGTF</span> <span class="pre">-g</span> <span class="pre">transcripts.gtf</span> <span class="pre">-l</span></code></div>
+<div class="line">- If you performed isoform quantification and wish to length normalize each isoform, provide <code class="xref py py-data docutils literal notranslate"><span class="pre">identifier='transcript_id'</span></code></div>
+<div class="line">- If you would like to normalize based on CDS length, provide <code class="xref py py-data docutils literal notranslate"><span class="pre">feature_type='CDS'</span></code></div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
 <div class="line"><strong>data</strong>: Input dataframe with counts values</div>
 <div class="line"><strong>gtf</strong>: GTF reference file path and name</div>
-<div class="line"><strong>gene_name_prefix</strong>: Label of original name (usually “gene_name “), must match the gene naming type in the input dataframe</div>
-<div class="line"><strong>gene_name_location</strong>: Position in last column of GTF where relevant data is found (i.e. 0 would be the first sub-string before the first comma, 3 would be the third sub-string after the second comma before the third comma)</div>
+<div class="line"><strong>feature_type</strong>: Label of feature to use in length normalization</div>
+<div class="line"><strong>identifier</strong>: Label for how to group genes/transcripts. If normalizing for a gene, use <code class="xref py py-data docutils literal notranslate"><span class="pre">gene_name</span></code> or <code class="xref py py-data docutils literal notranslate"><span class="pre">gene_id</span></code>. If performing length normalization for isoforms, provide <code class="xref py py-data docutils literal notranslate"><span class="pre">transcript_id</span></code></div>
 <div class="line"><strong>sep</strong>: GTF delimiter (usually tab-delimited)</div>
 <div class="line"><br /></div>
 <div class="line">Returns:</div>
@@ -266,109 +268,47 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="te-translation-efficiency">
-<h2>TE (Translation Efficiency)<a class="headerlink" href="#te-translation-efficiency" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tpm-transcripts-per-million">
+<h2>TPM (Transcripts per Million)<a class="headerlink" href="#tpm-transcripts-per-million" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.te ( data, samples=None, log2=True )</strong></div>
+<div class="line"><strong>xpressplot.tpm ( data, gtf, feature_type=’exon’, identifier=’gene_name’, sep=’t’ )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
-<div class="line">Transform paired ribosome footprint and RNA samples to translation efficiency measures</div>
+<div class="line">Perform transcripts per million sample normalization on RNAseq data</div>
 <div class="line"><br /></div>
-<div class="line">Formulae:</div>
-<div class="line"><span class="math notranslate nohighlight">\(log_2TE = log_2(\frac{RPF\ reads\ per\ gene}{total\ RNA\ reads\ per\ gene})\)</span></div>
+<div class="line">Formula:</div>
+<div class="line"><span class="math notranslate nohighlight">\(TPM_{g} = \frac{1e6 \cdot r_{\textit{ge}}}{(\sum_{g=1}^{n} (\frac{1e3 \cdot r_{\textit{ge}}}{l_{\textit{ge}}})) \cdot \textit{l} _{\textit{ge}}}\)</span></div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Dataframe contains normalized count data, where samples are along columns and genes across rows (unless otherwise desired)</div>
+<div class="line">- Dataframe contains raw count data, where samples are along columns and genes across rows</div>
+<div class="line">- By default, this will take the longest transcript based on combined exon length. If you prefer to use the cumulative exon length of the Ensembl canonical transcript, you must first curate the GTF using <code class="xref py py-data docutils literal notranslate"><span class="pre">xpresspipe</span> <span class="pre">modifyGTF</span> <span class="pre">-g</span> <span class="pre">transcripts.gtf</span> <span class="pre">-l</span></code></div>
+<div class="line">- If you performed isoform quantification and wish to length normalize each isoform, provide <code class="xref py py-data docutils literal notranslate"><span class="pre">identifier='transcript_id'</span></code></div>
+<div class="line">- If you would like to normalize based on CDS length, provide <code class="xref py py-data docutils literal notranslate"><span class="pre">feature_type='CDS'</span></code></div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
 <div class="line"><strong>data</strong>: Input dataframe with counts values</div>
-<div class="line"><strong>samples</strong>: GTF reference file path and name</div>
-<div class="line"><strong>log2</strong>: Label of original name (usually “gene_name “), must match the gene naming type in the input dataframe</div>
+<div class="line"><strong>gtf</strong>: GTF reference file path and name</div>
+<div class="line"><strong>feature_type</strong>: Label of feature to use in length normalization</div>
+<div class="line"><strong>identifier</strong>: Label for how to group genes/transcripts. If normalizing for a gene, use <code class="xref py py-data docutils literal notranslate"><span class="pre">gene_name</span></code> or <code class="xref py py-data docutils literal notranslate"><span class="pre">gene_id</span></code>. If performing length normalization for isoforms, provide <code class="xref py py-data docutils literal notranslate"><span class="pre">transcript_id</span></code></div>
+<div class="line"><strong>sep</strong>: GTF delimiter (usually tab-delimited)</div>
 <div class="line"><br /></div>
 <div class="line">Returns:</div>
-<div class="line"><strong>data_te</strong>: Pandas dataframe TE transformed</div>
-<div class="line"><br /></div>
-<div class="line">Examples:</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
-                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
-<span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="mf">82.49</span>
-<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
-<span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
-<span class="n">ENSG00000241860</span> <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
-<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="mf">41.28</span>   <span class="mf">92.27</span>   <span class="mf">77.93</span>
-<span class="o">&gt;</span> <span class="n">te_data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">te</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sample1&#39;</span><span class="p">,</span><span class="s1">&#39;sample2&#39;</span><span class="p">])</span>
-<span class="o">&gt;</span> <span class="n">te_data</span>
-                <span class="n">sample1</span> <span class="n">sample2</span>
-<span class="n">ENSG00000227232</span> <span class="mf">0.1657</span>  <span class="o">-</span><span class="mf">5.3679</span>
-<span class="n">ENSG00000240361</span> <span class="mf">8.4850</span>  <span class="o">-</span><span class="mf">3.2876</span>
-<span class="n">ENSG00000238009</span> <span class="o">-</span><span class="mf">1.8051</span> <span class="mf">0.1095</span>
-<span class="n">ENSG00000241860</span> <span class="mf">3.6658</span>  <span class="mf">1.2819</span>
-<span class="n">ENSG00000187634</span> <span class="mf">0.8388</span>  <span class="mf">0.2434</span>
-<span class="o">&gt;</span> <span class="n">te_data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">te</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">te_data</span>
-                <span class="n">s1_rpf_te</span> <span class="n">s2_rpf_te</span>
-<span class="n">ENSG00000227232</span> <span class="mf">0.1657</span>    <span class="o">-</span><span class="mf">5.3679</span>
-<span class="n">ENSG00000240361</span> <span class="mf">8.4850</span>    <span class="o">-</span><span class="mf">3.2876</span>
-<span class="n">ENSG00000238009</span> <span class="o">-</span><span class="mf">1.8051</span>   <span class="mf">0.1095</span>
-<span class="n">ENSG00000241860</span> <span class="mf">3.6658</span>    <span class="mf">1.2819</span>
-<span class="n">ENSG00000187634</span> <span class="mf">0.8388</span>    <span class="mf">0.2434</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="log-transformation">
-<h2>Log Transformation<a class="headerlink" href="#log-transformation" title="Permalink to this headline">¶</a></h2>
-<div class="line-block">
-<div class="line"><strong>xpresstools.log_scale ( data, log_base=10 )</strong></div>
-<div class="line"><br /></div>
-<div class="line">Purpose:</div>
-<div class="line">Log-scale a sample-normalized dataframe</div>
-<div class="line"><br /></div>
-<div class="line">Assumptions:</div>
-<div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: Input dataframe with counts values</div>
-<div class="line"><strong>log_base</strong>: Log base to use for transformation (default: 10; or 2)</div>
-<div class="line"><br /></div>
-<div class="line">Returns:</div>
-<div class="line"><strong>data_log</strong>: Pandas dataframe log-scaled</div>
-<div class="line"><br /></div>
-<div class="line">Examples:</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">data</span>
-                <span class="n">s1_rpf</span>  <span class="n">s1_rna</span>  <span class="n">s2_rpf</span>  <span class="n">s2_rna</span>
-<span class="n">ENSG00000227232</span> <span class="mf">66.34</span>   <span class="mf">59.13</span>   <span class="mf">1.90</span>    <span class="mf">82.49</span>
-<span class="n">ENSG00000240361</span> <span class="mf">35.73</span>   <span class="mf">0.00</span>    <span class="mf">7.38</span>    <span class="mf">72.94</span>
-<span class="n">ENSG00000238009</span> <span class="mf">20.02</span>   <span class="mf">70.21</span>   <span class="mf">85.10</span>   <span class="mf">78.87</span>
-<span class="n">ENSG00000241860</span> <span class="mf">96.23</span>   <span class="mf">7.49</span>    <span class="mf">93.49</span>   <span class="mf">38.39</span>
-<span class="n">ENSG00000187634</span> <span class="mf">73.91</span>   <span class="mf">41.28</span>   <span class="mf">92.27</span>   <span class="mf">77.93</span>
-<span class="o">&gt;</span> <span class="n">log_data</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">log_scale</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">log_data</span>
-                <span class="n">s1_rpf</span>    <span class="n">s1_rna</span>    <span class="n">s2_rpf</span>    <span class="n">s2_rna</span>
-<span class="n">ENSG00000227232</span> <span class="mf">1.822430</span>  <span class="mf">1.772542</span>  <span class="mf">0.301030</span>  <span class="mf">1.916927</span>
-<span class="n">ENSG00000240361</span> <span class="mf">1.554247</span>  <span class="o">-</span><span class="mf">1.000000</span> <span class="mf">0.873902</span>  <span class="mf">1.863561</span>
-<span class="n">ENSG00000238009</span> <span class="mf">1.303628</span>  <span class="mf">1.847017</span>  <span class="mf">1.930440</span>  <span class="mf">1.897462</span>
-<span class="n">ENSG00000241860</span> <span class="mf">1.983762</span>  <span class="mf">0.880242</span>  <span class="mf">1.971229</span>  <span class="mf">1.585348</span>
-<span class="n">ENSG00000187634</span> <span class="mf">1.869290</span>  <span class="mf">1.616790</span>  <span class="mf">1.965531</span>  <span class="mf">1.892262</span>
-</pre></div>
+<div class="line"><strong>data_tpm</strong>: Pandas dataframe with TPM-normalized</div>
 </div>
 </div>
 <div class="section" id="batch-normalize">
 <h2>Batch Normalize<a class="headerlink" href="#batch-normalize" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.batch_normalize ( input_file, batch_file )</strong></div>
+<div class="line"><strong>xpressplot.batch_normalize ( input_file, batch_file )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Control for batch effects between datasets</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage where samples are normalized previously if desired</div>
+<div class="line">- Requires a properly formatted dataframe for xpressplot usage where samples are normalized previously if desired</div>
 <div class="line">- Requires a properly formatted dataframe complying to SVA COMBAT info file (see example below)</div>
 <div class="line">- R is installed on your machine and is in your $PATH</div>
 <div class="line">- All input files are tab-delimited (with .txt or .tsv suffix)</div>
@@ -402,14 +342,14 @@
 <div class="section" id="clean-data">
 <h2>Clean Data<a class="headerlink" href="#clean-data" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.clean_df ( data, axis=0 )</strong></div>
+<div class="line"><strong>xpressplot.clean_df ( data, axis=0 )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Cleans NULL values from axis and clears duplicate indices</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line">- Requires a properly formatted dataframe for xpressplot usage</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
@@ -438,14 +378,14 @@
 <div class="section" id="set-gene-threshold">
 <h2>Set Gene Threshold<a class="headerlink" href="#set-gene-threshold" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.threshold ( data, minimum=None, maximum=None )</strong></div>
+<div class="line"><strong>xpressplot.threshold ( data, minimum=None, maximum=None )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Cleans gene axis (assumed to by rows) of genes containing values below or above user-determined thresholds</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line">- Requires a properly formatted dataframe for xpressplot usage</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
@@ -474,23 +414,23 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="prepare-xpresstools-dataset">
-<h2>Prepare XPRESStools Dataset<a class="headerlink" href="#prepare-xpresstools-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prepare-xpressplot-dataset">
+<h2>Prepare xpressplot Dataset<a class="headerlink" href="#prepare-xpressplot-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.prep_data ( data, info, gene_scale=True, print_means=False )</strong></div>
+<div class="line"><strong>xpressplot.prep_data ( data, info, gene_scale=True, print_means=False )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Prepare dataframe for downstream analyses</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage (genes as rows, samples as columns)</div>
-<div class="line">- Requires properly formatted XPRESStools metadata dataframe</div>
+<div class="line">- Requires a properly formatted dataframe for xpressplot usage (genes as rows, samples as columns)</div>
+<div class="line">- Requires properly formatted xpressplot metadata dataframe</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
-<div class="line"><strong>data</strong>: XPRESStools formatted dataframe of expression values</div>
-<div class="line"><strong>info</strong>: XPRESStools formatted sample info dataframe</div>
+<div class="line"><strong>data</strong>: xpressplot formatted dataframe of expression values</div>
+<div class="line"><strong>info</strong>: xpressplot formatted sample info dataframe</div>
 <div class="line"><strong>gene_scale</strong>: Scale genes (rows) of data</div>
 <div class="line"><strong>print_means</strong>: Print means for each sample verification</div>
 <div class="line"><br /></div>
@@ -502,14 +442,14 @@
 <div class="section" id="check-sample-expression-distributions">
 <h2>Check Sample Expression Distributions<a class="headerlink" href="#check-sample-expression-distributions" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.check_samples ( data )</strong></div>
+<div class="line"><strong>xpressplot.check_samples ( data )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Visualize gene expression distributions on a sample-by-sample basis</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line">- Requires a properly formatted dataframe for xpressplot usage</div>
 <div class="line"><br /></div>
 </div>
 <div class="line">Parameters:</div>
@@ -528,14 +468,14 @@
 <div class="section" id="microarray-probe-collapse">
 <h2>Microarray Probe Collapse<a class="headerlink" href="#microarray-probe-collapse" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line"><strong>xpresstools.probe_collapse ( data, reference, gene_list=None, no_multimappers=True )</strong></div>
+<div class="line"><strong>xpressplot.probe_collapse ( data, reference, gene_list=None, no_multimappers=True )</strong></div>
 <div class="line"><br /></div>
 <div class="line">Purpose:</div>
 <div class="line">Remove multimapping probes and collapse probes mapping to the same gene by averaging the values for those probes per sample</div>
 <div class="line"><br /></div>
 <div class="line">Assumptions:</div>
 <div class="line-block">
-<div class="line">- Requires a properly formatted dataframe for XPRESStools usage</div>
+<div class="line">- Requires a properly formatted dataframe for xpressplot usage</div>
 <div class="line">- Assumes GPL .txt file from NCBI is tab delimited</div>
 <div class="line"><br /></div>
 </div>

@@ -2,7 +2,7 @@
 General Usage
 #############
 
-| XPRESStools is intended as a all-in-one toolkit and interface for analysis of sequencing data
+| xpressplot is intended as a all-in-one toolkit and interface for analysis of sequencing data
 
 ======================================
 Sequence Data

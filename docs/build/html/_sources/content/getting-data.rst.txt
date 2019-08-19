@@ -5,7 +5,7 @@ Retrieving Data
 ========================
 Importing Data from File
 ========================
-| **xpresstools.get_df ( file_name, delimiter=',', low_memory=False, gene_axis='row' )**
+| **xpressplot.get_df ( file_name, delimiter=',', low_memory=False, gene_axis='row' )**
 |
 | Purpose:
 | Get sequence dataframe from user-provided file.
@@ -30,7 +30,7 @@ Importing Data from File
 .. code-block:: python
 
   > import pandas as pd
-  > import xpresstools as xp
+  > import xpressplot as xp
   > data = xp.get_df('/path/to/data.csv')
   > data
                 GSM523242 GSM523243 GSM523244 GSM523245 ...
@@ -43,7 +43,7 @@ Importing Data from File
 ============================
 Importing metadata from file
 ============================
-| **xpresstools.get_info ( file_name, delimiter=",", axis="col", sample_ids=0, labels=1 )**
+| **xpressplot.get_info ( file_name, delimiter=",", axis="col", sample_ids=0, labels=1 )**
 |
 | Purpose:
 | Get sample metadata from user-provided file
@@ -68,7 +68,7 @@ Importing metadata from file
 .. code-block:: python
 
   > import pandas as pd
-  > import xpresstools as xp
+  > import xpressplot as xp
   > metadata = xp.get_info('/path/to/metadata.csv')
   > metadata
       0         1
@@ -84,17 +84,17 @@ Importing data from GEO
 --------------------
 RNAseq Datasets
 --------------------
-| A module will be added in the future to automate this conversion and import from GEO 
-| Download the csv or tsv file provided in supplement and ensure formatted follows XPRESStools standards
+| A module will be added in the future to automate this conversion and import from GEO
+| Download the csv or tsv file provided in supplement and ensure formatted follows xpressplot standards
 | Sometimes the delimiter is formatted incorrectly. If so, a simple find/replace can be used to replace the incorrect delimiter with a \t
 | Remove the gene name column header, but keep the trailing tab
-| Create a metadata file following XPRESStools standards
+| Create a metadata file following xpressplot standards
 | Import data
 
 ---------------------
 MicroArray Datasets
 ---------------------
-| **xpresstools.get_geo ( geo_id, output_info=False )**
+| **xpressplot.get_geo ( geo_id, output_info=False )**
 |
 | Purpose:
 | Get sample data and metadata from a GEO database
@@ -113,7 +113,7 @@ MicroArray Datasets
 .. code-block:: python
 
   > import pandas as pd
-  > import xpresstools as xp
+  > import xpressplot as xp
   > data, metadata = xp.get_geo('GSE20916')
   > data
                 GSM523242 GSM523243 GSM523244 GSM523245 ...
@@ -133,7 +133,7 @@ MicroArray Datasets
 ===========================
 Catenate Raw Counts Files
 ===========================
-| **xpresstools.catenate_files ( directory, file_suffix='txt', save_file=None, delimiter='\t', drop_rows=0 )**
+| **xpressplot.catenate_files ( directory, file_suffix='txt', save_file=None, delimiter='\t', drop_rows=0 )**
 |
 | Purpose:
 | Compiles expression counts from multiple files into one table. For example, HTSeq-count outputs each alignment file's counts as a separate count file. This module will collect all single count files and compile them into a single count table.
@@ -169,7 +169,7 @@ Catenate Raw Counts Files
 ======================================
 Create Count Table from File List
 ======================================
-| **xpresstools.count_table ( file_list, gene_column=0, sample_column=1, sep='\t', drop_rows=5 )**
+| **xpressplot.count_table ( file_list, gene_column=0, sample_column=1, sep='\t', drop_rows=5 )**
 |
 | Purpose:
 | Collate HTseq counts files (similar to catenate_files(), but input is a file list)
@@ -190,7 +190,7 @@ Create Count Table from File List
 ============================
 Drop Samples
 ============================
-| **xpresstools.drop_samples ( data, ids )**
+| **xpressplot.drop_samples ( data, ids )**
 |
 | Purpose:
 | Drop samples by sample IDs -- pass in a list of names
@@ -229,7 +229,7 @@ Drop Samples
 ============================
 Drop label
 ============================
-| **xpresstools.drop_label ( data, info, label )**
+| **xpressplot.drop_label ( data, info, label )**
 |
 | Purpose:
 | Drop samples by label group name
@@ -270,7 +270,7 @@ Drop label
 ============================
 Keep labels
 ============================
-| **xpresstools.keep_labels ( data, info, label_list=None )**
+| **xpressplot.keep_labels ( data, info, label_list=None )**
 |
 | Purpose:
 | Keep samples by list of label names
@@ -311,7 +311,7 @@ Keep labels
 ======================================
 Rename dataframe column names
 ======================================
-| **xpresstools.rename_cols ( data, converters )**
+| **xpressplot.rename_cols ( data, converters )**
 |
 | Purpose:
 | Rename column names using dataframe
@@ -352,7 +352,7 @@ Rename dataframe column names
 =======================
 Rename genes with GTF
 =======================
-| **xpresstools.convert_names_gtf ( data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=1, refill=None, sep='\t' )**
+| **xpressplot.convert_names_gtf ( data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=1, refill=None, sep='\t' )**
 |
 | Purpose:
 | Convert row names (genes) of dataframe using GTF as reference for new name
@@ -398,7 +398,7 @@ Rename genes with GTF
 ======================================
 Rename dataframe row names
 ======================================
-| **xpresstools.rename_rows ( data, converters, label='index' )**
+| **xpressplot.rename_rows ( data, converters, label='index' )**
 |
 | Purpose:
 | Rename values in an index (row names) or a column

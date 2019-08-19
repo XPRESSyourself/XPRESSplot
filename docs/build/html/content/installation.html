@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; XPRESStools 0.0.3-beta documentation</title>
+  <title>Installation &mdash; XPRESSplot 0.2.0-beta documentation</title>
   
 
   
@@ -26,7 +26,8 @@
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -53,7 +54,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> XPRESStools
+            <a href="../index.html" class="icon icon-home"> XPRESSplot
           
 
           
@@ -87,7 +88,7 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESStools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">XPRESSplot</a></li>
 </ul>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="beginner.html">Wait! I’ve never programmed before!</a></li>
@@ -101,7 +102,6 @@
 <li class="toctree-l1"><a class="reference internal" href="getting-data.html">Retrieving Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="normalize.html">Normalization and Quality Control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference-building.html">Reference Building</a></li>
 </ul>
 
             
@@ -116,7 +116,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">XPRESStools</a>
+          <a href="../index.html">XPRESSplot</a>
         
       </nav>
 
@@ -171,9 +171,9 @@
 <div class="section" id="pypi-install">
 <h2>PyPi Install<a class="headerlink" href="#pypi-install" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line">1)  Install XPRESStools and associated dependencies via pip:</div>
+<div class="line">1)  Install xpressplot and associated dependencies via pip:</div>
 </div>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install xpresstools
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ pip install xpressplot
 </pre></div>
 </div>
 </div>
@@ -182,19 +182,19 @@
 <div class="line-block">
 <div class="line">This feature is not yet available…</div>
 <div class="line"><br /></div>
-<div class="line">1)  Install XPRESStools and associated dependencies via conda:</div>
+<div class="line">1)  Install xpressplot and associated dependencies via conda:</div>
 </div>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ conda install -y -c bioconda xpresstools
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ conda install -y -c bioconda xpressplot
 </pre></div>
 </div>
 </div>
 <div class="section" id="manual-install">
 <h2>Manual install<a class="headerlink" href="#manual-install" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
-<div class="line">1)  Or download XPRESStools manually:</div>
+<div class="line">1)  Or download xpressplot manually:</div>
 </div>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/XPRESSyourself/xpresstools.git
-$ <span class="nb">cd</span> XPRESStools
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/XPRESSyourself/xpressplot.git
+$ <span class="nb">cd</span> xpressplot
 $ <span class="nb">cd</span> python setup.py install
 </pre></div>
 </div>
@@ -202,10 +202,10 @@ $ <span class="nb">cd</span> python setup.py install
 <div class="line">2)  Or, to download specific version:</div>
 </div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nv">tag</span><span class="o">=</span><span class="s1">&#39;v0.0.1-beta&#39;</span>
-$ wget https://github.com/XPRESSyourself/XPRESStools/archive/<span class="nv">$tag</span>.zip
-$ unzip xpresstools-<span class="si">${</span><span class="nv">tag</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>.zip
-$ mv xpresstools-<span class="si">${</span><span class="nv">tag</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span> xpresstools
-$ <span class="nb">cd</span> xpresstools
+$ wget https://github.com/XPRESSyourself/xpressplot/archive/<span class="nv">$tag</span>.zip
+$ unzip xpressplot-<span class="si">${</span><span class="nv">tag</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>.zip
+$ mv xpressplot-<span class="si">${</span><span class="nv">tag</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span> xpressplot
+$ <span class="nb">cd</span> xpressplot
 $ <span class="nb">cd</span> python setup.py install
 </pre></div>
 </div>
@@ -213,11 +213,11 @@ $ <span class="nb">cd</span> python setup.py install
 <div class="line">3)  At the end of the installation instructions, an installation location will be given. Add this to your $PATH:</div>
 </div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>...
-Installing xpresstools script to /Users/<span class="nv">$USERNAME</span>/anaconda3/bin
+Installing xpressplot script to /Users/<span class="nv">$USERNAME</span>/anaconda3/bin
 
-Installed /Users/<span class="nv">$USERNAME</span>/anaconda3/lib/python3.6/site-packages/xpresstools-0.0.1b0-py3.6.egg
-Processing dependencies <span class="k">for</span> <span class="nv">XPRESStools</span><span class="o">==</span><span class="m">0</span>.0.1b0
-Finished processing dependencies <span class="k">for</span> <span class="nv">XPRESStools</span><span class="o">==</span><span class="m">0</span>.0.1b0
+Installed /Users/<span class="nv">$USERNAME</span>/anaconda3/lib/python3.6/site-packages/xpressplot-0.0.1b0-py3.6.egg
+Processing dependencies <span class="k">for</span> <span class="nv">xpressplot</span><span class="o">==</span><span class="m">0</span>.0.1b0
+Finished processing dependencies <span class="k">for</span> <span class="nv">xpressplot</span><span class="o">==</span><span class="m">0</span>.0.1b0
 
 $ <span class="nb">echo</span> <span class="s2">&quot;export PATH=&#39;/Users/</span><span class="nv">$USERNAME</span><span class="s2">/anaconda3/bin:</span><span class="nv">$PATH</span><span class="s2">&#39; &gt;&gt; ~/.bash_profile</span>
 </pre></div>
