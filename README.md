@@ -60,3 +60,6 @@ GeneE   10.24611   10.13807    8.84743    9.72365   10.42940    9.17510    ...
 
 [5 rows x 145 columns]   
 ```
+
+### Updates
+Information on updates to the software can be found [here](https://github.com/XPRESSyourself/XPRESSplot/releases).
