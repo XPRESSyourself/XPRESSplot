@@ -27,7 +27,17 @@ from multiprocessing import cpu_count, Pool
 import numpy as np
 import scipy.stats as stats
 import matplotlib
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use('agg')
+    import matplotlib.pyplot as plt
+except:
+    import matplotlib
+    import matplotlib.pyplot as plt
+    plt.switch_backend('agg')
+else:
+    import matplotlib
+    import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns

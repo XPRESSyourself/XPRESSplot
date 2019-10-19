@@ -28,7 +28,17 @@ import numpy as np
 from scipy.stats import linregress
 from sklearn.decomposition import PCA
 import matplotlib
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use('agg')
+    import matplotlib.pyplot as plt
+except:
+    import matplotlib
+    import matplotlib.pyplot as plt
+    plt.switch_backend('agg')
+else:
+    import matplotlib
+    import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(font='arial')
 jakes_cmap = sns.diverging_palette(212, 61, s=99, l=77, sep=1, n=16, center='dark') #Custom aesthetics

@@ -27,7 +27,17 @@ import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 import matplotlib
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use('agg')
+    import matplotlib.pyplot as plt
+except:
+    import matplotlib
+    import matplotlib.pyplot as plt
+    plt.switch_backend('agg')
+else:
+    import matplotlib
+    import matplotlib.pyplot as plt
 
 """INITIALIZATION PARAMETERS"""
 # Retrieve path for scripts used in this pipeline, appended to argument dictionary for every function
