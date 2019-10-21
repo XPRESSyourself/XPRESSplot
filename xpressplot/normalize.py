@@ -27,16 +27,10 @@ import pandas as pd
 import numpy as np
 from sklearn import preprocessing
 import matplotlib
-try:
-    import matplotlib
-    matplotlib.use('agg')
-    import matplotlib.pyplot as plt
-except:
-    import matplotlib
+if str(matplotlib.get_backend()).lower() != 'agg':
     import matplotlib.pyplot as plt
     plt.switch_backend('agg')
 else:
-    import matplotlib
     import matplotlib.pyplot as plt
 
 """INITIALIZATION PARAMETERS"""

@@ -28,16 +28,10 @@ import numpy as np
 from scipy.stats import linregress
 from sklearn.decomposition import PCA
 import matplotlib
-try:
-    import matplotlib
-    matplotlib.use('agg')
-    import matplotlib.pyplot as plt
-except:
-    import matplotlib
+if str(matplotlib.get_backend()).lower() != 'agg':
     import matplotlib.pyplot as plt
     plt.switch_backend('agg')
 else:
-    import matplotlib
     import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set(font='arial')
