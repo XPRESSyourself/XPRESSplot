@@ -1,4 +1,4 @@
-{% set version = "0.0.6b0" %}
+{% set version = "0.0.8b0" %}
 
 package:
   name: xpressplot
@@ -11,11 +11,12 @@ source:
 build:
   noarch: python
   number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv
 
 requirements:
   build:
     - python
-    - setuptools
+    - pip
   run:
     - python
     - pandas
@@ -24,24 +25,11 @@ requirements:
     - scikit-learn
     - matplotlib
     - seaborn
-    - plotly
-    
+    - plotly <4
+
 test:
   imports:
-    - os
-    - sys
-    - pandas
-    - numpy
     - xpressplot
-  source_files:
-    - tests
-  commands:
-    - curl -L https://sourceforge.net/projects/xpressplot/files/GPL570.txt/download -o tests/GPL570.txt
-    - python tests/analyze_test.py
-    - python tests/fetch_test.py
-    - python tests/format_test.py
-    - python tests/normalize_test.py
-    - python tests/utils_test.py
 
 about:
   home: https://github.com/XPRESSyourself/XPRESSplot

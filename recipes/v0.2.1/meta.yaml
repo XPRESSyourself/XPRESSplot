@@ -1,4 +1,4 @@
-{% set version = "0.2.2" %}
+{% set version = "0.2.1b" %}
 
 package:
   name: xpressplot
@@ -6,11 +6,11 @@ package:
 
 source:
   url: https://github.com/XPRESSyourself/XPRESSplot/archive/XPRESSplot-v{{ version }}.tar.gz
-  sha256: 7e88d1a260f1971252fb1292a57b1d601bee8d94085dc8d778ed6579e4613334
+  sha256: e6d26bb3f43f8bda7ce1465641d835f750b63b31e983cea73143c26e143cc2c5
 
 build:
   noarch: python
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv
 
 requirements:
