@@ -1,7 +1,7 @@
 ##############
 XPRESSplot
 ##############
-|build-status| |codecov| |docs| |pypi| |doi|
+|build-status| |codecov| |docs| |pypi| |conda| |doi|
 
 =================
 About
@@ -56,6 +56,9 @@ Questions?
 .. |pypi| image:: https://img.shields.io/pypi/v/XPRESSplot.svg
     :target: https://pypi.org/project/XPRESSplot
     :alt: PyPi Status
+
+.. |conda| image:: https://anaconda.org/bioconda/xpressplot/badges/version.svg
+    :target: https://anaconda.org/bioconda/xpressplot
 
 .. |doi| image:: https://zenodo.org/badge/170940002.svg
    :target: https://zenodo.org/badge/latestdoi/170940002
