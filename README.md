@@ -4,8 +4,8 @@
 ### A toolkit for navigating and analyzing gene expression datasets
 
 [![Build Status](https://travis-ci.org/XPRESSyourself/XPRESSplot.svg?branch=master)](https://travis-ci.org/XPRESSyourself/XPRESSplot)
-[![codecov.io](https://codecov.io/gh/XPRESSyourself/XPRESSplot/XPRESSplot.svg?branch=master)](https://codecov.io/gh/XPRESSyourself/XPRESSplot)
 [![Documentation Status](https://readthedocs.org/projects/xpressplot/badge/?version=latest)](https://xpressplot.readthedocs.io/en/latest/?badge=latest)
+[![codecov.io](https://codecov.io/gh/XPRESSyourself/XPRESSplot/XPRESSplot.svg?branch=master)](https://codecov.io/gh/XPRESSyourself/XPRESSplot)
 [![PyPi Status](https://img.shields.io/pypi/v/XPRESSplot.svg)](https://pypi.org/project/XPRESSplot/)
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/xpressplot/badges/version.svg)](https://anaconda.org/bioconda/xpressplot)
 [![DOI](https://zenodo.org/badge/170940002.svg)](https://zenodo.org/badge/latestdoi/170940002)

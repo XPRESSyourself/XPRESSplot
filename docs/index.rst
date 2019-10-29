@@ -1,7 +1,7 @@
 ##############
 XPRESSplot
 ##############
-|build-status| |codecov| |docs| |pypi| |conda| |doi|
+|build-status| |docs| |codecov| |pypi| |conda| |doi|
 
 =================
 About
