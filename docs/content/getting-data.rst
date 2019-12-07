@@ -352,7 +352,7 @@ Rename dataframe column names
 =======================
 Rename genes with GTF
 =======================
-| **xpressplot.convert_names_gtf ( data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=1, refill=None, sep='\t' )**
+| **xpressplot.convert_names ( data, gtf, orig_name_label='gene_id \"', orig_name_location=0, new_name_label='gene_name \"', new_name_location=1, refill=None, sep='\t' )**
 |
 | Purpose:
 | Convert row names (genes) of dataframe using GTF as reference for new name
