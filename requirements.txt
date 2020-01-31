@@ -1,5 +1,5 @@
 pandas
-numpy
+numpy<=1.17.5
 scipy
 scikit-learn
 matplotlib<3.0.0,>=2.1.1
