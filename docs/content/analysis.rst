@@ -241,7 +241,7 @@ Scatterplot
 ===============================
 RNA Volcano Plot
 ===============================
-| **xpressplot.rna_volcano ( file, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, interactive=False, save_fig=None, dpi=600, bbox_inches='tight' )**
+| **xpressplot.rna_volcano ( file, order_legend=None, title=None, alpha=1, highlight_points=None, highlight_color='DarkRed', highlight_names=None,  alpha_highlights=1, size=30, highlight_size=30, y_threshold=None, x_threshold=None, threshold_color='b', label_points=None, grid=False, whitegrid=False, interactive=False, save_fig=None, dpi=600, bbox_inches='tight' )**
 |
 | Purpose:
 | Create volcano plot with non-normally distributed data (RNA-seq). See :data:`Volcano Plot` for examples.
@@ -259,6 +259,7 @@ RNA Volcano Plot
 | **highlight_names**: Ordered list of names to use in legend (must follow order provided for highlight_points and highlight_color). Must use if highlighting points.
 | **alpha_highlights**: Opacity percentage for highlighted elements of scatter plot
 | **size**: Marker size
+| **highlight_size**: Highlighted marker size
 | **y_threshold**: Include a y-axis threshold dotted line (default: None). If a list is provided, each will be plotted
 | **x_threshold**: Include a x-axis threshold dotted line (default: None). If a list is provided, each will be plotted
 | **threshold_color**: Threshold line color (default: 'b'; black)

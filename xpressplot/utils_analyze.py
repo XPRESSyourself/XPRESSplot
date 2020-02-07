@@ -509,7 +509,7 @@ def highlight_markers(
     data, x, y,
     highlight_points, highlight_color,
     highlight_names, alpha_highlights,
-    ax):
+    highlight_size, ax):
 
     if all(isinstance(z, list) for z in highlight_points):
         p = 0
@@ -521,13 +521,15 @@ def highlight_markers(
                         x = data_genes.loc[str(x)],
                         y = data_genes.loc[str(y)],
                         color = str(highlight_color[p]),
-                        alpha = alpha_highlights[p])
+                        alpha = alpha_highlights[p],
+                        s = highlight_size)
             else:
                 ax = sns.scatterplot(
                         x = data_genes.loc[str(x)],
                         y = data_genes.loc[str(y)],
                         color = str(highlight_color[p]),
-                        alpha = alpha_highlights)
+                        alpha = alpha_highlights,
+                        s = highlight_size)
 
             p += 1
 
@@ -538,6 +540,7 @@ def highlight_markers(
                 x = data_genes.loc[str(x)],
                 y = data_genes.loc[str(y)],
                 color = str(highlight_color),
-                alpha = alpha_highlights)
+                alpha = alpha_highlights,
+                s = highlight_size)
 
     return ax

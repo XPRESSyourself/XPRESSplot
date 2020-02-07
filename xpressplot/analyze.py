@@ -231,6 +231,7 @@ def scatter(
     highlight_names=None,
     alpha_highlights=1,
     size=30,
+    highlight_size=30,
     y_threshold=None,
     x_threshold=None,
     threshold_color='b',
@@ -287,7 +288,7 @@ def scatter(
 
     # Plot selected genes if user-specified
     if highlight_points != None:
-        ax = highlight_markers(data_c, x, y, highlight_points, highlight_color, highlight_names, alpha_highlights, ax)
+        ax = highlight_markers(data_c, x, y, highlight_points, highlight_color, highlight_names, alpha_highlights, highlight_size, ax)
 
     # Label points
     if label_points != None and type(label_points) is dict:
@@ -421,6 +422,7 @@ def rna_volcano(
     highlight_names=None,
     alpha_highlights=1,
     size=30,
+    highlight_size=30,
     y_threshold=None,
     x_threshold=None,
     threshold_color='b',
@@ -456,6 +458,10 @@ def rna_volcano(
             s = size,
             color = 'black')
 
+        # remove duplicate labels for labeling
+        # in most cases, seems these are rows with NAs
+        data = data.loc[~data.index.duplicated()]
+
         # Plot thresholds
         y_threshold = make_threshold_list(y_threshold)
         if type(y_threshold) != list and y_threshold != None or type(y_threshold) == list and any(x is None for x in y_threshold) == False:
@@ -467,15 +473,16 @@ def rna_volcano(
 
         # Plot selected genes if user-specified
         if highlight_points != None:
-            ax = highlight_markers(data, 'log$_2$(Fold Change)', '-log$_1$$_0$(FDR)', highlight_points, highlight_color, highlight_names, alpha_highlights, ax)
+            ax = highlight_markers(data, 'log$_2$(Fold Change)', '-log$_1$$_0$(FDR)', highlight_points, highlight_color, highlight_names, alpha_highlights, highlight_size, ax)
 
         # Label points
         if label_points != None:
             if type(label_points) != list:
                 label_points = [label_points]
             data_label = data.loc[label_points]
+
             for index, row in data_label.iterrows():
-                ax.text(row[1] + 0.2, row[5] - 0.3, str(index), horizontalalignment='left', size='large', color='black', weight='semibold')
+                ax.text(row[1] + 0.2, row[5] + 0, str(index), horizontalalignment='left', size='large', color=highlight_color, weight='semibold')
 
         # Put the legend out of the figure
         ax = make_legend(ax, order_legend, highlight_color, highlight_names)
