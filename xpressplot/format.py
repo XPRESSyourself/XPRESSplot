@@ -31,12 +31,17 @@ from .utils import check_directories
 def convert_names(
     data,
     gtf,
-    orig_name_label='gene_id \"',
+    orig_name_label='gene_id',
     orig_name_location=0,
-    new_name_label='gene_name \"',
+    new_name_label='gene_name',
     new_name_location=2,
     refill=None,
+    add_space=True,
     sep='\t'):
+
+    if add_space == True:
+        orig_name_label = orig_name_label + ' \"'
+        new_name_label = new_name_label + ' \"'
 
     # Import reference GTF
     gtf = pd.read_csv(str(gtf),sep=sep,comment='#', low_memory=False, header=None)
