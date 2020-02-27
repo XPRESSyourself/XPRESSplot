@@ -650,7 +650,7 @@ def volcano(
 
     # Save hits if user-specified
     if return_data == True:
-        df_c = data_c[['log2 Fold Change', '-log10 P-Value']].copy()
+        df_c = data_c[['log$_2$(Fold Change)', '-log$_1$$_0$(P-Value)']].copy()
         return df_c
 
 """Plot a 2-D PCA with confidence intervals or a 3-D PCA with no confidence intervals"""

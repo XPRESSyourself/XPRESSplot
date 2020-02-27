@@ -19,11 +19,11 @@ requirements:
     - pip
   run:
     - python
-    - pandas
-    - numpy
+    - pandas<=0.25.3
+    - numpy<=1.17.5
     - scipy
     - scikit-learn
-    - matplotlib
+    - matplotlib<3.0.0,>=2.1.1
     - seaborn
     - plotly <4
 
