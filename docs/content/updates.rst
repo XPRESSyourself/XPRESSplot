@@ -2,6 +2,11 @@
 Updates
 ###############
 
+======================
+v0.2.4 (in progress)
+======================
+| - Updated volcano plotting to allow for successful export of fold change and p-value data to a dataframe for downstream user analysis
+
 ===========
 v0.2.3
 ===========
