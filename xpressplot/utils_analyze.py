@@ -60,7 +60,7 @@ def reset_plot(
     whitegrid, ax=False):
 
     if ax == True:
-        del ax
+        ax = None
 
     plt.close()
     plt.clf()

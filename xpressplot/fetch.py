@@ -218,7 +218,7 @@ def rename_rows(
         dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
         data_c[label] = data_c['index'].replace(dictionary)
         data_c = data_c.set_index('index')
-        del data_c.index.name
+        data_c.index.name = None
 
     else:
         dictionary = pd.Series(converters[1].values,index=converters[0]).to_dict()
@@ -269,7 +269,7 @@ def catenate_files(
 
     # Remove gene_names label
     data = data.set_index('gene_names')
-    del data.index.name
+    data.index.name = None
 
     if save_file != None:
         data.to_csv(str(save_file),sep=delimiter)
@@ -292,13 +292,13 @@ def count_table(
     for f in file_list[1:]:
         df_pull = pd.read_csv(str(f), sep=sep, comment='#', header=None)
         df = pd.concat([df, df_pull[df_pull.columns[sample_column]]], axis=1)
-        del df_pull
+        df_pull = None
 
     # Final formatting clean up of table
     df_counts = df.copy()
-    del df
+    df = None
     df_counts = df_counts.set_index(0)
-    del df_counts.index.name
+    df_counts.index.name = None
 
     # Remove path and file suffix from each file's name before adding as column names to table
     c = 0

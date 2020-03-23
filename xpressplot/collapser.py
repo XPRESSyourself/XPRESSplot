@@ -97,7 +97,7 @@ def run_collapser(
     data_collapsed = data_numeric.groupby('name_sort').mean()
 
     # Remove double header for indices
-    del data_collapsed.index.name
+    data_collapsed.index.name = None
 
     return data_collapsed
 

@@ -69,6 +69,6 @@ def convert_names(
     data_names = data.copy()
     data_names['new'] = data_names.index.to_series().map(gene_dict).fillna(data_names.index.to_series())
     data_names = data_names.set_index('new')
-    del data_names.index.name
+    data_names.index.name = None
 
     return data_names
