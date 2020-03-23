@@ -7,3 +7,5 @@
 *.ipynb_checkpoints
 tests/GPL570.txt
 tests/GSE20916_family.soft.gz
+build
+dist

@@ -124,11 +124,12 @@ counts_truth.loc['1294_at'] = pd.Series({'fGSM523242_counts.txt':96,'fGSM523243_
 counts_truth.loc['1405_i_at'] = pd.Series({'fGSM523242_counts.txt':73,'fGSM523243_counts.txt':41,'fGSM523244_counts.txt':92,'fGSM523245_counts.txt':77})
 #Default
 counts = xp.catenate_files(count_dir, file_suffix='counts.txt', save_file=None, delimiter='\t', drop_rows=0)
-assert counts.equals(counts_truth), 'catenate_files() failed'
+
+assert (counts == counts_truth).all().all(), 'catenate_files() failed'
 #drop_rows
 counts_truth_drop = counts_truth[:-2]
 counts = xp.catenate_files(count_dir, file_suffix='counts.txt', save_file=None, delimiter='\t', drop_rows=2)
-assert counts.equals(counts_truth_drop), 'catenate_files() failed when dropping tailing rows'
+assert (counts == counts_truth_drop).all().all(), 'catenate_files() failed when dropping tailing rows'
 
 """
 rename_cols

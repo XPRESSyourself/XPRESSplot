@@ -216,8 +216,8 @@ label_truth.loc['1294_at'] = pd.Series({'fGSM523242':96,'fGSM523243':7,'fGSM5232
 label_truth.loc['1405_i_at'] = pd.Series({'fGSM523242':73,'fGSM523243':41,'fGSM523244':92,'fGSM523245':77,'fGSM523246':26})
 
 data_noscale, data_label = xp.prep_data(data, info, gene_scale=False, print_means=True)
-assert data_noscale.astype(int).equals(data), 'prep_data() failed'
-assert data_label.equals(label_truth), 'prep_data() failed'
+assert (data_noscale == data).all().all(), 'prep_data() failed'
+assert (data_label == label_truth).all().all(), 'prep_data() failed'
 
 data_scale, data_label_s = xp.prep_data(data, info, gene_scale=True, print_means=False)
 data_scale = np.around(data_scale.astype(float), decimals=3)
