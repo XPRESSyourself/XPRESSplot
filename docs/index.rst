@@ -41,9 +41,11 @@ Questions?
 
 
 
-.. |build-status| image:: https://travis-ci.org/XPRESSyourself/XPRESSplot.svg?branch=master
-    :target: https://travis-ci.org/XPRESSyourself/XPRESSplot
+.. |build-status| image:: https://github.com/XPRESSyourself/XPRESSplot/workflows/build/badge.svg
+    :target: https://github.com/XPRESSyourself/XPRESSplot/workflows/build/
     :alt: Build Status
+
+
 
 .. |codecov| image:: https://codecov.io/gh/XPRESSyourself/XPRESSplot/XPRESSplot.svg?branch=master
     :target: https://codecov.io/gh/XPRESSyourself/XPRESSplot

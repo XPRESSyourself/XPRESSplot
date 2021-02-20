@@ -3,7 +3,7 @@
 
 ### A toolkit for navigating and analyzing gene expression datasets
 
-[![Build Status](https://travis-ci.com/XPRESSyourself/XPRESSplot.svg?branch=master)](https://travis-ci.com/XPRESSyourself/XPRESSplot)
+![Build Status](https://github.com/XPRESSyourself/XPRESSplot/workflows/build/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/xpressplot/badge/?version=latest)](https://xpressplot.readthedocs.io/en/latest/?badge=latest)
 [![codecov.io](https://codecov.io/gh/XPRESSyourself/XPRESSplot/XPRESSplot.svg?branch=master)](https://codecov.io/gh/XPRESSyourself/XPRESSplot)
 [![PyPi Status](https://img.shields.io/pypi/v/XPRESSplot.svg)](https://pypi.org/project/XPRESSplot/)
