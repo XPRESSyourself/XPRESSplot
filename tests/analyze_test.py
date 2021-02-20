@@ -97,7 +97,7 @@ try:
 except:
     pass
 else:
-    fail('multigene_overview() failed to catch an error in not providing metadata')
+    raise Exception('multigene_overview() failed to catch an error in not providing metadata')
 
 #Heatmap
 xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, gene_list=['SEC62','STX6','CCL5'], cbar_kws={'label':'z-score'}, figsize=(20,2))
@@ -111,7 +111,7 @@ try:
 except:
     pass
 else:
-    fail('heatmap() failed to catch error when only providing part of gene labeling variables')
+    raise Exception('heatmap() failed to catch error when only providing part of gene labeling variables')
 
 xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, xticklabels=True, linewidths=.5, linecolor='black', gene_list=['SEC62','STX6','CCL5'], figsize=(20,2))
 
@@ -123,7 +123,7 @@ try:
 except:
     pass
 else:
-    fail('scatter() failed to catch error when only providing one gene/axis to plot')
+    raise Exception('scatter() failed to catch error when only providing one gene/axis to plot')
 
 xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=False, alpha=.7)
 
@@ -132,7 +132,7 @@ try:
 except:
     pass
 else:
-    fail('scatter() failed to catch error when only providing one gene/axis to plot')
+    raise Exception('scatter() failed to catch error when only providing one gene/axis to plot')
 
 xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=True, alpha=.2, title='this is a title', y_threshold=5, x_threshold=[7])
 
@@ -150,7 +150,7 @@ try:
 except:
     pass
 else:
-    fail('scatter() failed to catch error when only providing one condition to plot')
+    raise Exception('scatter() failed to catch error when only providing one condition to plot')
 
 #Jointplot
 xp.jointplot(geo_labeled, meta, 'STX6', 'STX6', kind='reg')
