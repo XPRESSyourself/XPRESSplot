@@ -32,7 +32,7 @@ Manual install
 
   $ git clone https://github.com/XPRESSyourself/xpressplot.git
   $ cd xpressplot
-  $ cd python setup.py install
+  $ python setup.py install
 
 | 2)  Or, to download specific version:
 
@@ -43,7 +43,7 @@ Manual install
   $ unzip xpressplot-${tag:1}.zip
   $ mv xpressplot-${tag:1} xpressplot
   $ cd xpressplot
-  $ cd python setup.py install
+  $ python setup.py install
 
 | 3)  At the end of the installation instructions, an installation location will be given. Add this to your $PATH:
 
