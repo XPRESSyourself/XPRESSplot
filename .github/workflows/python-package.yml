@@ -1,0 +1,44 @@
+ame: build
+
+on:
+  [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install codecov flake8
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --statistics
+    - name: Test with codecov
+      run: |
+        curl -L https://sourceforge.net/projects/xpressplot/files/GPL570.txt/download -o tests/GPL570.txt
+        coverage run tests/fetch_test.py
+        coverage run -a tests/format_test.py
+        coverage run -a tests/normalize_test.py
+        coverage run -a tests/analyze_test.py
+        coverage run -a tests/utils_test.py
+        codecov
+    - name: Publish distribution 📦 to PyPI
+      if: startsWith(github.ref, 'refs/tags')
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
