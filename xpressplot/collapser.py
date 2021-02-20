@@ -23,6 +23,8 @@ this program.  If not, see <https://www.gnu.org/licenses/>.
 import pandas as pd
 import numpy as np
 
+from .utils_analyze import custom_list
+
 """Create dictionary of probes and their gene names for the microarray probe collapser"""
 def prep_collapser(
     reference, gene_list=None, no_multimappers=True):
