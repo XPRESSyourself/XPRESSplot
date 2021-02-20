@@ -28,7 +28,7 @@ import numpy as np
 
 import os
 __path__  =  os.path.dirname(os.path.realpath(__file__)) + '/'
-#__path__ = '/Users/jordan/scripts/XPRESSyourself/XPRESSplot/tests/'
+#__path__ = '~/Desktop/projects/XPRESSplot/tests/'
 
 data_loc = str(__path__ ) + 'large_test.csv'
 meta_loc = str(__path__ ) + 'sample_info_test.csv'
@@ -116,7 +116,7 @@ else:
 xp.heatmap(geo_scaled, meta, sample_palette=geo_colors, xticklabels=True, linewidths=.5, linecolor='black', gene_list=['SEC62','STX6','CCL5'], figsize=(20,2))
 
 #Scatterplot basic
-xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=True, order_legend=[1,3,2], alpha=.7)
+xp.scatter(geo_labeled, meta, 'SEC62', 'STX6', palette=geo_colors, add_linreg=True, alpha=.7)
 
 try:
     xp.scatter(geo_labeled, meta, 'SEC62', palette=geo_colors, add_linreg=True, order_legend=[1,3,2], alpha=.7)
@@ -165,14 +165,13 @@ xp.linreg(geo_labeled, 'STX6', linreg_file, delimiter=',')
 #2D-PCA
 xp.pca(geo_labeled, meta, geo_colors, grouping='samples', gene_list=None, gene_labels=False, ci=2, principle_components=[1,2], n_components=10, _3d_pca=False, scree_only=False, save_scree=None, size=10)
 
-xp.pca(geo_labeled, meta, geo_colors, grouping='samples', gene_list=['STX6','SCARB1','CCL5'], gene_labels=False, ci=2, principle_components=[1,2], n_components=2, _3d_pca=False, scree_only=False, save_scree=None, size=20, order_legend=[1,3,2])
+xp.pca(geo_labeled, meta, geo_colors, grouping='samples', gene_list=['STX6','SCARB1','CCL5'], gene_labels=False, ci=2, principle_components=[1,2], n_components=2, _3d_pca=False, scree_only=False, save_scree=None, size=20)
 
 xp.pca(geo_labeled, meta, geo_colors, grouping='samples', gene_labels=False, ci=1, principle_components=[1,2], n_components=10, _3d_pca=False, scree_only=False, save_scree=None, size=20)
 
 df_pca = xp.pca(geo_labeled, meta, geo_colors, grouping='samples', gene_labels=False, ci=1, principle_components=[2,3], n_components=10, _3d_pca=False, scree_only=False, save_scree=None, size=30, return_pca=True)
 df_pca.head()
 
-xp.pca(geo_labeled, meta, geo_colors, _3d_pca=False, scree_only=True, save_scree=True, save_fig=pca_file)
 
 #3D-PCA
 xp.pca(geo_labeled, meta, geo_colors, _3d_pca=True, order_legend=[1,3,2])
