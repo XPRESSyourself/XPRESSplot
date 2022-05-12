@@ -8,7 +8,9 @@
 [![codecov.io](https://codecov.io/gh/XPRESSyourself/XPRESSplot/XPRESSplot.svg?branch=master)](https://codecov.io/gh/XPRESSyourself/XPRESSplot)
 [![PyPi Status](https://img.shields.io/pypi/v/XPRESSplot.svg)](https://pypi.org/project/XPRESSplot/)
 [![Anaconda-Server Badge](https://anaconda.org/bioconda/xpressplot/badges/version.svg)](https://anaconda.org/bioconda/xpressplot)
-[![DOI](https://zenodo.org/badge/170940002.svg)](https://zenodo.org/badge/latestdoi/170940002)
+[![DOI](https://zenodo.org/badge/170940002.svg)](https://zenodo.org/badge/latestdoi/170940002)   
+
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/xpressplot/badges/downloads.svg)](https://anaconda.org/bioconda/xpressplot)
 
 ##### Find documentation [here](https://xpressplot.readthedocs.io/en/latest/)
 
